@@ -2,27 +2,8 @@
   "name": "vscode-postgresql",
   "displayName": "PostgreSQL",
   "version": "0.0.1",
+  "private": "false",
   "description": "Develop Postgres everywhere",
-  "publisher": "ms-ossdata",
-  "preview": true,
-  "license": "MIT",
-  "aiKey": "AIF-5574968e-856d-40d2-af67-c89a14e76412",
-  "icon": "images/extension-icon.png",
-  "galleryBanner": {
-    "color": "#2F2F2F",
-    "theme": "dark"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
-  },
-  "bugs": {
-    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
-  },
-  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
-  "engines": {
-    "vscode": "1.23.0"
-  },
   "categories": [
     "Programming Languages",
     "Azure"
@@ -34,128 +15,30 @@
     "PosgreSQL",
     "Postgres"
   ],
-  "activationEvents": [
-    "onLanguage:sql",
-    "onCommand:extension.pgsql.connect",
-    "onCommand:extension.pgsql.runQuery",
-    "onCommand:extension.pgsql.runCurrentStatement",
-    "onCommand:extension.pgsql.disconnect",
-    "onCommand:extension.pgsql.manageProfiles",
-    "onCommand:extension.pgsql.chooseDatabase",
-    "onCommand:extension.pgsql.cancelQuery",
-    "onCommand:extension.pgsql.showGettingStarted",
-    "onCommand:extension.pgsql.newQuery"
-  ],
-  "main": "./out/src/extension",
-  "extensionDependencies": [
-    "vscode.sql"
-  ],
-  "devDependencies": {
-    "chai": "4.3.10",
-    "coveralls": "3.1.1",
-    "decache": "4.6.2",
-    "del": "7.1.0",
-    "gulp": "github:gulpjs/gulp#4.0",
-    "gulp-clean-css": "4.3.0",
-    "gulp-concat": "2.6.1",
-    "gulp-filter": "8.0.0",
-    "gulp-install": "1.1.0",
-    "gulp-istanbul-report": "0.0.1",
-    "gulp-json-editor": "2.5.7",
-    "gulp-remote-src": "0.4.4",
-    "gulp-rename": "2.0.0",
-    "gulp-shell": "0.8.0",
-    "gulp-sourcemaps": "3.0.0",
-    "gulp-tslint": "8.1.4",
-    "gulp-typescript": "5.0.1",
-    "gulp-uglify": "3.0.2",
-    "istanbul": "0.4.5",
-    "jasmine-core": "~5.1.1",
-    "karma": "6.4.2",
-    "karma-chrome-launcher": "3.2.0",
-    "karma-coverage": "2.2.1",
-    "karma-htmlfile-reporter": "0.3.8",
-    "karma-jasmine": "5.1.0",
-    "karma-jasmine-html-reporter": "2.1.0",
-    "karma-junit-reporter": "2.0.1",
-    "karma-remap-istanbul": "0.6.0",
-    "pm-mocha-jenkins-reporter": "0.2.6",
-    "remap-istanbul": "0.13.0",
-    "systemjs-builder": "0.16.15",
-    "tslint": "5.20.1",
-    "typemoq": "2.1.0",
-    "typescript": "5.2.2",
-    "uglify-js": "mishoo/UglifyJS2#harmony-v2.8.22",
-    "vscode": "1.0.5",
-    "vscode-nls-dev": "https://github.com/Raymondd/vscode-nls-dev/releases/download/2.0.2/build.tar.gz",
-    "xmldom": "0.6.0",
-    "yargs": "https://registry.npmjs.org/yargs/-/yargs-3.32.0.tgz",
-    "typescript-esbuild": "0.3.1"
+  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
+  "bugs": {
+    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
   },
-  "dependencies": {
-    "applicationinsights": "2.9.0",
-    "body-parser": "1.20.2",
-    "comment-json": "4.2.3",
-    "copy-paste": "1.5.3",
-    "decompress": "4.2.1",
-    "ejs": "3.1.9",
-    "error-ex": "1.3.2",
-    "express": "4.18.2",
-    "figures": "5.0.0",
-    "fs-extra-promise": "1.0.1",
-    "getmac": "5.20.0",
-    "http-proxy-agent": "7.0.0",
-    "https-proxy-agent": "7.0.2",
-    "jsonc-parser": "3.2.0",
-    "opener": "1.5.2",
-    "plist": "3.1.0",
-    "pretty-data": "0.40.0",
-    "request": "2.73.0",
-    "semver": "https://registry.npmjs.org/semver/-/semver-5.0.3.tgz",
-    "tmp": "0.2.1",
-    "underscore": "1.13.6",
-    "vscode-extension-telemetry": "0.1.1",
-    "vscode-languageclient": "9.0.1",
-    "vscode-nls": "5.2.0",
-    "ws": "8.14.2"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Nikola Hristov",
+    "email": "nikola@nikolahristov.tech",
+    "url": "https://nikolahristov.tech"
+  },
+  "publisher": "playform",
+  "type": "module",
+  "main": "./out/src/extension",
+  "scripts": {
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "install-packages": "npm install github:gulpjs/gulp#4.0 && npm install gulp-install && gulp --gulpfile install.js install",
+    "package": "gulp package:online",
+    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts"
   },
   "contributes": {
-    "languages": [
-      {
-        "id": "sql",
-        "extensions": [
-          ".sql"
-        ],
-        "aliases": [
-          "SQL"
-        ],
-        "configuration": "./syntaxes/sql.configuration.json"
-      }
-    ],
-    "grammars": [
-      {
-        "language": "sql",
-        "scopeName": "source.sql",
-        "path": "./syntaxes/SQL.plist"
-      }
-    ],
-    "outputChannels": [
-      "PGSQL"
-    ],
-    "snippets": [
-      {
-        "language": "sql",
-        "path": "./snippets/pgsql.json"
-      }
-    ],
-    "menus": {
-      "editor/context": [
-        {
-          "command": "extension.pgsql.runQuery",
-          "when": "editorLangId == sql"
-        }
-      ]
-    },
     "commands": [
       {
         "command": "extension.pgsql.runQuery",
@@ -201,26 +84,6 @@
         "command": "extension.pgsql.newQuery",
         "title": "%extension.pgsql.newQuery%",
         "category": "PostgreSQL"
-      }
-    ],
-    "keybindings": [
-      {
-        "command": "extension.pgsql.runQuery",
-        "key": "ctrl+m ctrl+r",
-        "mac": "cmd+m cmd+r",
-        "when": "editorTextFocus && editorLangId == 'sql'"
-      },
-      {
-        "command": "extension.pgsql.connect",
-        "key": "ctrl+m ctrl+c",
-        "mac": "cmd+m cmd+c",
-        "when": "editorTextFocus && editorLangId == 'sql'"
-      },
-      {
-        "command": "extension.pgsql.disconnect",
-        "key": "ctrl+m ctrl+d",
-        "mac": "cmd+m cmd+d",
-        "when": "editorTextFocus && editorLangId == 'sql'"
       }
     ],
     "configuration": {
@@ -535,22 +398,159 @@
           "scope": "window"
         }
       }
-    }
+    },
+    "grammars": [
+      {
+        "language": "sql",
+        "scopeName": "source.sql",
+        "path": "./syntaxes/SQL.plist"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "extension.pgsql.runQuery",
+        "key": "ctrl+m ctrl+r",
+        "mac": "cmd+m cmd+r",
+        "when": "editorTextFocus && editorLangId == 'sql'"
+      },
+      {
+        "command": "extension.pgsql.connect",
+        "key": "ctrl+m ctrl+c",
+        "mac": "cmd+m cmd+c",
+        "when": "editorTextFocus && editorLangId == 'sql'"
+      },
+      {
+        "command": "extension.pgsql.disconnect",
+        "key": "ctrl+m ctrl+d",
+        "mac": "cmd+m cmd+d",
+        "when": "editorTextFocus && editorLangId == 'sql'"
+      }
+    ],
+    "languages": [
+      {
+        "id": "sql",
+        "extensions": [
+          ".sql"
+        ],
+        "aliases": [
+          "SQL"
+        ],
+        "configuration": "./syntaxes/sql.configuration.json"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "extension.pgsql.runQuery",
+          "when": "editorLangId == sql"
+        }
+      ]
+    },
+    "outputChannels": [
+      "PGSQL"
+    ],
+    "snippets": [
+      {
+        "language": "sql",
+        "path": "./snippets/pgsql.json"
+      }
+    ]
   },
-  "scripts": {
-    "postinstall": "node ./node_modules/vscode/bin/install",
-    "install-packages": "npm install github:gulpjs/gulp#4.0 && npm install gulp-install && gulp --gulpfile install.js install",
-    "package": "gulp package:online",
-    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts"
+  "activationEvents": [
+    "onLanguage:sql",
+    "onCommand:extension.pgsql.connect",
+    "onCommand:extension.pgsql.runQuery",
+    "onCommand:extension.pgsql.runCurrentStatement",
+    "onCommand:extension.pgsql.disconnect",
+    "onCommand:extension.pgsql.manageProfiles",
+    "onCommand:extension.pgsql.chooseDatabase",
+    "onCommand:extension.pgsql.cancelQuery",
+    "onCommand:extension.pgsql.showGettingStarted",
+    "onCommand:extension.pgsql.newQuery"
+  ],
+  "dependencies": {
+    "applicationinsights": "2.9.0",
+    "body-parser": "1.20.2",
+    "comment-json": "4.2.3",
+    "copy-paste": "1.5.3",
+    "decompress": "4.2.1",
+    "ejs": "3.1.9",
+    "error-ex": "1.3.2",
+    "express": "4.18.2",
+    "figures": "5.0.0",
+    "fs-extra-promise": "1.0.1",
+    "getmac": "5.20.0",
+    "http-proxy-agent": "7.0.0",
+    "https-proxy-agent": "7.0.2",
+    "jsonc-parser": "3.2.0",
+    "opener": "1.5.2",
+    "plist": "3.1.0",
+    "pretty-data": "0.40.0",
+    "request": "2.73.0",
+    "semver": "https://registry.npmjs.org/semver/-/semver-5.0.3.tgz",
+    "tmp": "0.2.1",
+    "underscore": "1.13.6",
+    "vscode-extension-telemetry": "0.1.1",
+    "vscode-languageclient": "9.0.1",
+    "vscode-nls": "5.2.0",
+    "ws": "8.14.2"
   },
-  "type": "module",
-  "private": "false",
+  "devDependencies": {
+    "chai": "4.3.10",
+    "coveralls": "3.1.1",
+    "decache": "4.6.2",
+    "del": "7.1.0",
+    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-clean-css": "4.3.0",
+    "gulp-concat": "2.6.1",
+    "gulp-filter": "8.0.0",
+    "gulp-install": "1.1.0",
+    "gulp-istanbul-report": "0.0.1",
+    "gulp-json-editor": "2.5.7",
+    "gulp-remote-src": "0.4.4",
+    "gulp-rename": "2.0.0",
+    "gulp-shell": "0.8.0",
+    "gulp-sourcemaps": "3.0.0",
+    "gulp-tslint": "8.1.4",
+    "gulp-typescript": "5.0.1",
+    "gulp-uglify": "3.0.2",
+    "istanbul": "0.4.5",
+    "jasmine-core": "~5.1.1",
+    "karma": "6.4.2",
+    "karma-chrome-launcher": "3.2.0",
+    "karma-coverage": "2.2.1",
+    "karma-htmlfile-reporter": "0.3.8",
+    "karma-jasmine": "5.1.0",
+    "karma-jasmine-html-reporter": "2.1.0",
+    "karma-junit-reporter": "2.0.1",
+    "karma-remap-istanbul": "0.6.0",
+    "pm-mocha-jenkins-reporter": "0.2.6",
+    "remap-istanbul": "0.13.0",
+    "systemjs-builder": "0.16.15",
+    "tslint": "5.20.1",
+    "typemoq": "2.1.0",
+    "typescript": "5.2.2",
+    "typescript-esbuild": "0.3.1",
+    "uglify-js": "mishoo/UglifyJS2#harmony-v2.8.22",
+    "vscode": "1.0.5",
+    "vscode-nls-dev": "https://github.com/Raymondd/vscode-nls-dev/releases/download/2.0.2/build.tar.gz",
+    "xmldom": "0.6.0",
+    "yargs": "https://registry.npmjs.org/yargs/-/yargs-3.32.0.tgz"
+  },
+  "extensionDependencies": [
+    "vscode.sql"
+  ],
+  "engines": {
+    "vscode": "1.23.0"
+  },
   "publishConfig": {
     "access": "public"
   },
-  "author": {
-    "name": "Nikola Hristov",
-    "email": "nikola@nikolahristov.tech",
-    "url": "https://nikolahristov.tech"
-  }
+  "icon": "images/extension-icon.png",
+  "galleryBanner": {
+    "color": "#2F2F2F",
+    "theme": "dark"
+  },
+  "preview": true,
+  "aiKey": "AIF-5574968e-856d-40d2-af67-c89a14e76412"
 }

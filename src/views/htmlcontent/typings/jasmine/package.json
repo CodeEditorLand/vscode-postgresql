@@ -1,4 +1,50 @@
 {
+  "name": "@types/jasmine",
+  "version": "0.0.1",
+  "private": "false",
+  "description": "TypeScript definitions for Jasmine 2.5",
+  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
+  "bugs": {
+    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Nikola Hristov",
+    "email": "nikola@nikolahristov.tech",
+    "url": "https://nikolahristov.tech"
+  },
+  "maintainers": [
+    {
+      "name": "types",
+      "email": "ryan.cavanaugh@microsoft.com"
+    }
+  ],
+  "publisher": "playform",
+  "type": "module",
+  "main": "",
+  "typings": "index.d.ts",
+  "directories": {},
+  "scripts": {
+    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts"
+  },
+  "devDependencies": {
+    "typescript-esbuild": "0.3.1"
+  },
+  "peerDependencies": {},
+  "optionalDependencies": {},
+  "publishConfig": {
+    "access": "public"
+  },
+  "dist": {
+    "shasum": "15f16040b1106941ec4aeefa3cd9c55342a0dcbb",
+    "tarball": "https://registry.npmjs.org/@types/jasmine/-/jasmine-2.5.37.tgz"
+  },
+  "readme": "ERROR: No README data found!",
+  "typesPublisherContentHash": "342ad787ae1d9085f9cb2f352460449c601a7fbda833a19bb87aa2787dbc9ec3",
   "_args": [
     [
       {
@@ -43,51 +89,5 @@
   "_shasum": "15f16040b1106941ec4aeefa3cd9c55342a0dcbb",
   "_shrinkwrap": null,
   "_spec": "@types/jasmine@^2.5.36",
-  "_where": "/Users/anthonydresser/Documents/vscode-pgsql/src/views/htmlcontent",
-  "author": {
-    "name": "Nikola Hristov",
-    "email": "nikola@nikolahristov.tech",
-    "url": "https://nikolahristov.tech"
-  },
-  
-  "description": "TypeScript definitions for Jasmine 2.5",
-  "devDependencies": {
-    "typescript-esbuild": "0.3.1"
-  },
-  "directories": {},
-  "dist": {
-    "shasum": "15f16040b1106941ec4aeefa3cd9c55342a0dcbb",
-    "tarball": "https://registry.npmjs.org/@types/jasmine/-/jasmine-2.5.37.tgz"
-  },
-  "license": "MIT",
-  "main": "",
-  "maintainers": [
-    {
-      "name": "types",
-      "email": "ryan.cavanaugh@microsoft.com"
-    }
-  ],
-  "name": "@types/jasmine",
-  "optionalDependencies": {},
-  "peerDependencies": {},
-  "readme": "ERROR: No README data found!",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
-  },
-  "scripts": {
-    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts"
-  },
-  "typesPublisherContentHash": "342ad787ae1d9085f9cb2f352460449c601a7fbda833a19bb87aa2787dbc9ec3",
-  "typings": "index.d.ts",
-  "version": "0.0.1",
-  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
-  "bugs": {
-    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
-  },
-  "type": "module",
-  "private": "false",
-  "publishConfig": {
-    "access": "public"
-  }
+  "_where": "/Users/anthonydresser/Documents/vscode-pgsql/src/views/htmlcontent"
 }
