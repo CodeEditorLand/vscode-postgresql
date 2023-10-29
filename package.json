@@ -1,7 +1,7 @@
 {
   "name": "vscode-postgresql",
   "displayName": "PostgreSQL",
-  "version": "0.2.0",
+  "version": "0.0.1",
   "description": "Develop Postgres everywhere",
   "publisher": "ms-ossdata",
   "preview": true,
@@ -14,12 +14,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Microsoft/vscode-postgresql.git"
+    "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
   },
   "bugs": {
-    "url": "https://github.com/Microsoft/vscode-postgresql/issues"
+    "url": "https://github.com/CodeEditorLand/CodeEditorLand/issues"
   },
-  "homepage": "https://github.com/Microsoft/vscode-postgresql/blob/master/README.md",
+  "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
   "engines": {
     "vscode": "1.23.0"
   },
@@ -89,7 +89,8 @@
     "vscode": "1.0.5",
     "vscode-nls-dev": "https://github.com/Raymondd/vscode-nls-dev/releases/download/2.0.2/build.tar.gz",
     "xmldom": "0.6.0",
-    "yargs": "https://registry.npmjs.org/yargs/-/yargs-3.32.0.tgz"
+    "yargs": "https://registry.npmjs.org/yargs/-/yargs-3.32.0.tgz",
+    "typescript-esbuild": "0.3.1"
   },
   "dependencies": {
     "applicationinsights": "2.9.0",
@@ -539,6 +540,17 @@
   "scripts": {
     "postinstall": "node ./node_modules/vscode/bin/install",
     "install-packages": "npm install github:gulpjs/gulp#4.0 && npm install gulp-install && gulp --gulpfile install.js install",
-    "package": "gulp package:online"
+    "package": "gulp package:online",
+    "prepublishOnly": "TypeScriptESBuild Source/**/*.ts"
+  },
+  "type": "module",
+  "private": "false",
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": {
+    "name": "Nikola Hristov",
+    "email": "nikola@nikolahristov.tech",
+    "url": "https://nikolahristov.tech"
   }
 }
