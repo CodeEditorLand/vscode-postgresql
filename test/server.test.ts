@@ -1,174 +1,130 @@
-import * as TypeMoq from "typemoq";
-import assert = require("assert");
-import ServiceDownloadProvider from "../src/languageservice/serviceDownloadProvider";
-import ServerProvider from "../src/languageservice/server";
-import { ServerStatusView } from "../src/languageservice/serverStatus";
-import Config from "./../src/configurations/config";
-import { Runtime } from "../src/models/platform";
-import { IConfig, IStatusView } from "../src/languageservice/interfaces";
+import * as TypeMoq from 'typemoq';
+import assert = require('assert');
+import ServiceDownloadProvider from '../src/languageservice/serviceDownloadProvider';
+import ServerProvider from '../src/languageservice/server';
+import {ServerStatusView} from '../src/languageservice/serverStatus';
+import Config from './../src/configurations/config';
+import {Runtime} from '../src/models/platform';
+import {IConfig, IStatusView} from '../src/languageservice/interfaces';
 
 interface IFixture {
-	executableFileName: string;
-	executablesFromConfig: string[];
-	runtime: Runtime;
-	installDir: string;
+    executableFileName: string;
+    executablesFromConfig: string[];
+    runtime: Runtime;
+    installDir: string;
 }
 
-suite("Server tests", () => {
-	let testDownloadProvider: TypeMoq.IMock<ServiceDownloadProvider>;
-	let testStatusView: TypeMoq.IMock<IStatusView>;
-	let testConfig: TypeMoq.IMock<IConfig>;
+suite('Server tests', () => {
 
-	setup(() => {
-		testDownloadProvider = TypeMoq.Mock.ofType(
-			ServiceDownloadProvider,
-			TypeMoq.MockBehavior.Strict
-		);
-		testStatusView = TypeMoq.Mock.ofType(
-			ServerStatusView,
-			TypeMoq.MockBehavior.Strict
-		);
-		testConfig = TypeMoq.Mock.ofType(Config, TypeMoq.MockBehavior.Strict);
-	});
+    let testDownloadProvider: TypeMoq.IMock<ServiceDownloadProvider>;
+    let testStatusView: TypeMoq.IMock<IStatusView>;
+    let testConfig: TypeMoq.IMock<IConfig>;
 
-	function setupMocks(fixture: IFixture): void {
-		testConfig
-			.setup((x) => x.getSqlToolsExecutableFiles())
-			.returns(() => fixture.executablesFromConfig);
-		testDownloadProvider
-			.setup((x) => x.getInstallDirectory(fixture.runtime))
-			.returns(() => fixture.installDir);
-		testDownloadProvider
-			.setup((x) => x.installSQLToolsService(fixture.runtime))
-			.callback(() => {
-				fixture.executablesFromConfig = [
-					fixture.executableFileName.replace(fixture.installDir, ""),
-				];
-			})
-			.returns(() => {
-				return Promise.resolve(true);
-			});
-	}
+    setup(() => {
+        testDownloadProvider = TypeMoq.Mock.ofType(ServiceDownloadProvider, TypeMoq.MockBehavior.Strict);
+        testStatusView = TypeMoq.Mock.ofType(ServerStatusView, TypeMoq.MockBehavior.Strict);
+        testConfig = TypeMoq.Mock.ofType(Config, TypeMoq.MockBehavior.Strict);
+    });
 
-	test("findServerPath should return error given a folder with no installed service", () => {
-		let fixture: IFixture = {
-			executableFileName: "",
-			runtime: Runtime.Windows_7_64,
-			installDir: __dirname,
-			executablesFromConfig: ["exeFile1", "exeFile2"],
-		};
+    function setupMocks(fixture: IFixture): void {
+        testConfig.setup(x => x.getSqlToolsExecutableFiles()).returns(() => fixture.executablesFromConfig);
+        testDownloadProvider.setup(x => x.getInstallDirectory(fixture.runtime)).returns(() => fixture.installDir);
+        testDownloadProvider.setup(x => x.installSQLToolsService(fixture.runtime)).callback(() => {
+            fixture.executablesFromConfig = [fixture.executableFileName.replace(fixture.installDir, '')];
+        }).returns(() => { return Promise.resolve(true); });
+    }
 
-		setupMocks(fixture);
-		let server = new ServerProvider(
-			testDownloadProvider.object,
-			testConfig.object,
-			testStatusView.object
-		);
+    test('findServerPath should return error given a folder with no installed service', () => {
+        let fixture: IFixture = {
+            executableFileName: '',
+            runtime: Runtime.Windows_7_64,
+            installDir: __dirname,
+            executablesFromConfig: ['exeFile1', 'exeFile2']
+        };
 
-		return server.findServerPath(fixture.installDir).then((result) => {
-			assert.equal(result, undefined);
-		});
-	});
+        setupMocks(fixture);
+        let server = new ServerProvider(testDownloadProvider.object, testConfig.object, testStatusView.object);
 
-	test("findServerPath should return the file path given a file that exists", () => {
-		let fixture: IFixture = {
-			executableFileName: __filename,
-			runtime: Runtime.Windows_7_64,
-			installDir: __dirname,
-			executablesFromConfig: undefined,
-		};
-		setupMocks(fixture);
-		let server = new ServerProvider(
-			testDownloadProvider.object,
-			testConfig.object,
-			testStatusView.object
-		);
+        return server.findServerPath(fixture.installDir).then( result => {
+            assert.equal(result, undefined);
+        });
+    });
 
-		return server
-			.findServerPath(fixture.executableFileName)
-			.then((result) => {
-				assert.equal(result, fixture.executableFileName);
-			});
-	});
+    test('findServerPath should return the file path given a file that exists', () => {
+        let fixture: IFixture = {
+            executableFileName: __filename,
+            runtime: Runtime.Windows_7_64,
+            installDir: __dirname,
+            executablesFromConfig: undefined
+        };
+        setupMocks(fixture);
+        let server = new ServerProvider(testDownloadProvider.object, testConfig.object, testStatusView.object);
 
-	test("findServerPath should not return the given file path if does not exist", () => {
-		let fixture: IFixture = {
-			executableFileName: __filename,
-			runtime: Runtime.Windows_7_64,
-			installDir: __dirname,
-			executablesFromConfig: ["exeFile1", "exeFile2"],
-		};
-		setupMocks(fixture);
-		let server = new ServerProvider(
-			testDownloadProvider.object,
-			testConfig.object,
-			testStatusView.object
-		);
+        return server.findServerPath(fixture.executableFileName).then( result => {
+            assert.equal(result, fixture.executableFileName);
+        });
+    });
 
-		return server.findServerPath(fixture.installDir).then((result) => {
-			assert.equal(result, undefined);
-		});
-	});
+    test('findServerPath should not return the given file path if does not exist', () => {
+        let fixture: IFixture = {
+            executableFileName: __filename,
+            runtime: Runtime.Windows_7_64,
+            installDir: __dirname,
+            executablesFromConfig: ['exeFile1', 'exeFile2']
+        };
+        setupMocks(fixture);
+        let server = new ServerProvider(testDownloadProvider.object, testConfig.object, testStatusView.object);
 
-	test("findServerPath should return a valid file path given a folder with installed service", () => {
-		let fixture: IFixture = {
-			executableFileName: __filename,
-			runtime: Runtime.Windows_7_64,
-			installDir: __dirname,
-			executablesFromConfig: ["exeFile1", __filename],
-		};
-		setupMocks(fixture);
-		let server = new ServerProvider(
-			testDownloadProvider.object,
-			testConfig.object,
-			testStatusView.object
-		);
+        return server.findServerPath(fixture.installDir).then( result => {
+            assert.equal(result, undefined);
+        });
+    });
 
-		return server
-			.findServerPath(fixture.executableFileName)
-			.then((result) => {
-				assert.equal(result, fixture.executableFileName);
-			});
-	});
+    test('findServerPath should return a valid file path given a folder with installed service', () => {
+        let fixture: IFixture = {
+            executableFileName: __filename,
+            runtime: Runtime.Windows_7_64,
+            installDir: __dirname,
+            executablesFromConfig: ['exeFile1', __filename]
+        };
+        setupMocks(fixture);
+        let server = new ServerProvider(testDownloadProvider.object, testConfig.object, testStatusView.object);
 
-	test("getOrDownloadServer should download the service if not exist and return the valid service file path", () => {
-		let fixture: IFixture = {
-			executableFileName: __filename,
-			runtime: Runtime.Windows_7_64,
-			installDir: __dirname,
-			executablesFromConfig: ["exeFile1"],
-		};
+        return server.findServerPath(fixture.executableFileName).then( result => {
+            assert.equal(result, fixture.executableFileName);
+        });
+    });
 
-		setupMocks(fixture);
-		let server = new ServerProvider(
-			testDownloadProvider.object,
-			testConfig.object,
-			testStatusView.object
-		);
+    test('getOrDownloadServer should download the service if not exist and return the valid service file path', () => {
+        let fixture: IFixture = {
+            executableFileName: __filename,
+            runtime: Runtime.Windows_7_64,
+            installDir: __dirname,
+            executablesFromConfig: ['exeFile1']
+        };
 
-		return server.getOrDownloadServer(fixture.runtime).then((result) => {
-			assert.equal(result, fixture.executableFileName);
-		});
-	});
+        setupMocks(fixture);
+        let server = new ServerProvider(testDownloadProvider.object, testConfig.object, testStatusView.object);
 
-	test("getOrDownloadServer should not download the service if already exist", () => {
-		let fixture: IFixture = {
-			executableFileName: __filename,
-			runtime: Runtime.Windows_7_64,
-			installDir: __dirname,
-			executablesFromConfig: [__filename.replace(__dirname, "")],
-		};
+        return server.getOrDownloadServer(fixture.runtime).then( result => {
+            assert.equal(result, fixture.executableFileName);
+        });
+    });
 
-		setupMocks(fixture);
+    test('getOrDownloadServer should not download the service if already exist', () => {
+        let fixture: IFixture = {
+            executableFileName: __filename,
+            runtime: Runtime.Windows_7_64,
+            installDir: __dirname,
+            executablesFromConfig: [__filename.replace(__dirname, '')]
+        };
 
-		let server = new ServerProvider(
-			testDownloadProvider.object,
-			testConfig.object,
-			testStatusView.object
-		);
+        setupMocks(fixture);
 
-		return server.getOrDownloadServer(fixture.runtime).then((result) => {
-			assert.equal(result, fixture.executableFileName);
-		});
-	});
+        let server = new ServerProvider(testDownloadProvider.object, testConfig.object, testStatusView.object);
+
+        return server.getOrDownloadServer(fixture.runtime).then( result => {
+             assert.equal(result, fixture.executableFileName);
+        });
+    });
 });
