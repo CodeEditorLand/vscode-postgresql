@@ -151,13 +151,11 @@ gulp.task("ext:copy-appinsights", () => {
 		"./node_modules/applicationinsights/**/*.*",
 		"./node_modules/applicationinsights/*.*",
 	];
-	return gulp
-		.src(filesToMove, { base: "./" })
-		.pipe(
-			gulp.dest("./node_modules/vscode-extension-telemetry", {
-				"overwrite": true,
-			})
-		);
+	return gulp.src(filesToMove, { base: "./" }).pipe(
+		gulp.dest("./node_modules/vscode-extension-telemetry", {
+			"overwrite": true,
+		})
+	);
 });
 
 gulp.task(

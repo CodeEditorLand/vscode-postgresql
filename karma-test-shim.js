@@ -56,8 +56,7 @@ function initTestBed() {
 	return Promise.all([
 		System.import("@angular/core/testing"),
 		System.import("@angular/platform-browser-dynamic/testing"),
-	])
-	.then(function (providers) {
+	]).then(function (providers) {
 		var coreTesting = providers[0];
 		var browserTesting = providers[1];
 
