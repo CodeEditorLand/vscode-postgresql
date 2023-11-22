@@ -2,6 +2,7 @@
   "name": "vscode-postgresql",
   "displayName": "PostgreSQL",
   "version": "0.0.1",
+  "private": "false",
   "description": "Develop Postgres everywhere",
   "homepage": "https://github.com/CodeEditorLand/CodeEditorLand#readme",
   "bugs": {
@@ -12,7 +13,13 @@
     "url": "git+https://github.com/CodeEditorLand/CodeEditorLand.git"
   },
   "license": "MIT",
+  "author": {
+    "name": "Nikola Hristov",
+    "email": "nikola@nikolahristov.tech",
+    "url": "https://nikolahristov.tech"
+  },
   "publisher": "playform",
+  "type": "module",
   "main": "./out/src/extension",
   "scripts": {
     "postinstall": "node ./node_modules/vscode/bin/install",
@@ -512,31 +519,24 @@
     "tslint": "5.20.1",
     "typemoq": "2.1.0",
     "typescript": "5.3.2",
+    "typescript-esbuild": "0.3.1",
     "uglify-js": "mishoo/UglifyJS2#harmony-v2.8.22",
     "vscode": "1.0.5",
     "vscode-nls-dev": "https://github.com/Raymondd/vscode-nls-dev/releases/download/2.0.2/build.tar.gz",
     "xmldom": "0.6.0",
-    "yargs": "https://registry.npmjs.org/yargs/-/yargs-3.32.0.tgz",
-    "typescript-esbuild": "0.3.1"
+    "yargs": "https://registry.npmjs.org/yargs/-/yargs-3.32.0.tgz"
   },
   "extensionDependencies": [
     "vscode.sql"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "icon": "images/extension-icon.png",
   "galleryBanner": {
     "color": "#2F2F2F",
     "theme": "dark"
   },
   "preview": true,
-  "aiKey": "AIF-5574968e-856d-40d2-af67-c89a14e76412",
-  "type": "module",
-  "private": "false",
-  "publishConfig": {
-    "access": "public"
-  },
-  "author": {
-    "name": "Nikola Hristov",
-    "email": "nikola@nikolahristov.tech",
-    "url": "https://nikolahristov.tech"
-  }
+  "aiKey": "AIF-5574968e-856d-40d2-af67-c89a14e76412"
 }
