@@ -431,8 +431,8 @@ export function parseNumAsTimeString(value: number): string {
 		tempVal < 10
 			? "00" + tempVal
 			: tempVal < 100
-			? "0" + tempVal
-			: "" + tempVal;
+			  ? "0" + tempVal
+			  : "" + tempVal;
 
 	let rs = hs + ":" + ms + ":" + ss;
 

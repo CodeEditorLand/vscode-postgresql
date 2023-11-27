@@ -61,13 +61,13 @@ export class ConnectionConfig implements IConnectionConfig {
 			let nameA = a.profileName
 				? a.profileName
 				: a.server
-				? a.server
-				: a.connectionString;
+				  ? a.server
+				  : a.connectionString;
 			let nameB = b.profileName
 				? b.profileName
 				: b.server
-				? b.server
-				: b.connectionString;
+				  ? b.server
+				  : b.connectionString;
 			return nameA.localeCompare(nameB);
 		};
 
