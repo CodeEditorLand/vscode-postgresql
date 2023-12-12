@@ -1,75 +1,70 @@
-"use strict";
+'use strict';
 
 // This code is originally from https://github.com/DonJayamanne/bowerVSCode
 // License: https://github.com/DonJayamanne/bowerVSCode/blob/master/LICENSE
 
-import { window, StatusBarItem, StatusBarAlignment } from "vscode";
+import {window, StatusBarItem, StatusBarAlignment} from 'vscode';
 
 export default class ProgressIndicator {
-	private _statusBarItem: StatusBarItem;
 
-	constructor() {
-		this._statusBarItem = window.createStatusBarItem(
-			StatusBarAlignment.Left
-		);
-	}
+    private _statusBarItem: StatusBarItem;
 
-	private _tasks: string[] = [];
-	public beginTask(task: string): void {
-		this._tasks.push(task);
-		this.displayProgressIndicator();
-	}
+    constructor() {
+        this._statusBarItem = window.createStatusBarItem(StatusBarAlignment.Left);
+       }
 
-	public endTask(task: string): void {
-		if (this._tasks.length > 0) {
-			this._tasks.pop();
-		}
+    private _tasks: string[] = [];
+    public beginTask(task: string): void {
+        this._tasks.push(task);
+        this.displayProgressIndicator();
+    }
 
-		this.setMessage();
-	}
+    public endTask(task: string): void {
+        if (this._tasks.length > 0) {
+            this._tasks.pop();
+        }
 
-	private setMessage(): void {
-		if (this._tasks.length === 0) {
-			this._statusBarItem.text = "";
-			this.hideProgressIndicator();
-			return;
-		}
+        this.setMessage();
+    }
 
-		this._statusBarItem.text = this._tasks[this._tasks.length - 1];
-		this._statusBarItem.show();
-	}
+    private setMessage(): void {
+        if (this._tasks.length === 0) {
+            this._statusBarItem.text = '';
+            this.hideProgressIndicator();
+            return;
+        }
 
-	private _interval: any;
-	private displayProgressIndicator(): void {
-		this.setMessage();
-		this.hideProgressIndicator();
-		this._interval = setInterval(
-			() => this.onDisplayProgressIndicator(),
-			100
-		);
-	}
-	private hideProgressIndicator(): void {
-		if (this._interval) {
-			clearInterval(this._interval);
-			this._interval = undefined;
-		}
-		this.ProgressCounter = 0;
-	}
+        this._statusBarItem.text = this._tasks[this._tasks.length - 1];
+        this._statusBarItem.show();
+    }
 
-	private ProgressText = ["|", "/", "-", "\\", "|", "/", "-", "\\"];
-	private ProgressCounter = 0;
-	private onDisplayProgressIndicator(): void {
-		if (this._tasks.length === 0) {
-			return;
-		}
+    private _interval: any;
+    private displayProgressIndicator(): void {
+        this.setMessage();
+        this.hideProgressIndicator();
+        this._interval = setInterval(() => this.onDisplayProgressIndicator(), 100);
+    }
+    private hideProgressIndicator(): void {
+        if (this._interval) {
+            clearInterval(this._interval);
+            this._interval = undefined;
+        }
+        this.ProgressCounter = 0;
+    }
 
-		let txt = this.ProgressText[this.ProgressCounter];
-		this._statusBarItem.text =
-			this._tasks[this._tasks.length - 1] + " " + txt;
-		this.ProgressCounter++;
+    private ProgressText = ['|', '/', '-', '\\', '|', '/', '-', '\\'];
+    private ProgressCounter = 0;
+    private onDisplayProgressIndicator(): void {
+        if (this._tasks.length === 0) {
+            return;
+        }
 
-		if (this.ProgressCounter >= this.ProgressText.length - 1) {
-			this.ProgressCounter = 0;
-		}
-	}
+        let txt = this.ProgressText[this.ProgressCounter];
+        this._statusBarItem.text = this._tasks[this._tasks.length - 1] + ' ' + txt;
+        this.ProgressCounter++;
+
+        if (this.ProgressCounter >= this.ProgressText.length - 1) {
+            this.ProgressCounter = 0;
+        }
+    }
 }

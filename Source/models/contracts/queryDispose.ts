@@ -1,22 +1,18 @@
-import { RequestType } from "vscode-languageclient";
+import { RequestType } from 'vscode-languageclient';
 
 export namespace QueryDisposeRequest {
-	export const type = new RequestType<
-		QueryDisposeParams,
-		QueryDisposeResult,
-		void,
-		void
-	>("query/dispose");
+    export const type = new RequestType<QueryDisposeParams, QueryDisposeResult, void, void>('query/dispose');
 }
 
 /**
  * Parameters to provide when disposing of a query
  */
 export class QueryDisposeParams {
-	ownerUri: string;
+    ownerUri: string;
 }
 
 /**
  * Result received upon successful disposal of a query
  */
-export class QueryDisposeResult {}
+export class QueryDisposeResult {
+}

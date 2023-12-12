@@ -1,79 +1,78 @@
-"use strict";
+'use strict';
 
 // This code is originally from https://github.com/DonJayamanne/bowerVSCode
 // License: https://github.com/DonJayamanne/bowerVSCode/blob/master/LICENSE
 
-import vscode = require("vscode");
-import Prompt from "./prompt";
-import EscapeException from "../utils/EscapeException";
-import { INameValueChoice } from "./question";
+import vscode = require('vscode');
+import Prompt from './prompt';
+import EscapeException from '../utils/EscapeException';
+import { INameValueChoice } from './question';
 
-const figures = require("figures");
+const figures = require('figures');
 
 export default class ExpandPrompt extends Prompt {
-	constructor(question: any, ignoreFocusOut?: boolean) {
-		super(question, ignoreFocusOut);
-	}
 
-	public render(): any {
-		// label indicates this is a quickpick item. Otherwise it's a name-value pair
-		if (this._question.choices[0].label) {
-			return this.renderQuickPick(this._question.choices);
-		} else {
-			return this.renderNameValueChoice(this._question.choices);
-		}
-	}
+    constructor(question: any, ignoreFocusOut?: boolean) {
+        super(question, ignoreFocusOut);
+    }
 
-	private renderQuickPick(choices: vscode.QuickPickItem[]): any {
-		let options = this.defaultQuickPickOptions;
-		options.placeHolder = this._question.message;
+    public render(): any {
+        // label indicates this is a quickpick item. Otherwise it's a name-value pair
+        if (this._question.choices[0].label) {
+            return this.renderQuickPick(this._question.choices);
+        } else {
+            return this.renderNameValueChoice(this._question.choices);
+        }
+    }
 
-		return vscode.window.showQuickPick(choices, options).then((result) => {
-			if (result === undefined) {
-				throw new EscapeException();
-			}
+    private renderQuickPick(choices: vscode.QuickPickItem[]): any {
+        let options = this.defaultQuickPickOptions;
+        options.placeHolder = this._question.message;
 
-			return this.validateAndReturn(result || false);
-		});
-	}
-	private renderNameValueChoice(choices: INameValueChoice[]): any {
-		const choiceMap = this._question.choices.reduce((result, choice) => {
-			result[choice.name] = choice.value;
-			return result;
-		}, {});
+        return vscode.window.showQuickPick(choices, options)
+            .then(result => {
+                if (result === undefined) {
+                    throw new EscapeException();
+                }
 
-		let options = this.defaultQuickPickOptions;
-		options.placeHolder = this._question.message;
+                return this.validateAndReturn(result || false);
+            });
+    }
+    private renderNameValueChoice(choices: INameValueChoice[]): any {
+        const choiceMap = this._question.choices.reduce((result, choice) => {
+            result[choice.name] = choice.value;
+            return result;
+        }, {});
 
-		return vscode.window
-			.showQuickPick(Object.keys(choiceMap), options)
-			.then((result) => {
-				if (result === undefined) {
-					throw new EscapeException();
-				}
+        let options = this.defaultQuickPickOptions;
+        options.placeHolder = this._question.message;
 
-				// Note: cannot be used with 0 or false responses
-				let returnVal = choiceMap[result] || false;
-				return this.validateAndReturn(returnVal);
-			});
-	}
+        return vscode.window.showQuickPick(Object.keys(choiceMap), options)
+            .then(result => {
+                if (result === undefined) {
+                    throw new EscapeException();
+                }
 
-	private validateAndReturn(value: any): any {
-		if (!this.validate(value)) {
-			return this.render();
-		}
-		return value;
-	}
+                // Note: cannot be used with 0 or false responses
+                let returnVal =  choiceMap[result] || false;
+                return this.validateAndReturn(returnVal);
+            });
+    }
 
-	private validate(value: any): boolean {
-		const validationError = this._question.validate
-			? this._question.validate(value || "")
-			: undefined;
+    private validateAndReturn(value: any): any {
+        if (!this.validate(value)) {
+            return this.render();
+        }
+        return value;
+    }
 
-		if (validationError) {
-			this._question.message = `${figures.warning} ${validationError}`;
-			return false;
-		}
-		return true;
-	}
+    private validate(value: any): boolean {
+        const validationError = this._question.validate ? this._question.validate(value || '') : undefined;
+
+        if (validationError) {
+            this._question.message = `${figures.warning} ${validationError}`;
+            return false;
+        }
+        return true;
+    }
 }

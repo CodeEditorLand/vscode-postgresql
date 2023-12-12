@@ -1,3 +1,3 @@
-"use strict";
+'use strict';
 
-export default require("error-ex")("EscapeException");
+export default require('error-ex')('EscapeException');

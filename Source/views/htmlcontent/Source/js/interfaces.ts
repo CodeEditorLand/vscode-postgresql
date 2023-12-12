@@ -10,103 +10,103 @@
  */
 
 export interface IDbColumn {
-	allowDBNull?: boolean;
-	baseCatalogName: string;
-	baseColumnName: string;
-	baseSchemaName: string;
-	baseServerName: string;
-	baseTableName: string;
-	columnName: string;
-	columnOrdinal?: number;
-	columnSize?: number;
-	isAliased?: boolean;
-	isAutoIncrement?: boolean;
-	isExpression?: boolean;
-	isHidden?: boolean;
-	isIdentity?: boolean;
-	isKey?: boolean;
-	isBytes?: boolean;
-	isChars?: boolean;
-	isSqlVariant?: boolean;
-	isUdt?: boolean;
-	dataType: string;
-	isXml?: boolean;
-	isJson?: boolean;
-	isLong?: boolean;
-	isReadOnly?: boolean;
-	isUnique?: boolean;
-	numericPrecision?: number;
-	numericScale?: number;
-	udtAssemblyQualifiedName: string;
-	dataTypeName: string;
+    allowDBNull?: boolean;
+    baseCatalogName: string;
+    baseColumnName: string;
+    baseSchemaName: string;
+    baseServerName: string;
+    baseTableName: string;
+    columnName: string;
+    columnOrdinal?: number;
+    columnSize?: number;
+    isAliased?: boolean;
+    isAutoIncrement?: boolean;
+    isExpression?: boolean;
+    isHidden?: boolean;
+    isIdentity?: boolean;
+    isKey?: boolean;
+    isBytes?: boolean;
+    isChars?: boolean;
+    isSqlVariant?: boolean;
+    isUdt?: boolean;
+    dataType: string;
+    isXml?: boolean;
+    isJson?: boolean;
+    isLong?: boolean;
+    isReadOnly?: boolean;
+    isUnique?: boolean;
+    numericPrecision?: number;
+    numericScale?: number;
+    udtAssemblyQualifiedName: string;
+    dataTypeName: string;
 }
 
 export class DbCellValue {
-	displayValue: string;
-	isNull: boolean;
+    displayValue: string;
+    isNull: boolean;
 }
 
 export class ResultSetSubset {
-	rowCount: number;
-	rows: DbCellValue[][];
+    rowCount: number;
+    rows: DbCellValue[][];
 }
 
 export class ResultSetSummary {
-	id: number;
-	rowCount: number;
-	columnInfo: IDbColumn[];
+    id: number;
+    rowCount: number;
+    columnInfo: IDbColumn[];
 }
 
 export class BatchSummary {
-	id: number;
-	selection: ISelectionData;
-	resultSetSummaries: ResultSetSummary[];
-	executionElapsed: string;
-	executionEnd: string;
-	executionStart: string;
+    id: number;
+    selection: ISelectionData;
+    resultSetSummaries: ResultSetSummary[];
+    executionElapsed: string;
+    executionEnd: string;
+    executionStart: string;
 }
 
 export interface IGridResultSet {
-	columns: IDbColumn[];
-	rowsUri: string;
-	numberOfRows: number;
+    columns: IDbColumn[];
+    rowsUri: string;
+    numberOfRows: number;
 }
 
 export interface ISelectionData {
-	startLine: number;
-	startColumn: number;
-	endLine: number;
-	endColumn: number;
+    startLine: number;
+    startColumn: number;
+    endLine: number;
+    endColumn: number;
 }
 
 export interface IMessageLink {
-	uri: string;
-	text: string;
+    uri: string;
+    text: string;
 }
 
 export interface IMessage {
-	batchId?: number;
-	time: string;
-	message: string;
-	isError: boolean;
-	link?: IMessageLink;
+    batchId?: number;
+    time: string;
+    message: string;
+    isError: boolean;
+    link?: IMessageLink;
 }
 
 export interface IGridIcon {
-	showCondition: () => boolean;
-	icon: () => string;
-	hoverText: () => string;
-	functionality: (batchId: number, resultId: number, index: number) => void;
+    showCondition: () => boolean;
+    icon: () => string;
+    hoverText: () => string;
+    functionality: (batchId: number, resultId: number, index: number) => void;
 }
 
 export interface IResultsConfig {
-	shortcuts: { [key: string]: string };
-	messagesDefaultOpen: boolean;
+    shortcuts: { [key: string]: string };
+    messagesDefaultOpen: boolean;
 }
 
 export class WebSocketEvent {
-	type: string;
-	data: any;
+    type: string;
+    data: any;
 }
 
 /**
@@ -116,46 +116,46 @@ export class WebSocketEvent {
  * @interface IRange
  */
 export interface IRange {
-	selectNodeContents(el): void;
-	/**
-	 * Returns any user-visible text covered under the range, using standard HTML Range API calls
-	 *
-	 * @returns {string}
-	 *
-	 * @memberOf IRange
-	 */
-	toString(): string;
-	/**
-	 * Replaces the current selection with this range. Equivalent to rangy.getSelection().setSingleRange(range).
-	 *
-	 *
-	 * @memberOf IRange
-	 */
-	select(): void;
+    selectNodeContents(el): void;
+    /**
+     * Returns any user-visible text covered under the range, using standard HTML Range API calls
+     *
+     * @returns {string}
+     *
+     * @memberOf IRange
+     */
+    toString(): string;
+    /**
+     * Replaces the current selection with this range. Equivalent to rangy.getSelection().setSingleRange(range).
+     *
+     *
+     * @memberOf IRange
+     */
+    select(): void;
 
-	/**
-	 * Returns the `Document` element containing the range
-	 *
-	 * @returns {Document}
-	 *
-	 * @memberOf IRange
-	 */
-	getDocument(): Document;
+    /**
+     * Returns the `Document` element containing the range
+     *
+     * @returns {Document}
+     *
+     * @memberOf IRange
+     */
+    getDocument(): Document;
 
-	/**
-	 * Detaches the range so it's no longer tracked by Rangy using DOM manipulation
-	 *
-	 *
-	 * @memberOf IRange
-	 */
-	detach(): void;
+    /**
+     * Detaches the range so it's no longer tracked by Rangy using DOM manipulation
+     *
+     *
+     * @memberOf IRange
+     */
+    detach(): void;
 
-	/**
-	 * Gets formatted text under a range. This is an improvement over toString() which contains unnecessary whitespac
-	 *
-	 * @returns {string}
-	 *
-	 * @memberOf IRange
-	 */
-	text(): string;
+    /**
+     * Gets formatted text under a range. This is an improvement over toString() which contains unnecessary whitespac
+     *
+     * @returns {string}
+     *
+     * @memberOf IRange
+     */
+    text(): string;
 }
