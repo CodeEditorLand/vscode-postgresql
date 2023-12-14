@@ -7,7 +7,7 @@
         "escapedName": "@types%2fjasmine",
         "name": "@types/jasmine",
         "rawSpec": "2.5.36",
-        "spec": ">=2.5.36 <3.0.0",
+        "spec": "2.5.36 <3.0.0",
         "type": "range"
       },
       "/Users/anthonydresser/Documents/vscode-pgsql/src/views/htmlcontent"
@@ -33,7 +33,7 @@
     "escapedName": "@types%2fjasmine",
     "name": "@types/jasmine",
     "rawSpec": "2.5.36",
-    "spec": ">=2.5.36 <3.0.0",
+    "spec": "2.5.36 <3.0.0",
     "type": "range"
   },
   "_requiredBy": [
