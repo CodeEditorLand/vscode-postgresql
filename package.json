@@ -20,20 +20,6 @@
     "url": "https://github.com/Microsoft/vscode-postgresql/issues"
   },
   "homepage": "https://github.com/Microsoft/vscode-postgresql/blob/master/README.md",
-  "engines": {
-    "vscode": "1.23.0"
-  },
-  "categories": [
-    "Programming Languages",
-    "Azure"
-  ],
-  "keywords": [
-    "SQL",
-    "PGSQL",
-    "PG",
-    "PosgreSQL",
-    "Postgres"
-  ],
   "activationEvents": [
     "onLanguage:sql",
     "onCommand:extension.pgsql.connect",
@@ -82,7 +68,6 @@
     "pm-mocha-jenkins-reporter": "0.2.6",
     "remap-istanbul": "0.6.4",
     "systemjs-builder": "0.15.32",
-    "tslint": "3.14.0",
     "typemoq": "1.7.0",
     "typescript": "2.3.4",
     "uglify-js": "mishoo/UglifyJS2#harmony-v2.8.22",
