@@ -2,16 +2,24 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import { Directive, Output, EventEmitter, ElementRef, Inject, forwardRef } from '@angular/core';
+import {
+	Directive,
+	Output,
+	EventEmitter,
+	ElementRef,
+	Inject,
+	forwardRef,
+} from "@angular/core";
 // import { Observable } from 'rxjs/Rx';
 
 @Directive({
-  selector: '[mousedown]'
+	selector: "[mousedown]",
 })
 export class MouseDownDirective {
-    @Output('mousedown') onMouseDown: EventEmitter<void> = new EventEmitter<void>();
+	@Output("mousedown") onMouseDown: EventEmitter<void> =
+		new EventEmitter<void>();
 
-    constructor(@Inject(forwardRef(() => ElementRef)) private _el: ElementRef) {
+	constructor(@Inject(forwardRef(() => ElementRef)) private _el: ElementRef) {
         const self = this;
         setTimeout(() => {
             let $gridCanvas = $(this._el.nativeElement).find('.grid-canvas');

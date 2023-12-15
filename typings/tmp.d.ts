@@ -3,7 +3,6 @@
 // Definitions by: Jared Klopper <https://github.com/optical>
 
 declare module "tmp" {
-
 	module tmp {
 		interface Options extends SimpleOptions {
 			mode?: number;
@@ -25,18 +24,49 @@ declare module "tmp" {
 			removeCallback: () => void;
 		}
 
-		function file(callback: (err: any, path: string, fd: number, cleanupCallback: () => void) => void): void;
-		function file(config: Options, callback?: (err: any, path: string, fd: number, cleanupCallback: () => void) => void): void;
+		function file(
+			callback: (
+				err: any,
+				path: string,
+				fd: number,
+				cleanupCallback: () => void,
+			) => void,
+		): void;
+		function file(
+			config: Options,
+			callback?: (
+				err: any,
+				path: string,
+				fd: number,
+				cleanupCallback: () => void,
+			) => void,
+		): void;
 
 		function fileSync(config?: Options): SynchronousResult;
 
-		function dir(callback: (err: any, path: string, cleanupCallback: () => void) => void): void;
-		function dir(config: Options, callback?: (err: any, path: string, cleanupCallback: () => void) => void): void;
+		function dir(
+			callback: (
+				err: any,
+				path: string,
+				cleanupCallback: () => void,
+			) => void,
+		): void;
+		function dir(
+			config: Options,
+			callback?: (
+				err: any,
+				path: string,
+				cleanupCallback: () => void,
+			) => void,
+		): void;
 
 		function dirSync(config?: Options): SynchronousResult;
 
 		function tmpName(callback: (err: any, path: string) => void): void;
-		function tmpName(config: SimpleOptions, callback?: (err: any, path: string) => void): void;
+		function tmpName(
+			config: SimpleOptions,
+			callback?: (err: any, path: string) => void,
+		): void;
 
 		function tmpNameSync(config?: SimpleOptions): string;
 
