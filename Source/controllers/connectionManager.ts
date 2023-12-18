@@ -649,7 +649,6 @@ export default class ConnectionManager {
 	}
 
 	public disconnect(fileUri: string): Promise<boolean> {
-
 		return new Promise<boolean>((resolve, reject) => {
 			if (this.isConnected(fileUri)) {
 				const disconnectParams =
@@ -700,7 +699,6 @@ export default class ConnectionManager {
 		reject: any,
 		fileUri: string,
 	): void {
-
 		// show connection picklist
 		this.connectionUI.showConnections().then((connectionCreds): void => {
 			if (connectionCreds) {
@@ -809,7 +807,6 @@ export default class ConnectionManager {
 		fileUri: string,
 		connectionCreds: Interfaces.IConnectionCredentials,
 	): Promise<boolean> {
-
 		return new Promise<boolean>((resolve, reject) => {
 			const connectionInfo: ConnectionInfo = new ConnectionInfo();
 			connectionInfo.extensionTimer = new Utils.Timer();

@@ -646,7 +646,6 @@ export class ConnectionUI {
 
 	// Prompts the user to pick a profile for removal, then removes from the global saved state
 	public removeProfile(): Promise<boolean> {
-
 		// Flow: Select profile to remove, confirm removal, remove, notify
 		const profiles = this._connectionStore.getProfilePickListItems(false);
 		return this.selectProfileForRemoval(profiles)

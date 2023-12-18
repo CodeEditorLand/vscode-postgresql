@@ -93,7 +93,6 @@ export default class MainController implements vscode.Disposable {
 	 * Initializes the extension
 	 */
 	public activate(): Promise<boolean> {
-
 		const activationTimer = new Utils.Timer();
 
 		// register VS Code commands
@@ -172,7 +171,6 @@ export default class MainController implements vscode.Disposable {
 	 * Initializes the extension
 	 */
 	public initialize(activationTimer: Utils.Timer): Promise<boolean> {
-
 		// initialize language service client
 		return new Promise<boolean>((resolve, reject) => {
 			// Initialize telemetry

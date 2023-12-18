@@ -12,8 +12,8 @@ import Constants = require("../constants/constants");
  */
 export class ServerInitializationResult {
 	public constructor(
-		public installedBeforeInitializing: boolean = false,
-		public isRunning: boolean = false,
+		public installedBeforeInitializing = false,
+		public isRunning = false,
 		public serverPath: string = undefined,
 	) {}
 
