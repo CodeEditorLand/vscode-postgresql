@@ -1,11 +1,9 @@
-"use strict";
-
 // This code is originally from https://github.com/DonJayamanne/bowerVSCode
 // License: https://github.com/DonJayamanne/bowerVSCode/blob/master/LICENSE
 
 import { window } from "vscode";
-import Prompt from "./prompt";
 import EscapeException from "../utils/EscapeException";
+import Prompt from "./prompt";
 
 export default class ListPrompt extends Prompt {
 	constructor(question: any, ignoreFocusOut?: boolean) {
@@ -18,7 +16,7 @@ export default class ListPrompt extends Prompt {
 			return result;
 		}, {});
 
-		let options = this.defaultQuickPickOptions;
+		const options = this.defaultQuickPickOptions;
 		options.placeHolder = this._question.message;
 
 		return window

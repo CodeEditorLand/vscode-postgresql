@@ -13,9 +13,9 @@ export class Logger implements ILogger {
 	private _writer: (message: string) => void;
 	private _prefix: string;
 
-	private _indentLevel: number = 0;
-	private _indentSize: number = 4;
-	private _atLineStart: boolean = false;
+	private _indentLevel = 0;
+	private _indentSize = 4;
+	private _atLineStart = false;
 
 	constructor(writer: (message: string) => void, prefix?: string) {
 		this._writer = writer;

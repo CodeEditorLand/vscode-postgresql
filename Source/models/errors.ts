@@ -9,10 +9,7 @@ export class PlatformNotSupportedError extends Error {
 	public static readonly message = "";
 	public readonly code: ErrorCodes = ErrorCodes.ERR_PLATFORM_NOT_SUPPORTED;
 
-	constructor(
-		message?: string,
-		public platform?: string
-	) {
+	constructor(message?: string, public platform?: string) {
 		super(message || PlatformNotSupportedError.message);
 	}
 }
@@ -25,7 +22,7 @@ export class ArchitectureNotSupportedError extends PlatformNotSupportedError {
 	constructor(
 		message?: string,
 		platform?: string,
-		public architecture?: string
+		public architecture?: string,
 	) {
 		super(message || ArchitectureNotSupportedError.message, platform);
 	}
@@ -39,7 +36,7 @@ export class DistributionNotSupportedError extends PlatformNotSupportedError {
 	constructor(
 		message?: string,
 		platform?: string,
-		public distribution?: string
+		public distribution?: string,
 	) {
 		super(message || DistributionNotSupportedError.message, platform);
 	}

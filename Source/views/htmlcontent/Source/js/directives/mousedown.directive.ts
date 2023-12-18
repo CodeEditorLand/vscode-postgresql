@@ -4,10 +4,10 @@
  * ------------------------------------------------------------------------------------------ */
 import {
 	Directive,
-	Output,
-	EventEmitter,
 	ElementRef,
+	EventEmitter,
 	Inject,
+	Output,
 	forwardRef,
 } from "@angular/core";
 // import { Observable } from 'rxjs/Rx';
@@ -19,14 +19,13 @@ export class MouseDownDirective {
 	@Output("mousedown") onMouseDown: EventEmitter<void> =
 		new EventEmitter<void>();
 
-	constructor(@Inject(forwardRef(() => ElementRef)) private _el: ElementRef) {
-		const self = this;
+	constructor(@Inject(forwardRef(() => ElementRef)) private _el: ElementRef) {;
 		setTimeout(() => {
-			let $gridCanvas = $(this._el.nativeElement).find(".grid-canvas");
+			const $gridCanvas = $(this._el.nativeElement).find(".grid-canvas");
 			$gridCanvas.on("mousedown", () => {
-				self.onMouseDown.emit();
+				this.onMouseDown.emit();
 			});
-			let mouseDownFuncs: any[] = $._data($gridCanvas[0], "events")[
+			const mouseDownFuncs: any[] = $._data($gridCanvas[0], "events")[
 				"mousedown"
 			];
 			// reverse the event array so that our event fires first.

@@ -1,17 +1,17 @@
+import { NotificationHandler } from "vscode-languageclient";
+import SqlToolsServiceClient from "../languageservice/serviceclient";
+import {
+	QueryExecuteBatchCompleteNotification,
+	QueryExecuteBatchStartNotification,
+	QueryExecuteCompleteNotification,
+	QueryExecuteMessageNotification,
+	QueryExecuteResultSetCompleteNotification,
+} from "../models/contracts/queryExecute";
 /*
  *  Class for handler and distributing notification coming from the
  *  service layer
  */
 import QueryRunner from "./queryRunner";
-import SqlToolsServiceClient from "../languageservice/serviceclient";
-import {
-	QueryExecuteCompleteNotification,
-	QueryExecuteBatchStartNotification,
-	QueryExecuteBatchCompleteNotification,
-	QueryExecuteResultSetCompleteNotification,
-	QueryExecuteMessageNotification,
-} from "../models/contracts/queryExecute";
-import { NotificationHandler } from "vscode-languageclient";
 
 export class QueryNotificationHandler {
 	private static _instance: QueryNotificationHandler;
@@ -36,23 +36,23 @@ export class QueryNotificationHandler {
 	private initialize(): void {
 		SqlToolsServiceClient.instance.onNotification(
 			QueryExecuteCompleteNotification.type,
-			this.handleQueryCompleteNotification()
+			this.handleQueryCompleteNotification(),
 		);
 		SqlToolsServiceClient.instance.onNotification(
 			QueryExecuteBatchStartNotification.type,
-			this.handleBatchStartNotification()
+			this.handleBatchStartNotification(),
 		);
 		SqlToolsServiceClient.instance.onNotification(
 			QueryExecuteBatchCompleteNotification.type,
-			this.handleBatchCompleteNotification()
+			this.handleBatchCompleteNotification(),
 		);
 		SqlToolsServiceClient.instance.onNotification(
 			QueryExecuteResultSetCompleteNotification.type,
-			this.handleResultSetCompleteNotification()
+			this.handleResultSetCompleteNotification(),
 		);
 		SqlToolsServiceClient.instance.onNotification(
 			QueryExecuteMessageNotification.type,
-			this.handleMessageNotification()
+			this.handleMessageNotification(),
 		);
 	}
 
@@ -65,7 +65,7 @@ export class QueryNotificationHandler {
 		// _handlerCallbackQueue will be non-empty. Run all handlers in the queue first
 		// so that notifications are handled in order they arrived
 		while (this._handlerCallbackQueue.length > 0) {
-			let handler: NotificationHandler<any> =
+			const handler: NotificationHandler<any> =
 				this._handlerCallbackQueue.shift();
 			handler(runner);
 		}
@@ -82,7 +82,7 @@ export class QueryNotificationHandler {
 	// public for testing only
 	private enqueueOrRun(
 		handlerCallback: (runnerParam: QueryRunner) => void,
-		runner: QueryRunner
+		runner: QueryRunner,
 	): void {
 		if (runner === undefined) {
 			this._handlerCallbackQueue.push(handlerCallback);
@@ -94,22 +94,21 @@ export class QueryNotificationHandler {
 	// Distributes result completion notification to appropriate methods
 	// public for testing only
 	public handleQueryCompleteNotification(): NotificationHandler<any> {
-		const self = this;
 		return (event) => {
-			let handlerCallback = (runner: QueryRunner) => {
+			const handlerCallback = (runner: QueryRunner) => {
 				runner.handleQueryComplete(event);
 
 				// There should be no more notifications for this query, so unbind the QueryRunner if it
 				// is present in the map. If it is not present, handleQueryCompleteNotification must have been
 				// called before registerRunner
-				if (self._queryRunners.get(event.ownerUri) !== undefined) {
-					self._queryRunners.delete(event.ownerUri);
+				if (this._queryRunners.get(event.ownerUri) !== undefined) {
+					this._queryRunners.delete(event.ownerUri);
 				}
 			};
 
-			self.enqueueOrRun(
+			this.enqueueOrRun(
 				handlerCallback,
-				self._queryRunners.get(event.ownerUri)
+				this._queryRunners.get(event.ownerUri),
 			);
 		};
 	}
@@ -117,14 +116,13 @@ export class QueryNotificationHandler {
 	// Distributes batch start notification to appropriate methods
 	// public for testing only
 	public handleBatchStartNotification(): NotificationHandler<any> {
-		const self = this;
 		return (event) => {
-			let handlerCallback = (runner: QueryRunner) => {
+			const handlerCallback = (runner: QueryRunner) => {
 				runner.handleBatchStart(event);
 			};
-			self.enqueueOrRun(
+			this.enqueueOrRun(
 				handlerCallback,
-				self._queryRunners.get(event.ownerUri)
+				this._queryRunners.get(event.ownerUri),
 			);
 		};
 	}
@@ -132,14 +130,13 @@ export class QueryNotificationHandler {
 	// Distributes batch completion notification to appropriate methods
 	// public for testing only
 	public handleBatchCompleteNotification(): NotificationHandler<any> {
-		const self = this;
 		return (event) => {
-			let handlerCallback = (runner: QueryRunner) => {
+			const handlerCallback = (runner: QueryRunner) => {
 				runner.handleBatchComplete(event);
 			};
-			self.enqueueOrRun(
+			this.enqueueOrRun(
 				handlerCallback,
-				self._queryRunners.get(event.ownerUri)
+				this._queryRunners.get(event.ownerUri),
 			);
 		};
 	}
@@ -147,14 +144,13 @@ export class QueryNotificationHandler {
 	// Distributes result set completion notification to appropriate methods
 	// public for testing only
 	public handleResultSetCompleteNotification(): NotificationHandler<any> {
-		const self = this;
 		return (event) => {
-			let handlerCallback = (runner: QueryRunner) => {
+			const handlerCallback = (runner: QueryRunner) => {
 				runner.handleResultSetComplete(event);
 			};
-			self.enqueueOrRun(
+			this.enqueueOrRun(
 				handlerCallback,
-				self._queryRunners.get(event.ownerUri)
+				this._queryRunners.get(event.ownerUri),
 			);
 		};
 	}
@@ -162,14 +158,13 @@ export class QueryNotificationHandler {
 	// Distributes message notifications
 	// public for testing only
 	public handleMessageNotification(): NotificationHandler<any> {
-		const self = this;
 		return (event) => {
-			let handlerCallback = (runner: QueryRunner) => {
+			const handlerCallback = (runner: QueryRunner) => {
 				runner.handleMessage(event);
 			};
-			self.enqueueOrRun(
+			this.enqueueOrRun(
 				handlerCallback,
-				self._queryRunners.get(event.ownerUri)
+				this._queryRunners.get(event.ownerUri),
 			);
 		};
 	}

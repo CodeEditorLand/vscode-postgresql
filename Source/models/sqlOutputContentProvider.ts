@@ -1,4 +1,3 @@
-"use strict";
 import vscode = require("vscode");
 import path = require("path");
 import Constants = require("../constants/constants");
@@ -48,7 +47,7 @@ export class SqlOutputContentProvider {
 	// CONSTRUCTOR /////////////////////////////////////////////////////////
 	constructor(
 		context: vscode.ExtensionContext,
-		private _statusView: StatusView
+		private _statusView: StatusView,
 	) {
 		this._vscodeWrapper = new VscodeWrapper();
 
@@ -57,52 +56,52 @@ export class SqlOutputContentProvider {
 
 		// add http handler for '/root'
 		this._service.addHandler(Interfaces.ContentType.Root, (req, res) =>
-			this.rootRequestHandler(req, res)
+			this.rootRequestHandler(req, res),
 		);
 		// add http handler for '/rows' - return rows end-point for a specific resultset
 		this._service.addHandler(Interfaces.ContentType.Rows, (req, res) =>
-			this.rowRequestHandler(req, res)
+			this.rowRequestHandler(req, res),
 		);
 		// add http handler for '/config'
 		this._service.addHandler(Interfaces.ContentType.Config, (req, res) =>
-			this.configRequestHandler(req, res)
+			this.configRequestHandler(req, res),
 		);
 		// add http handler for '/saveResults' - return success message as JSON
 		this._service.addPostHandler(
 			Interfaces.ContentType.SaveResults,
-			(req, res) => this.saveResultsRequestHandler(req, res)
+			(req, res) => this.saveResultsRequestHandler(req, res),
 		);
 		// add http handler for '/openLink' - open content in a new vscode editor pane
 		this._service.addPostHandler(
 			Interfaces.ContentType.OpenLink,
-			(req, res) => this.openLinkRequestHandler(req, res)
+			(req, res) => this.openLinkRequestHandler(req, res),
 		);
 		// add http post handler for copying results
 		this._service.addPostHandler(Interfaces.ContentType.Copy, (req, res) =>
-			this.copyRequestHandler(req, res)
+			this.copyRequestHandler(req, res),
 		);
 		// add http get handler for setting the selection in the editor
 		this._service.addHandler(
 			Interfaces.ContentType.EditorSelection,
-			(req, res) => this.editorSelectionRequestHandler(req, res)
+			(req, res) => this.editorSelectionRequestHandler(req, res),
 		);
 		// add http post handler for showing errors to user
 		this._service.addPostHandler(
 			Interfaces.ContentType.ShowError,
-			(req, res) => this.showErrorRequestHandler(req, res)
+			(req, res) => this.showErrorRequestHandler(req, res),
 		);
 		// add http post handler for showing warning to user
 		this._service.addPostHandler(
 			Interfaces.ContentType.ShowWarning,
-			(req, res) => this.showWarningRequestHandler(req, res)
+			(req, res) => this.showWarningRequestHandler(req, res),
 		);
 		// add http get handler for getting all localized texts
 		this._service.addHandler(
 			Interfaces.ContentType.LocalizedTexts,
 			(req, res) => {
-				let localizedText = LocalizedConstants;
+				const localizedText = LocalizedConstants;
 				res.send(localizedText);
-			}
+			},
 		);
 
 		// start express server on localhost and listen on a random port
@@ -115,21 +114,21 @@ export class SqlOutputContentProvider {
 	}
 
 	public rootRequestHandler(req, res): void {
-		let uri: string = req.query.uri;
+		const uri: string = req.query.uri;
 		if (this._queryResultsMap.has(uri)) {
 			clearTimeout(this._queryResultsMap.get(uri).timeout);
 		}
-		let theme: string = req.query.theme;
-		let backgroundcolor: string = req.query.backgroundcolor;
-		let color: string = req.query.color;
+		const theme: string = req.query.theme;
+		const backgroundcolor: string = req.query.backgroundcolor;
+		const color: string = req.query.color;
 		let prod;
 		try {
 			fs.accessSync(
 				path.join(
 					LocalWebService.staticContentPath,
-					Constants.contentProviderMinFile
+					Constants.contentProviderMinFile,
 				),
-				fs.F_OK
+				fs.F_OK,
 			);
 			prod = true;
 		} catch (e) {
@@ -139,24 +138,24 @@ export class SqlOutputContentProvider {
 		if (this._queryResultsMap.has(uri)) {
 			queryUri = this._queryResultsMap.get(uri).queryRunner.uri;
 		}
-		let pgsqlConfig = this._vscodeWrapper.getConfiguration(
+		const pgsqlConfig = this._vscodeWrapper.getConfiguration(
 			Constants.extensionName,
-			queryUri
+			queryUri,
 		);
-		let editorConfig = this._vscodeWrapper.getConfiguration(
+		const editorConfig = this._vscodeWrapper.getConfiguration(
 			"editor",
-			queryUri
+			queryUri,
 		);
-		let extensionFontFamily = pgsqlConfig
+		const extensionFontFamily = pgsqlConfig
 			.get<string>(Constants.extConfigResultFontFamily)
 			.split("'")
 			.join("")
 			.split('"')
 			.join("");
-		let extensionFontSize = pgsqlConfig.get<number>(
-			Constants.extConfigResultFontSize
+		const extensionFontSize = pgsqlConfig.get<number>(
+			Constants.extConfigResultFontSize,
 		);
-		let fontfamily = extensionFontFamily
+		const fontfamily = extensionFontFamily
 			? extensionFontFamily
 			: editorConfig
 					.get<string>("fontFamily")
@@ -164,14 +163,14 @@ export class SqlOutputContentProvider {
 					.join("")
 					.split('"')
 					.join("");
-		let fontsize = extensionFontSize
+		const fontsize = extensionFontSize
 			? extensionFontSize + "px"
 			: editorConfig.get<number>("fontSize") + "px";
-		let fontweight = editorConfig.get<string>("fontWeight");
+		const fontweight = editorConfig.get<string>("fontWeight");
 		res.render(
 			path.join(
 				LocalWebService.staticContentPath,
-				Constants.msgContentProviderSqlOutputHtml
+				Constants.msgContentProviderSqlOutputHtml,
 			),
 			{
 				uri: uri,
@@ -182,80 +181,81 @@ export class SqlOutputContentProvider {
 				fontsize: fontsize,
 				fontweight: fontweight,
 				prod: prod,
-			}
+			},
 		);
 	}
 
 	public rowRequestHandler(req, res): void {
-		let resultId = parseInt(req.query.resultId, 10);
-		let batchId = parseInt(req.query.batchId, 10);
-		let rowStart = parseInt(req.query.rowStart, 10);
-		let numberOfRows = parseInt(req.query.numberOfRows, 10);
-		let uri: string = req.query.uri;
+		const resultId = parseInt(req.query.resultId, 10);
+		const batchId = parseInt(req.query.batchId, 10);
+		const rowStart = parseInt(req.query.rowStart, 10);
+		const numberOfRows = parseInt(req.query.numberOfRows, 10);
+		const uri: string = req.query.uri;
 		this._queryResultsMap
 			.get(uri)
 			.queryRunner.getRows(rowStart, numberOfRows, batchId, resultId)
 			.then((results) => {
-				let json = JSON.stringify(results.resultSubset);
+				const json = JSON.stringify(results.resultSubset);
 				res.send(json);
 			});
 	}
 
 	public configRequestHandler(req, res): void {
-		let queryUri = this._queryResultsMap.get(req.query.uri).queryRunner.uri;
-		let extConfig = this._vscodeWrapper.getConfiguration(
+		const queryUri = this._queryResultsMap.get(req.query.uri).queryRunner
+			.uri;
+		const extConfig = this._vscodeWrapper.getConfiguration(
 			Constants.extensionConfigSectionName,
-			queryUri
+			queryUri,
 		);
-		let config = new ResultsConfig();
-		for (let key of Constants.extConfigResultKeys) {
+		const config = new ResultsConfig();
+		for (const key of Constants.extConfigResultKeys) {
 			config[key] = extConfig[key];
 		}
-		let json = JSON.stringify(config);
+		const json = JSON.stringify(config);
 		res.send(json);
 	}
 
 	public saveResultsRequestHandler(req, res): void {
-		let uri: string = req.query.uri;
-		let queryUri = this._queryResultsMap.get(uri).queryRunner.uri;
-		let selectedResultSetNo: number = Number(req.query.resultSetNo);
-		let batchIndex: number = Number(req.query.batchIndex);
-		let format: string = req.query.format;
-		let selection: Interfaces.ISlickRange[] = req.body;
-		let saveResults = new ResultsSerializer();
+		const uri: string = req.query.uri;
+		const queryUri = this._queryResultsMap.get(uri).queryRunner.uri;
+		const selectedResultSetNo: number = Number(req.query.resultSetNo);
+		const batchIndex: number = Number(req.query.batchIndex);
+		const format: string = req.query.format;
+		const selection: Interfaces.ISlickRange[] = req.body;
+		const saveResults = new ResultsSerializer();
 		saveResults.onSaveResults(
 			queryUri,
 			batchIndex,
 			selectedResultSetNo,
 			format,
-			selection
+			selection,
 		);
 		res.status = 200;
 		res.send();
 	}
 
 	public openLinkRequestHandler(req, res): void {
-		let content: string = req.body.content;
-		let columnName: string = req.body.columnName;
-		let linkType: string = req.body.type;
+		const content: string = req.body.content;
+		const columnName: string = req.body.columnName;
+		const linkType: string = req.body.type;
 		this.openLink(content, columnName, linkType);
 		res.status = 200;
 		res.send();
 	}
 
 	public copyRequestHandler(req, res): void {
-		let uri = req.query.uri;
-		let resultId = req.query.resultId;
-		let batchId = req.query.batchId;
-		let includeHeaders = req.query.includeHeaders;
-		let selection: Interfaces.ISlickRange[] = req.body;
+		const uri = req.query.uri;
+		const resultId = req.query.resultId;
+		const batchId = req.query.batchId;
+		const includeHeaders = req.query.includeHeaders;
+		const selection: Interfaces.ISlickRange[] = req.body;
 		this._queryResultsMap
 			.get(uri)
 			.queryRunner.copyResults(
 				selection,
 				batchId,
 				resultId,
-				includeHeaders
+				includeHeaders,
 			)
 			.then(() => {
 				res.status = 200;
@@ -264,8 +264,8 @@ export class SqlOutputContentProvider {
 	}
 
 	public editorSelectionRequestHandler(req, res): void {
-		let uri = req.query.uri;
-		let selection: ISelectionData = {
+		const uri = req.query.uri;
+		const selection: ISelectionData = {
 			startLine: parseInt(req.query.startLine, 10),
 			startColumn: parseInt(req.query.startColumn, 10),
 			endLine: parseInt(req.query.endLine, 10),
@@ -281,7 +281,7 @@ export class SqlOutputContentProvider {
 	}
 
 	public showErrorRequestHandler(req, res): void {
-		let message: string = req.body.message;
+		const message: string = req.body.message;
 		this._vscodeWrapper.showErrorMessage(message);
 		// not attached to show function callback, since callback returns only after user closes message
 		res.status = 200;
@@ -289,7 +289,7 @@ export class SqlOutputContentProvider {
 	}
 
 	public showWarningRequestHandler(req, res): void {
-		let message: string = req.body.message;
+		const message: string = req.body.message;
 		this._vscodeWrapper.showWarningMessage(message);
 		// not attached to show function callback, since callback returns only after user closes message
 		res.status = 200;
@@ -309,16 +309,16 @@ export class SqlOutputContentProvider {
 	// PUBLIC METHODS //////////////////////////////////////////////////////
 
 	public isRunningQuery(uri: string): boolean {
-		return !this._queryResultsMap.has(uri)
-			? false
-			: this._queryResultsMap.get(uri).queryRunner.isExecutingQuery;
+		return this._queryResultsMap.has(uri)
+			? this._queryResultsMap.get(uri).queryRunner.isExecutingQuery
+			: false;
 	}
 
 	public runQuery(
 		statusView: any,
 		uri: string,
 		selection: ISelectionData,
-		title: string
+		title: string,
 	): void {
 		// execute the query with a query runner
 		this.runQueryCallback(
@@ -330,7 +330,7 @@ export class SqlOutputContentProvider {
 				if (queryRunner) {
 					queryRunner.runQuery(selection);
 				}
-			}
+			},
 		);
 	}
 
@@ -338,7 +338,7 @@ export class SqlOutputContentProvider {
 		statusView: any,
 		uri: string,
 		selection: ISelectionData,
-		title: string
+		title: string,
 	): void {
 		// execute the statement with a query runner
 		this.runQueryCallback(
@@ -350,10 +350,10 @@ export class SqlOutputContentProvider {
 				if (queryRunner) {
 					queryRunner.runStatement(
 						selection.startLine,
-						selection.startColumn
+						selection.startColumn,
 					);
 				}
-			}
+			},
 		);
 	}
 
@@ -362,22 +362,22 @@ export class SqlOutputContentProvider {
 		uri: string,
 		selection: ISelectionData,
 		title: string,
-		queryCallback: any
+		queryCallback: any,
 	): void {
-		let resultsUri = this.getResultsUri(uri);
-		let queryRunner = this.createQueryRunner(
+		const resultsUri = this.getResultsUri(uri);
+		const queryRunner = this.createQueryRunner(
 			statusView,
 			uri,
 			resultsUri,
 			selection,
-			title
+			title,
 		);
 		if (queryRunner) {
 			queryCallback(queryRunner);
 
-			let paneTitle = Utils.formatString(
+			const paneTitle = Utils.formatString(
 				LocalizedConstants.titleResultsPane,
-				queryRunner.title
+				queryRunner.title,
 			);
 			// Always run this command even if just updating to avoid a bug - tfs 8686842
 			this.displayResultPane(resultsUri, paneTitle, uri);
@@ -389,19 +389,19 @@ export class SqlOutputContentProvider {
 		uri: string,
 		resultsUri: string,
 		selection: ISelectionData,
-		title: string
+		title: string,
 	): QueryRunner {
 		// Reuse existing query runner if it exists
 		let queryRunner: QueryRunner;
 
 		if (this._queryResultsMap.has(resultsUri)) {
-			let existingRunner: QueryRunner =
+			const existingRunner: QueryRunner =
 				this._queryResultsMap.get(resultsUri).queryRunner;
 
 			// If the query is already in progress, don't attempt to send it
 			if (existingRunner.isExecutingQuery) {
 				this._vscodeWrapper.showInformationMessage(
-					LocalizedConstants.msgRunQueryInProgress
+					LocalizedConstants.msgRunQueryInProgress,
 				);
 				return;
 			}
@@ -421,10 +421,10 @@ export class SqlOutputContentProvider {
 			});
 			queryRunner.eventEmitter.on("batchStart", (batch) => {
 				// Build a link for the selection and send it in a message
-				let encodedUri = encodeURIComponent(resultsUri);
+				const encodedUri = encodeURIComponent(resultsUri);
 				let link =
 					LocalWebService.getEndpointUri(
-						Interfaces.ContentType.EditorSelection
+						Interfaces.ContentType.EditorSelection,
 					) + `?uri=${encodedUri}`;
 				if (batch.selection) {
 					link +=
@@ -434,7 +434,7 @@ export class SqlOutputContentProvider {
 						`&endColumn=${batch.selection.endColumn}`;
 				}
 
-				let message = {
+				const message = {
 					message: LocalizedConstants.runQueryBatchStartMessage,
 					batchId: undefined,
 					isError: false,
@@ -442,7 +442,7 @@ export class SqlOutputContentProvider {
 					link: {
 						text: Utils.formatString(
 							LocalizedConstants.runQueryBatchStartLine,
-							batch.selection.startLine + 1
+							batch.selection.startLine + 1,
 						),
 						uri: link,
 					},
@@ -456,7 +456,7 @@ export class SqlOutputContentProvider {
 				this._service.broadcast(
 					resultsUri,
 					"complete",
-					totalMilliseconds
+					totalMilliseconds,
 				);
 			});
 			queryRunner.eventEmitter.on("start", () => {
@@ -464,7 +464,7 @@ export class SqlOutputContentProvider {
 			});
 			this._queryResultsMap.set(
 				resultsUri,
-				new QueryRunnerState(queryRunner)
+				new QueryRunnerState(queryRunner),
 			);
 		}
 
@@ -475,19 +475,19 @@ export class SqlOutputContentProvider {
 	public displayResultPane(
 		resultsUri: string,
 		paneTitle: string,
-		queryUri: string
+		queryUri: string,
 	): void {
 		// Get the active text editor
-		let activeTextEditor = this._vscodeWrapper.activeTextEditor;
+		const activeTextEditor = this._vscodeWrapper.activeTextEditor;
 
 		// Wrapper tells us where the new results pane should be placed
-		let resultPaneColumn = this.newResultPaneViewColumn(queryUri);
+		const resultPaneColumn = this.newResultPaneViewColumn(queryUri);
 
-		let config = this._vscodeWrapper.getConfiguration(
+		const config = this._vscodeWrapper.getConfiguration(
 			Constants.extensionConfigSectionName,
-			queryUri
+			queryUri,
 		);
-		let retainContextWhenHidden =
+		const retainContextWhenHidden =
 			config[Constants.configPersistQueryResultTabs];
 
 		// Check if the results window already exists
@@ -500,7 +500,7 @@ export class SqlOutputContentProvider {
 				{
 					retainContextWhenHidden: retainContextWhenHidden,
 					enableScripts: true,
-				}
+				},
 			);
 			this._resultsPanes.set(resultsUri, panel);
 		}
@@ -513,13 +513,12 @@ export class SqlOutputContentProvider {
 		if (resultPaneColumn !== activeTextEditor.viewColumn) {
 			this._vscodeWrapper.showTextDocument(
 				activeTextEditor.document,
-				activeTextEditor.viewColumn
+				activeTextEditor.viewColumn,
 			);
 		}
 	}
 
 	public cancelQuery(input: QueryRunner | string): void {
-		let self = this;
 		let queryRunner: QueryRunner;
 
 		if (typeof input === "string") {
@@ -528,7 +527,7 @@ export class SqlOutputContentProvider {
 				queryRunner = this._queryResultsMap.get(input).queryRunner;
 			} else {
 				// Option 2: The string is a file URI (the SQL file tab has focus)
-				let resultsUri = this.getResultsUri(input).toString();
+				const resultsUri = this.getResultsUri(input).toString();
 				if (this._queryResultsMap.has(resultsUri)) {
 					queryRunner =
 						this._queryResultsMap.get(resultsUri).queryRunner;
@@ -539,8 +538,8 @@ export class SqlOutputContentProvider {
 		}
 
 		if (queryRunner === undefined || !queryRunner.isExecutingQuery) {
-			self._vscodeWrapper.showInformationMessage(
-				LocalizedConstants.msgCancelQueryNotRunning
+			this._vscodeWrapper.showInformationMessage(
+				LocalizedConstants.msgCancelQueryNotRunning,
 			);
 			return;
 		}
@@ -553,13 +552,13 @@ export class SqlOutputContentProvider {
 			(success) => undefined,
 			(error) => {
 				// On error, show error message
-				self._vscodeWrapper.showErrorMessage(
+				this._vscodeWrapper.showErrorMessage(
 					Utils.formatString(
 						LocalizedConstants.msgCancelQueryFailed,
-						error.message
-					)
+						error.message,
+					),
 				);
-			}
+			},
 		);
 	}
 
@@ -572,8 +571,8 @@ export class SqlOutputContentProvider {
 	 */
 	public onUntitledFileSaved(untitledUri: string, savedUri: string): void {
 		// If we don't have any query runners mapped to this uri, don't do anything
-		let untitledResultsUri = decodeURIComponent(
-			this.getResultsUri(untitledUri)
+		const untitledResultsUri = decodeURIComponent(
+			this.getResultsUri(untitledUri),
 		);
 		if (!this._queryResultsMap.has(untitledResultsUri)) {
 			return;
@@ -583,10 +582,10 @@ export class SqlOutputContentProvider {
 		// the old uri. As long as we make requests to the service against that uri, we'll be good.
 
 		// Remap the query runner in the map
-		let savedResultUri = decodeURIComponent(this.getResultsUri(savedUri));
+		const savedResultUri = decodeURIComponent(this.getResultsUri(savedUri));
 		this._queryResultsMap.set(
 			savedResultUri,
-			this._queryResultsMap.get(untitledResultsUri)
+			this._queryResultsMap.get(untitledResultsUri),
 		);
 		this._queryResultsMap.delete(untitledResultsUri);
 	}
@@ -598,7 +597,7 @@ export class SqlOutputContentProvider {
 	 * @param doc   The document that was closed
 	 */
 	public onDidCloseTextDocument(doc: vscode.TextDocument): void {
-		for (let [key, value] of this._queryResultsMap.entries()) {
+		for (const [key, value] of this._queryResultsMap.entries()) {
 			// closed text document related to a results window we are holding
 			if (doc.uri.toString() === value.queryRunner.uri) {
 				value.flaggedForDeletion = true;
@@ -612,11 +611,10 @@ export class SqlOutputContentProvider {
 	}
 
 	private setRunnerDeletionTimeout(uri: string): NodeJS.Timer {
-		const self = this;
 		return setTimeout(() => {
-			let queryRunnerState = self._queryResultsMap.get(uri);
+			const queryRunnerState = this._queryResultsMap.get(uri);
 			if (queryRunnerState.flaggedForDeletion) {
-				self._queryResultsMap.delete(uri);
+				this._queryResultsMap.delete(uri);
 
 				if (queryRunnerState.queryRunner.isExecutingQuery) {
 					// We need to cancel it, which will dispose it
@@ -634,17 +632,17 @@ export class SqlOutputContentProvider {
 	// Called exactly once to load html content in the webview
 	public provideTextDocumentContent(uri: string): string {
 		// URI needs to be encoded as a component for proper inclusion in a url
-		let encodedUri = encodeURIComponent(uri);
+		const encodedUri = encodeURIComponent(uri);
 		console.log(
 			`${LocalWebService.getEndpointUri(
-				Interfaces.ContentType.Root
-			)}?uri=${encodedUri}`
+				Interfaces.ContentType.Root,
+			)}?uri=${encodedUri}`,
 		);
 
 		// Fix for issue #669 "Results Panel not Refreshing Automatically" - always include a unique time
 		// so that the content returned is different. Otherwise VSCode will not refresh the document since it
 		// thinks that there is nothing to be updated.
-		let timeNow = new Date().getTime();
+		const timeNow = new Date().getTime();
 		return `
         <html>
         <head>
@@ -657,7 +655,7 @@ export class SqlOutputContentProvider {
                     var color = styles.getPropertyValue('--color');
                     var theme = document.body.className;
                     var url = "${LocalWebService.getEndpointUri(
-						Interfaces.ContentType.Root
+						Interfaces.ContentType.Root,
 					)}?" +
                             "uri=${encodedUri}" +
                             "&theme=" + theme +
@@ -679,9 +677,8 @@ export class SqlOutputContentProvider {
 	public openLink(
 		content: string,
 		columnName: string,
-		linkType: string
+		linkType: string,
 	): void {
-		const self = this;
 		if (linkType === "xml") {
 			try {
 				content = pd.xml(content);
@@ -711,20 +708,20 @@ export class SqlOutputContentProvider {
 							})
 							.then((result) => {
 								if (!result) {
-									self._vscodeWrapper.showErrorMessage(
-										LocalizedConstants.msgCannotOpenContent
+									this._vscodeWrapper.showErrorMessage(
+										LocalizedConstants.msgCannotOpenContent,
 									);
 								}
 							});
 					},
 					(error: any) => {
-						self._vscodeWrapper.showErrorMessage(error);
-					}
+						this._vscodeWrapper.showErrorMessage(error);
+					},
 				);
 			},
 			(error: any) => {
-				self._vscodeWrapper.showErrorMessage(error);
-			}
+				this._vscodeWrapper.showErrorMessage(error);
+			},
 		);
 	}
 
@@ -732,7 +729,7 @@ export class SqlOutputContentProvider {
 	 * Return the query for a file uri
 	 */
 	public getQueryRunner(uri: string): QueryRunner {
-		let resultsUri = this.getResultsUri(uri).toString();
+		const resultsUri = this.getResultsUri(uri).toString();
 		if (this._queryResultsMap.has(resultsUri)) {
 			return this._queryResultsMap.get(resultsUri).queryRunner;
 		} else {
@@ -751,7 +748,7 @@ export class SqlOutputContentProvider {
 	private getResultsUri(srcUri: string): string {
 		// NOTE: The results uri will be encoded when we parse it to a uri
 		return vscode.Uri.parse(
-			SqlOutputContentProvider.providerUri + srcUri
+			SqlOutputContentProvider.providerUri + srcUri,
 		).toString();
 	}
 
@@ -761,7 +758,7 @@ export class SqlOutputContentProvider {
 	 */
 	private isResultsUri(srcUri: string): boolean {
 		return srcUri.startsWith(
-			SqlOutputContentProvider.providerUri.toString()
+			SqlOutputContentProvider.providerUri.toString(),
 		);
 	}
 
@@ -772,11 +769,11 @@ export class SqlOutputContentProvider {
 	 */
 	public newResultPaneViewColumn(queryUri: string): vscode.ViewColumn {
 		// Find configuration options
-		let config = this._vscodeWrapper.getConfiguration(
+		const config = this._vscodeWrapper.getConfiguration(
 			Constants.extensionConfigSectionName,
-			queryUri
+			queryUri,
 		);
-		let splitPaneSelection = config[Constants.configSplitPaneSelection];
+		const splitPaneSelection = config[Constants.configSplitPaneSelection];
 		let viewColumn: vscode.ViewColumn;
 
 		switch (splitPaneSelection) {
@@ -802,9 +799,10 @@ export class SqlOutputContentProvider {
 	}
 
 	// Exposing some variables for testing purposes only
-	set setDisplayResultPane(
-		implementation: (var1: string, var2: string) => void
-	) {
+	set setDisplayResultPane(implementation: (
+		var1: string,
+		var2: string,
+	) => void) {
 		this.displayResultPane = implementation;
 	}
 

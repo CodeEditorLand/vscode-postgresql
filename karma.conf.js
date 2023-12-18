@@ -8,7 +8,7 @@ if (fs.existsSync("./out/coverconfig.json")) {
 	coverconfig = false;
 }
 
-module.exports = function (config) {
+module.exports = (config) => {
 	var appBase = "out/src/views/htmlcontent/dist/"; // transpiled app JS and map files
 	var appSrcBase = "src/views/htmlcontent/src/js/"; // app source TS files
 	var appAssets = "base/out/src/views/htmlcontent/"; // component assets fetched by Angular's compiler

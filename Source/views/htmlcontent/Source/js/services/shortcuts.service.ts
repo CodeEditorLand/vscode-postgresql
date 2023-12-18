@@ -2,7 +2,7 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import { Injectable, Inject, forwardRef } from "@angular/core";
+import { Inject, Injectable, forwardRef } from "@angular/core";
 
 import { DataService } from "./data.service";
 
@@ -32,13 +32,12 @@ export class ShortcutService {
 	 * @param eventString The exact event string of the keycode you require (e.g event.toggleMessagePane)
 	 */
 	stringCodeFor(eventString: string): Promise<string> {
-		const self = this;
 		if (this.shortcuts) {
 			return Promise.resolve(this.stringCodeForInternal(eventString));
 		} else {
 			return new Promise<string>((resolve, reject) => {
-				self.waitPromise.then(() => {
-					resolve(self.stringCodeForInternal(eventString));
+				this.waitPromise.then(() => {
+					resolve(this.stringCodeForInternal(eventString));
 				});
 			});
 		}
@@ -47,34 +46,34 @@ export class ShortcutService {
 	private stringCodeForInternal(eventString: string): string {
 		let keyString = this.shortcuts[eventString];
 		if (keyString) {
-			let platString = this.window.navigator.platform;
+			const platString = this.window.navigator.platform;
 
 			// find the current platform
 			if (platString.match(/win/i)) {
 				// iterate through the display replacement that are defined
-				for (let key in displayCodes["windows"]) {
+				for (const key in displayCodes["windows"]) {
 					if (displayCodes["windows"].hasOwnProperty(key)) {
 						keyString = keyString.replace(
 							key,
-							displayCodes["windows"][key]
+							displayCodes["windows"][key],
 						);
 					}
 				}
 			} else if (platString.match(/linux/i)) {
-				for (let key in displayCodes["linux"]) {
+				for (const key in displayCodes["linux"]) {
 					if (displayCodes["linux"].hasOwnProperty(key)) {
 						keyString = keyString.replace(
 							key,
-							displayCodes["linux"][key]
+							displayCodes["linux"][key],
 						);
 					}
 				}
 			} else if (platString.match(/mac/i)) {
-				for (let key in displayCodes["mac"]) {
+				for (const key in displayCodes["mac"]) {
 					if (displayCodes["mac"].hasOwnProperty(key)) {
 						keyString = keyString.replace(
 							key,
-							displayCodes["mac"][key]
+							displayCodes["mac"][key],
 						);
 					}
 				}
@@ -84,20 +83,19 @@ export class ShortcutService {
 	}
 
 	getEvent(shortcut: string): Promise<string> {
-		const self = this;
 		if (this.shortcuts) {
 			return Promise.resolve(this.getEventInternal(shortcut));
 		} else {
 			return new Promise<string>((resolve, reject) => {
-				self.waitPromise.then(() => {
-					resolve(self.getEventInternal(shortcut));
+				this.waitPromise.then(() => {
+					resolve(this.getEventInternal(shortcut));
 				});
 			});
 		}
 	}
 
 	private getEventInternal(shortcut: string): string {
-		for (let event in this.shortcuts) {
+		for (const event in this.shortcuts) {
 			if (this.shortcuts.hasOwnProperty(event)) {
 				if (this.shortcuts[event] === shortcut) {
 					return event;

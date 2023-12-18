@@ -1,13 +1,12 @@
-"use strict";
 import LocalizedConstants = require("../constants/localizedConstants");
-import { IConnectionProfile } from "./interfaces";
-import { ConnectionCredentials } from "./connectionCredentials";
 import {
-	QuestionTypes,
-	IQuestion,
-	IPrompter,
 	INameValueChoice,
+	IPrompter,
+	IQuestion,
+	QuestionTypes,
 } from "../prompts/question";
+import { ConnectionCredentials } from "./connectionCredentials";
+import { IConnectionProfile } from "./interfaces";
 import * as utils from "./utils";
 
 // Concrete implementation of the IConnectionProfile interface
@@ -31,23 +30,23 @@ export class ConnectionProfile
 	 */
 	public static createProfile(
 		prompter: IPrompter,
-		defaultProfileValues?: IConnectionProfile
+		defaultProfileValues?: IConnectionProfile,
 	): Promise<IConnectionProfile> {
-		let profile: ConnectionProfile = new ConnectionProfile();
+		const profile: ConnectionProfile = new ConnectionProfile();
 		// Ensure all core properties are entered
-		let authOptions: INameValueChoice[] =
+		const authOptions: INameValueChoice[] =
 			ConnectionCredentials.getAuthenticationTypesChoice();
 		if (authOptions.length === 1) {
 			// Set default value as there is only 1 option
 			profile.authenticationType = authOptions[0].value;
 		}
 
-		let questions: IQuestion[] =
+		const questions: IQuestion[] =
 			ConnectionCredentials.getRequiredCredentialValuesQuestions(
 				profile,
 				true,
 				false,
-				defaultProfileValues
+				defaultProfileValues,
 			);
 		// Check if password needs to be saved
 		questions.push({

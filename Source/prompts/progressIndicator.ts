@@ -1,16 +1,14 @@
-"use strict";
-
 // This code is originally from https://github.com/DonJayamanne/bowerVSCode
 // License: https://github.com/DonJayamanne/bowerVSCode/blob/master/LICENSE
 
-import { window, StatusBarItem, StatusBarAlignment } from "vscode";
+import { StatusBarAlignment, StatusBarItem, window } from "vscode";
 
 export default class ProgressIndicator {
 	private _statusBarItem: StatusBarItem;
 
 	constructor() {
 		this._statusBarItem = window.createStatusBarItem(
-			StatusBarAlignment.Left
+			StatusBarAlignment.Left,
 		);
 	}
 
@@ -45,7 +43,7 @@ export default class ProgressIndicator {
 		this.hideProgressIndicator();
 		this._interval = setInterval(
 			() => this.onDisplayProgressIndicator(),
-			100
+			100,
 		);
 	}
 	private hideProgressIndicator(): void {
@@ -63,7 +61,7 @@ export default class ProgressIndicator {
 			return;
 		}
 
-		let txt = this.ProgressText[this.ProgressCounter];
+		const txt = this.ProgressText[this.ProgressCounter];
 		this._statusBarItem.text =
 			this._tasks[this._tasks.length - 1] + " " + txt;
 		this.ProgressCounter++;

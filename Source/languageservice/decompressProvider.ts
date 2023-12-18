@@ -3,10 +3,8 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-"use strict";
-
-import { IDecompressProvider, IPackage } from "./interfaces";
 import { ILogger } from "../models/interfaces";
+import { IDecompressProvider, IPackage } from "./interfaces";
 const decompress = require("decompress");
 
 export default class DecompressProvider implements IDecompressProvider {
@@ -15,7 +13,7 @@ export default class DecompressProvider implements IDecompressProvider {
 			decompress(pkg.tmpFile.name, pkg.installPath)
 				.then((files) => {
 					logger.appendLine(
-						`Done! ${files.length} files unpacked.\n`
+						`Done! ${files.length} files unpacked.\n`,
 					);
 					resolve();
 				})

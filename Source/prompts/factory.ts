@@ -1,20 +1,18 @@
-"use strict";
-
 // This code is originally from https://github.com/DonJayamanne/bowerVSCode
 // License: https://github.com/DonJayamanne/bowerVSCode/blob/master/LICENSE
 
-import Prompt from "./prompt";
-import InputPrompt from "./input";
-import PasswordPrompt from "./password";
-import ListPrompt from "./list";
-import ConfirmPrompt from "./confirm";
 import CheckboxPrompt from "./checkbox";
+import ConfirmPrompt from "./confirm";
 import ExpandPrompt from "./expand";
+import InputPrompt from "./input";
+import ListPrompt from "./list";
+import PasswordPrompt from "./password";
+import Prompt from "./prompt";
 
 export default class PromptFactory {
 	public static createPrompt(
 		question: any,
-		ignoreFocusOut?: boolean
+		ignoreFocusOut?: boolean,
 	): Prompt {
 		/**
 		 * TODO:
@@ -36,7 +34,7 @@ export default class PromptFactory {
 				return new ExpandPrompt(question, ignoreFocusOut);
 			default:
 				throw new Error(
-					`Could not find a prompt for question type ${question.type}`
+					`Could not find a prompt for question type ${question.type}`,
 				);
 		}
 	}

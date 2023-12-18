@@ -5,7 +5,7 @@ import { NotificationType, RequestType } from "vscode-languageclient";
 // Connection request message callback declaration
 export namespace ConnectionRequest {
 	export const type = new RequestType<ConnectParams, boolean, void, void>(
-		"connection/connect"
+		"connection/connect",
 	);
 }
 
@@ -40,7 +40,7 @@ export class ConnectParams {
  */
 export namespace ConnectionCompleteNotification {
 	export const type = new NotificationType<ConnectionCompleteParams, void>(
-		"connection/complete"
+		"connection/complete",
 	);
 }
 
@@ -179,7 +179,7 @@ export type CancelConnectResult = boolean;
  */
 export namespace ConnectionChangedNotification {
 	export const type = new NotificationType<ConnectionChangedParams, void>(
-		"connection/connectionchanged"
+		"connection/connectionchanged",
 	);
 }
 

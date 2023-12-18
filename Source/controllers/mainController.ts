@@ -3,27 +3,26 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-"use strict";
 import * as events from "events";
 import vscode = require("vscode");
 import Constants = require("../constants/constants");
 import LocalizedConstants = require("../constants/localizedConstants");
 import Utils = require("../models/utils");
-import { SqlOutputContentProvider } from "../models/sqlOutputContentProvider";
-import { RebuildIntelliSenseNotification } from "../models/contracts/languageService";
-import StatusView from "../views/statusView";
-import ConnectionManager from "./connectionManager";
-import SqlToolsServerClient from "../languageservice/serviceclient";
-import { IPrompter } from "../prompts/question";
-import CodeAdapter from "../prompts/adapter";
-import Telemetry from "../models/telemetry";
-import VscodeWrapper from "./vscodeWrapper";
-import UntitledSqlDocumentService from "./untitledSqlDocumentService";
-import { ISelectionData } from "./../models/interfaces";
 import * as path from "path";
+import SqlToolsServerClient from "../languageservice/serviceclient";
+import { RebuildIntelliSenseNotification } from "../models/contracts/languageService";
+import { SqlOutputContentProvider } from "../models/sqlOutputContentProvider";
+import Telemetry from "../models/telemetry";
+import CodeAdapter from "../prompts/adapter";
+import { IPrompter } from "../prompts/question";
+import StatusView from "../views/statusView";
+import { ISelectionData } from "./../models/interfaces";
+import ConnectionManager from "./connectionManager";
+import UntitledSqlDocumentService from "./untitledSqlDocumentService";
+import VscodeWrapper from "./vscodeWrapper";
 import fs = require("fs");
 
-let opener = require("opener");
+const opener = require("opener");
 
 /**
  * The main controller class that initializes the extension
@@ -36,7 +35,7 @@ export default class MainController implements vscode.Disposable {
 	private _connectionMgr: ConnectionManager;
 	private _prompter: IPrompter;
 	private _vscodeWrapper: VscodeWrapper;
-	private _initialized: boolean = false;
+	private _initialized = false;
 	private _lastSavedUri: string;
 	private _lastSavedTimer: Utils.Timer;
 	private _lastOpenedUri: string;
@@ -50,7 +49,7 @@ export default class MainController implements vscode.Disposable {
 	constructor(
 		context: vscode.ExtensionContext,
 		connectionManager?: ConnectionManager,
-		vscodeWrapper?: VscodeWrapper
+		vscodeWrapper?: VscodeWrapper,
 	) {
 		this._context = context;
 		if (connectionManager) {
@@ -59,7 +58,7 @@ export default class MainController implements vscode.Disposable {
 		this._vscodeWrapper = vscodeWrapper || new VscodeWrapper();
 
 		this._untitledSqlDocumentService = new UntitledSqlDocumentService(
-			this._vscodeWrapper
+			this._vscodeWrapper,
 		);
 	}
 
@@ -67,11 +66,10 @@ export default class MainController implements vscode.Disposable {
 	 * Helper method to setup command registrations
 	 */
 	private registerCommand(command: string): void {
-		const self = this;
 		this._context.subscriptions.push(
 			vscode.commands.registerCommand(command, () => {
-				self._event.emit(command);
-			})
+				this._event.emit(command);
+			}),
 		);
 	}
 
@@ -95,70 +93,69 @@ export default class MainController implements vscode.Disposable {
 	 * Initializes the extension
 	 */
 	public activate(): Promise<boolean> {
-		const self = this;
 
-		let activationTimer = new Utils.Timer();
+		const activationTimer = new Utils.Timer();
 
 		// register VS Code commands
 		this.registerCommand(Constants.cmdConnect);
 		this._event.on(Constants.cmdConnect, () => {
-			self.runAndLogErrors(self.onNewConnection(), "onNewConnection");
+			this.runAndLogErrors(this.onNewConnection(), "onNewConnection");
 		});
 		this.registerCommand(Constants.cmdDisconnect);
 		this._event.on(Constants.cmdDisconnect, () => {
-			self.runAndLogErrors(self.onDisconnect(), "onDisconnect");
+			this.runAndLogErrors(this.onDisconnect(), "onDisconnect");
 		});
 		this.registerCommand(Constants.cmdRunQuery);
 		this._event.on(Constants.cmdRunQuery, () => {
-			self.onRunQuery();
+			this.onRunQuery();
 		});
 		this.registerCommand(Constants.cmdManageConnectionProfiles);
 		this._event.on(Constants.cmdRunCurrentStatement, () => {
-			self.onRunCurrentStatement();
+			this.onRunCurrentStatement();
 		});
 		this.registerCommand(Constants.cmdRunCurrentStatement);
 		this._event.on(Constants.cmdManageConnectionProfiles, () => {
-			self.runAndLogErrors(self.onManageProfiles(), "onManageProfiles");
+			this.runAndLogErrors(this.onManageProfiles(), "onManageProfiles");
 		});
 		this.registerCommand(Constants.cmdChooseDatabase);
 		this._event.on(Constants.cmdChooseDatabase, () => {
-			self.runAndLogErrors(self.onChooseDatabase(), "onChooseDatabase");
+			this.runAndLogErrors(this.onChooseDatabase(), "onChooseDatabase");
 		});
 		this.registerCommand(Constants.cmdChooseLanguageFlavor);
 		this._event.on(Constants.cmdChooseLanguageFlavor, () => {
-			self.runAndLogErrors(
-				self.onChooseLanguageFlavor(),
-				"onChooseLanguageFlavor"
+			this.runAndLogErrors(
+				this.onChooseLanguageFlavor(),
+				"onChooseLanguageFlavor",
 			);
 		});
 		this.registerCommand(Constants.cmdCancelQuery);
 		this._event.on(Constants.cmdCancelQuery, () => {
-			self.onCancelQuery();
+			this.onCancelQuery();
 		});
 		this.registerCommand(Constants.cmdShowGettingStarted);
 		this._event.on(Constants.cmdShowGettingStarted, () => {
-			self.launchGettingStartedPage();
+			this.launchGettingStartedPage();
 		});
 		this.registerCommand(Constants.cmdNewQuery);
 		this._event.on(Constants.cmdNewQuery, () => {
-			self.runAndLogErrors(self.onNewQuery(), "onNewQuery");
+			this.runAndLogErrors(this.onNewQuery(), "onNewQuery");
 		});
 		this.registerCommand(Constants.cmdRebuildIntelliSenseCache);
 		this._event.on(Constants.cmdRebuildIntelliSenseCache, () => {
-			self.onRebuildIntelliSense();
+			this.onRebuildIntelliSense();
 		});
 
 		// this._vscodeWrapper = new VscodeWrapper();
 
 		// Add handlers for VS Code generated commands
 		this._vscodeWrapper.onDidCloseTextDocument((params) =>
-			this.onDidCloseTextDocument(params)
+			this.onDidCloseTextDocument(params),
 		);
 		this._vscodeWrapper.onDidOpenTextDocument((params) =>
-			this.onDidOpenTextDocument(params)
+			this.onDidOpenTextDocument(params),
 		);
 		this._vscodeWrapper.onDidSaveTextDocument((params) =>
-			this.onDidSaveTextDocument(params)
+			this.onDidSaveTextDocument(params),
 		);
 
 		return this.initialize(activationTimer);
@@ -175,7 +172,6 @@ export default class MainController implements vscode.Disposable {
 	 * Initializes the extension
 	 */
 	public initialize(activationTimer: Utils.Timer): Promise<boolean> {
-		const self = this;
 
 		// initialize language service client
 		return new Promise<boolean>((resolve, reject) => {
@@ -183,25 +179,25 @@ export default class MainController implements vscode.Disposable {
 			Telemetry.disable();
 
 			SqlToolsServerClient.instance
-				.initialize(self._context)
+				.initialize(this._context)
 				.then((serverResult) => {
 					// Init status bar
-					self._statusview = new StatusView(self._vscodeWrapper);
+					this._statusview = new StatusView(this._vscodeWrapper);
 
 					// Init CodeAdapter for use when user response to questions is needed
-					self._prompter = new CodeAdapter();
+					this._prompter = new CodeAdapter();
 
 					// Init content provider for results pane
-					self._outputContentProvider = new SqlOutputContentProvider(
-						self._context,
-						self._statusview
+					this._outputContentProvider = new SqlOutputContentProvider(
+						this._context,
+						this._statusview,
 					);
 
 					// Init connection manager and connection MRU
-					self._connectionMgr = new ConnectionManager(
-						self._context,
-						self._statusview,
-						self._prompter
+					this._connectionMgr = new ConnectionManager(
+						this._context,
+						this._statusview,
+						this._prompter,
 					);
 
 					activationTimer.end();
@@ -216,10 +212,10 @@ export default class MainController implements vscode.Disposable {
 								serverResult.installedBeforeInitializing
 									? 1
 									: 0,
-						}
+						},
 					);
 
-					self.showReleaseNotesPrompt();
+					this.showReleaseNotesPrompt();
 
 					// Handle case where SQL file is the 1st opened document
 					const activeTextEditor =
@@ -232,7 +228,7 @@ export default class MainController implements vscode.Disposable {
 					}
 
 					Utils.logDebug("activated.");
-					self._initialized = true;
+					this._initialized = true;
 					resolve(true);
 				})
 				.catch((err) => {
@@ -250,7 +246,7 @@ export default class MainController implements vscode.Disposable {
 			return;
 		}
 		try {
-			let uri = this._vscodeWrapper.activeTextEditorUri;
+			const uri = this._vscodeWrapper.activeTextEditorUri;
 			Telemetry.sendTelemetryEvent("CancelQuery");
 			this._outputContentProvider.cancelQuery(uri);
 		} catch (err) {
@@ -279,7 +275,7 @@ export default class MainController implements vscode.Disposable {
 				this._connectionMgr.onChooseLanguageFlavor();
 			} else {
 				this._vscodeWrapper.showWarningMessage(
-					LocalizedConstants.msgOpenSqlFile
+					LocalizedConstants.msgOpenSqlFile,
 				);
 			}
 		}
@@ -291,8 +287,8 @@ export default class MainController implements vscode.Disposable {
 	 */
 	private onDisconnect(): Promise<any> {
 		if (this.canRunCommand() && this.validateTextDocumentHasFocus()) {
-			let fileUri = this._vscodeWrapper.activeTextEditorUri;
-			let queryRunner =
+			const fileUri = this._vscodeWrapper.activeTextEditorUri;
+			const queryRunner =
 				this._outputContentProvider.getQueryRunner(fileUri);
 			if (queryRunner && queryRunner.isExecutingQuery) {
 				this._outputContentProvider.cancelQuery(fileUri);
@@ -332,17 +328,17 @@ export default class MainController implements vscode.Disposable {
 			if (fileUri && this._vscodeWrapper.isEditingSqlFile) {
 				this._statusview.languageServiceStatusChanged(
 					fileUri,
-					LocalizedConstants.updatingIntelliSenseStatus
+					LocalizedConstants.updatingIntelliSenseStatus,
 				);
 				SqlToolsServerClient.instance.sendNotification(
 					RebuildIntelliSenseNotification.type,
 					{
 						ownerUri: fileUri,
-					}
+					},
 				);
 			} else {
 				this._vscodeWrapper.showWarningMessage(
-					LocalizedConstants.msgOpenSqlFile
+					LocalizedConstants.msgOpenSqlFile,
 				);
 			}
 		}
@@ -353,7 +349,7 @@ export default class MainController implements vscode.Disposable {
 	 */
 	public onRunCurrentStatement(callbackThis?: MainController): void {
 		// the 'this' context is lost in retry callback, so capture it here
-		let self: MainController = callbackThis ? callbackThis : this;
+		const self: MainController = callbackThis ? callbackThis : this;
 		try {
 			if (!self.canRunCommand()) {
 				return;
@@ -361,7 +357,7 @@ export default class MainController implements vscode.Disposable {
 			if (!self.canRunV2Command()) {
 				// Notify the user that this is not supported on this version
 				this._vscodeWrapper.showErrorMessage(
-					LocalizedConstants.macSierraRequiredErrorMessage
+					LocalizedConstants.macSierraRequiredErrorMessage,
 				);
 				return;
 			}
@@ -376,9 +372,9 @@ export default class MainController implements vscode.Disposable {
 
 			Telemetry.sendTelemetryEvent("RunCurrentStatement");
 
-			let editor = self._vscodeWrapper.activeTextEditor;
-			let uri = self._vscodeWrapper.activeTextEditorUri;
-			let title = path.basename(editor.document.fileName);
+			const editor = self._vscodeWrapper.activeTextEditor;
+			const uri = self._vscodeWrapper.activeTextEditorUri;
+			const title = path.basename(editor.document.fileName);
 
 			// return early if the document does contain any text
 			if (editor.document.getText(undefined).trim().length === 0) {
@@ -386,7 +382,7 @@ export default class MainController implements vscode.Disposable {
 			}
 
 			// only the start line and column are used to determine the current statement
-			let querySelection: ISelectionData = {
+			const querySelection: ISelectionData = {
 				startLine: editor.selection.start.line,
 				startColumn: editor.selection.start.character,
 				endLine: 0,
@@ -397,12 +393,12 @@ export default class MainController implements vscode.Disposable {
 				self._statusview,
 				uri,
 				querySelection,
-				title
+				title,
 			);
 		} catch (err) {
 			Telemetry.sendTelemetryEventForException(
 				err,
-				"onRunCurrentStatement"
+				"onRunCurrentStatement",
 			);
 		}
 	}
@@ -412,7 +408,7 @@ export default class MainController implements vscode.Disposable {
 	 */
 	public onRunQuery(callbackThis?: MainController): void {
 		// the 'this' context is lost in retry callback, so capture it here
-		let self: MainController = callbackThis ? callbackThis : this;
+		const self: MainController = callbackThis ? callbackThis : this;
 		try {
 			if (!self.canRunCommand() || !self.validateTextDocumentHasFocus()) {
 				return;
@@ -423,15 +419,15 @@ export default class MainController implements vscode.Disposable {
 				return;
 			}
 
-			let editor = self._vscodeWrapper.activeTextEditor;
-			let uri = self._vscodeWrapper.activeTextEditorUri;
-			let title = path.basename(editor.document.fileName);
+			const editor = self._vscodeWrapper.activeTextEditor;
+			const uri = self._vscodeWrapper.activeTextEditorUri;
+			const title = path.basename(editor.document.fileName);
 			let querySelection: ISelectionData;
 
 			// Calculate the selection if we have a selection, otherwise we'll use null to indicate
 			// the entire document is the selection
 			if (!editor.selection.isEmpty) {
-				let selection = editor.selection;
+				const selection = editor.selection;
 				querySelection = {
 					startLine: selection.start.line,
 					startColumn: selection.start.character,
@@ -441,7 +437,7 @@ export default class MainController implements vscode.Disposable {
 			}
 
 			// Trim down the selection. If it is empty after selecting, then we don't execute
-			let selectionToTrim = editor.selection.isEmpty
+			const selectionToTrim = editor.selection.isEmpty
 				? undefined
 				: editor.selection;
 			if (editor.document.getText(selectionToTrim).trim().length === 0) {
@@ -454,7 +450,7 @@ export default class MainController implements vscode.Disposable {
 				self._statusview,
 				uri,
 				querySelection,
-				title
+				title,
 			);
 		} catch (err) {
 			Telemetry.sendTelemetryEventForException(err, "onRunQuery");
@@ -466,43 +462,42 @@ export default class MainController implements vscode.Disposable {
 	 * the query execution method if needed
 	 */
 	public isRetryRequiredBeforeQuery(retryMethod: any): boolean {
-		let self = this;
-		if (!self._vscodeWrapper.isEditingSqlFile) {
+		if (!this._vscodeWrapper.isEditingSqlFile) {
 			// Prompt the user to change the language mode to SQL before running a query
-			self._connectionMgr.connectionUI
+			this._connectionMgr.connectionUI
 				.promptToChangeLanguageMode()
 				.then((result) => {
 					if (result) {
-						retryMethod(self);
+						retryMethod(this);
 					}
 				})
 				.catch((err) => {
-					self._vscodeWrapper.showErrorMessage(
-						LocalizedConstants.msgError + err
+					this._vscodeWrapper.showErrorMessage(
+						LocalizedConstants.msgError + err,
 					);
 				});
 			return true;
 		} else if (
-			!self._connectionMgr.isConnected(
-				self._vscodeWrapper.activeTextEditorUri
+			this._connectionMgr.isConnected(
+				this._vscodeWrapper.activeTextEditorUri,
 			)
 		) {
+			// we don't need to do anything to configure environment before running query
+			return false;
+		} else {
 			// If we are disconnected, prompt the user to choose a connection before executing
-			self.onNewConnection()
+			this.onNewConnection()
 				.then((result) => {
 					if (result) {
-						retryMethod(self);
+						retryMethod(this);
 					}
 				})
 				.catch((err) => {
-					self._vscodeWrapper.showErrorMessage(
-						LocalizedConstants.msgError + err
+					this._vscodeWrapper.showErrorMessage(
+						LocalizedConstants.msgError + err,
 					);
 				});
 			return true;
-		} else {
-			// we don't need to do anything to configure environment before running query
-			return false;
 		}
 	}
 
@@ -511,12 +506,11 @@ export default class MainController implements vscode.Disposable {
 	 */
 	private runAndLogErrors<T>(
 		promise: Promise<T>,
-		handlerName: string
+		handlerName: string,
 	): Promise<T> {
-		let self = this;
 		return promise.catch((err) => {
-			self._vscodeWrapper.showErrorMessage(
-				LocalizedConstants.msgError + err
+			this._vscodeWrapper.showErrorMessage(
+				LocalizedConstants.msgError + err,
 			);
 			Telemetry.sendTelemetryEventForException(err, handlerName);
 			return undefined;
@@ -534,9 +528,7 @@ export default class MainController implements vscode.Disposable {
 		this._connectionMgr = connectionManager;
 	}
 
-	public set untitledSqlDocumentService(
-		untitledSqlDocumentService: UntitledSqlDocumentService
-	) {
+	public set untitledSqlDocumentService(untitledSqlDocumentService: UntitledSqlDocumentService) {
 		this._untitledSqlDocumentService = untitledSqlDocumentService;
 	}
 
@@ -566,7 +558,8 @@ export default class MainController implements vscode.Disposable {
 	 * Verifies the tools service version is high enough to support certain commands
 	 */
 	private canRunV2Command(): boolean {
-		let version: number = SqlToolsServerClient.instance.getServiceVersion();
+		const version: number =
+			SqlToolsServerClient.instance.getServiceVersion();
 		return version > 1;
 	}
 
@@ -574,18 +567,17 @@ export default class MainController implements vscode.Disposable {
 	 * Prompt the user to view release notes if this is new extension install
 	 */
 	private showReleaseNotesPrompt(): void {
-		let self = this;
 		if (!this.doesExtensionLaunchedFileExist()) {
 			// ask the user to view a scenario document
-			let confirmText = "View Now";
+			const confirmText = "View Now";
 			this._vscodeWrapper
 				.showInformationMessage(
 					"View pgsql for Visual Studio Code release notes?",
-					confirmText
+					confirmText,
 				)
 				.then((choice) => {
 					if (choice === confirmText) {
-						self.launchReleaseNotesPage();
+						this.launchReleaseNotesPage();
 					}
 				});
 		}
@@ -623,7 +615,7 @@ export default class MainController implements vscode.Disposable {
 	 */
 	private doesExtensionLaunchedFileExist(): boolean {
 		// check if file already exists on disk
-		let filePath = this._context.asAbsolutePath("extensionlaunched.dat");
+		const filePath = this._context.asAbsolutePath("extensionlaunched.dat");
 		try {
 			// this will throw if the file does not exist
 			fs.statSync(filePath);
@@ -653,8 +645,8 @@ export default class MainController implements vscode.Disposable {
 			// Avoid processing events before initialization is complete
 			return;
 		}
-		let closedDocumentUri: string = doc.uri.toString();
-		let closedDocumentUriScheme: string = doc.uri.scheme;
+		const closedDocumentUri: string = doc.uri.toString();
+		const closedDocumentUriScheme: string = doc.uri.scheme;
 
 		// Stop timers if they have been started
 		if (this._lastSavedTimer) {
@@ -678,7 +670,7 @@ export default class MainController implements vscode.Disposable {
 			// Untitled file was saved and connection will be transfered
 			this._connectionMgr.transferFileConnection(
 				closedDocumentUri,
-				this._lastSavedUri
+				this._lastSavedUri,
 			);
 
 			// If there was an openTextDoc event just before this closeTextDoc event then we know it was a rename
@@ -690,7 +682,7 @@ export default class MainController implements vscode.Disposable {
 			// File was renamed and connection will be transfered
 			this._connectionMgr.transferFileConnection(
 				closedDocumentUri,
-				this._lastOpenedUri
+				this._lastOpenedUri,
 			);
 		} else {
 			// Pass along the close event to the other handlers for a normal closed file
@@ -719,7 +711,7 @@ export default class MainController implements vscode.Disposable {
 		if (doc && doc.languageId === Constants.languageId) {
 			this._statusview.languageFlavorChanged(
 				doc.uri.toString(),
-				Constants.pgsqlProviderName
+				Constants.pgsqlProviderName,
 			);
 		}
 
@@ -740,7 +732,7 @@ export default class MainController implements vscode.Disposable {
 			return;
 		}
 
-		let savedDocumentUri: string = doc.uri.toString();
+		const savedDocumentUri: string = doc.uri.toString();
 
 		// Keep track of which file was last saved and when for detecting the case when we save an untitled document to disk
 		this._lastSavedTimer = new Utils.Timer();

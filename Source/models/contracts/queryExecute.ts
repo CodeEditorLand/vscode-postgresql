@@ -1,5 +1,5 @@
-import { RequestType, NotificationType } from "vscode-languageclient";
-import { IDbColumn, ISelectionData, IResultMessage } from "./../interfaces";
+import { NotificationType, RequestType } from "vscode-languageclient";
+import { IDbColumn, IResultMessage, ISelectionData } from "./../interfaces";
 
 export class ResultSetSummary {
 	id: number;
@@ -69,7 +69,7 @@ export class QueryExecuteResultSetCompleteNotificationParams {
 // ------------------------------- < Query Message Notification > ------------------------------------
 export namespace QueryExecuteMessageNotification {
 	export const type = new NotificationType<QueryExecuteMessageParams, void>(
-		"query/message"
+		"query/message",
 	);
 }
 

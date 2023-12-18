@@ -1,11 +1,9 @@
-"use strict";
-
 // This code is originally from https://github.com/DonJayamanne/bowerVSCode
 // License: https://github.com/DonJayamanne/bowerVSCode/blob/master/LICENSE
 
-import { window, InputBoxOptions } from "vscode";
-import Prompt from "./prompt";
+import { InputBoxOptions, window } from "vscode";
 import EscapeException from "../utils/EscapeException";
+import Prompt from "./prompt";
 
 const figures = require("figures");
 
@@ -53,7 +51,7 @@ export default class InputPrompt extends Prompt {
 
 			if (validationError) {
 				this._question.default = new Error(
-					`${figures.warning} ${validationError}`
+					`${figures.warning} ${validationError}`,
 				);
 
 				return this.render();

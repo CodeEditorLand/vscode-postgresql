@@ -1,30 +1,28 @@
-"use strict";
-
 // This code is originally from https://github.com/DonJayamanne/bowerVSCode
 // License: https://github.com/DonJayamanne/bowerVSCode/blob/master/LICENSE
 
-import { window, OutputChannel } from "vscode";
-import * as Constants from "../constants/constants";
 import * as nodeUtil from "util";
-import PromptFactory from "./factory";
+import { OutputChannel, window } from "vscode";
+import * as Constants from "../constants/constants";
 import EscapeException from "../utils/EscapeException";
-import { IQuestion, IPrompter, IPromptCallback } from "./question";
+import PromptFactory from "./factory";
+import { IPromptCallback, IPrompter, IQuestion } from "./question";
 
 // Supports simple pattern for prompting for user input and acting on this
 export default class CodeAdapter implements IPrompter {
 	private outChannel: OutputChannel;
-	private outBuffer: string = "";
+	private outBuffer = "";
 	private messageLevelFormatters = {};
 	constructor() {
 		// TODO Decide whether output channel logging should be saved here?
 		this.outChannel = window.createOutputChannel(
-			Constants.outputChannelName
+			Constants.outputChannelName,
 		);
 		// this.outChannel.clear();
 	}
 
 	public logError(message: any): void {
-		let line = `error: ${message.message}\n    Code - ${message.code}`;
+		const line = `error: ${message.message}\n    Code - ${message.code}`;
 
 		this.outBuffer += `${line}\n`;
 		this.outChannel.appendLine(line);
@@ -74,7 +72,7 @@ export default class CodeAdapter implements IPrompter {
 	// }
 
 	public log(message: any): void {
-		let line: string = "";
+		let line = "";
 		if (message && typeof message.level === "string") {
 			let formatter: (a: any) => string = this.formatMessage;
 			if (this.messageLevelFormatters[message.level]) {
@@ -114,9 +112,9 @@ export default class CodeAdapter implements IPrompter {
 
 	public promptSingle<T>(
 		question: IQuestion,
-		ignoreFocusOut?: boolean
+		ignoreFocusOut?: boolean,
 	): Promise<T> {
-		let questions: IQuestion[] = [question];
+		const questions: IQuestion[] = [question];
 		return this.prompt(questions, ignoreFocusOut).then((answers) => {
 			if (answers) {
 				return answers[question.name] || false;
@@ -126,12 +124,12 @@ export default class CodeAdapter implements IPrompter {
 
 	public prompt<T>(
 		questions: IQuestion[],
-		ignoreFocusOut?: boolean
+		ignoreFocusOut?: boolean,
 	): Promise<{ [key: string]: T }> {
-		let answers: { [key: string]: T } = {};
+		const answers: { [key: string]: T } = {};
 
 		// Collapse multiple questions into a set of prompt steps
-		let promptResult: Promise<{ [key: string]: T }> = questions.reduce(
+		const promptResult: Promise<{ [key: string]: T }> = questions.reduce(
 			(promise: Promise<{ [key: string]: T }>, question: IQuestion) => {
 				this.fixQuestion(question);
 
@@ -139,7 +137,7 @@ export default class CodeAdapter implements IPrompter {
 					.then(() => {
 						return PromptFactory.createPrompt(
 							question,
-							ignoreFocusOut
+							ignoreFocusOut,
 						);
 					})
 					.then((prompt) => {
@@ -166,7 +164,7 @@ export default class CodeAdapter implements IPrompter {
 						return answers;
 					});
 			},
-			Promise.resolve()
+			Promise.resolve(),
 		);
 
 		return promptResult.catch((err) => {
@@ -181,7 +179,7 @@ export default class CodeAdapter implements IPrompter {
 	// Helper to make it possible to prompt using callback pattern. Generally Promise is a preferred flow
 	public promptCallback(
 		questions: IQuestion[],
-		callback: IPromptCallback
+		callback: IPromptCallback,
 	): void {
 		// Collapse multiple questions into a set of prompt steps
 		this.prompt(questions).then((answers) => {

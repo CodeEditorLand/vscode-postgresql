@@ -3,7 +3,6 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-"use strict";
 const fs = require("fs");
 import * as path from "path";
 import * as Constants from "../constants/constants";
@@ -31,25 +30,25 @@ export default class Config implements IConfig {
 
 	public getSqlToolsServiceDownloadUrl(): string {
 		return this.getSqlToolsConfigValue(
-			Constants.sqlToolsServiceDownloadUrlConfigKey
+			Constants.sqlToolsServiceDownloadUrlConfigKey,
 		);
 	}
 
 	public getSqlToolsInstallDirectory(): string {
 		return this.getSqlToolsConfigValue(
-			Constants.sqlToolsServiceInstallDirConfigKey
+			Constants.sqlToolsServiceInstallDirConfigKey,
 		);
 	}
 
 	public getSqlToolsExecutableFiles(): string[] {
 		return this.getSqlToolsConfigValue(
-			Constants.sqlToolsServiceExecutableFilesConfigKey
+			Constants.sqlToolsServiceExecutableFilesConfigKey,
 		);
 	}
 
 	public getSqlToolsPackageVersion(): string {
 		return this.getSqlToolsConfigValue(
-			Constants.sqlToolsServiceVersionConfigKey
+			Constants.sqlToolsServiceVersionConfigKey,
 		);
 	}
 
@@ -71,8 +70,8 @@ export default class Config implements IConfig {
 	}
 
 	public getSqlToolsConfigValue(configKey: string): any {
-		let json = Config.configJsonContent;
-		let toolsConfig = json[this._sqlToolsServiceConfigKey];
+		const json = Config.configJsonContent;
+		const toolsConfig = json[this._sqlToolsServiceConfigKey];
 		let configValue: string = undefined;
 		if (toolsConfig !== undefined) {
 			configValue = toolsConfig[configKey];
@@ -81,8 +80,8 @@ export default class Config implements IConfig {
 	}
 
 	public getExtensionConfig(key: string, defaultValue?: any): any {
-		let json = Config.configJsonContent;
-		let extensionConfig = json[Constants.extensionConfigSectionName];
+		const json = Config.configJsonContent;
+		const extensionConfig = json[Constants.extensionConfigSectionName];
 		let configValue = extensionConfig[key];
 		if (!configValue) {
 			configValue = defaultValue;
@@ -91,7 +90,7 @@ export default class Config implements IConfig {
 	}
 
 	public getWorkspaceConfig(key: string, defaultValue?: any): any {
-		let json = Config.configJsonContent;
+		const json = Config.configJsonContent;
 		let configValue = json[key];
 		if (!configValue) {
 			configValue = defaultValue;
@@ -100,8 +99,8 @@ export default class Config implements IConfig {
 	}
 
 	static loadConfig(): any {
-		let configContent = fs.readFileSync(
-			path.join(__dirname, "../config.json")
+		const configContent = fs.readFileSync(
+			path.join(__dirname, "../config.json"),
 		);
 		return JSON.parse(configContent);
 	}

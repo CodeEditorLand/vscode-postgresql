@@ -1,36 +1,35 @@
-"use strict";
 import vscode = require("vscode");
 import Constants = require("../constants/constants");
 import LocalizedConstants = require("../constants/localizedConstants");
-import { ConnectionCredentials } from "../models/connectionCredentials";
 import ConnectionManager from "../controllers/connectionManager";
-import { ConnectionStore } from "../models/connectionStore";
+import { ConnectionCredentials } from "../models/connectionCredentials";
 import { ConnectionProfile } from "../models/connectionProfile";
+import { ConnectionStore } from "../models/connectionStore";
 import {
-	IConnectionCredentials,
-	IConnectionProfile,
-	IConnectionCredentialsQuickPickItem,
 	CredentialsQuickPickItemType,
+	IConnectionCredentials,
+	IConnectionCredentialsQuickPickItem,
+	IConnectionProfile,
 } from "../models/interfaces";
 import {
 	INameValueChoice,
-	IQuestion,
 	IPrompter,
+	IQuestion,
 	QuestionTypes,
 } from "../prompts/question";
 import Interfaces = require("../models/interfaces");
+import VscodeWrapper from "../controllers/vscodeWrapper";
 import { Timer } from "../models/utils";
 import * as Utils from "../models/utils";
-import VscodeWrapper from "../controllers/vscodeWrapper";
 
 /**
  * The different tasks for managing connection profiles.
  */
 enum ManageProfileTask {
 	Create = 1,
-	ClearRecentlyUsed,
-	Edit,
-	Remove,
+	ClearRecentlyUsed = 2,
+	Edit = 3,
+	Remove = 4,
 }
 
 export interface ISqlProviderItem extends vscode.QuickPickItem {
@@ -44,10 +43,10 @@ export class ConnectionUI {
 		private _connectionManager: ConnectionManager,
 		private _connectionStore: ConnectionStore,
 		private _prompter: IPrompter,
-		private _vscodeWrapper?: VscodeWrapper
+		private _vscodeWrapper?: VscodeWrapper,
 	) {
 		this._errorOutputChannel = vscode.window.createOutputChannel(
-			LocalizedConstants.connectionErrorChannelName
+			LocalizedConstants.connectionErrorChannelName,
 		);
 		if (!this.vscodeWrapper) {
 			this.vscodeWrapper = new VscodeWrapper();
@@ -82,27 +81,26 @@ export class ConnectionUI {
 	// Helper to let user choose a connection from a picklist
 	// Return the ConnectionInfo for the user's choice
 	public showConnections(): Promise<IConnectionCredentials> {
-		const self = this;
 		return new Promise<IConnectionCredentials>((resolve, reject) => {
-			let picklist: IConnectionCredentialsQuickPickItem[] =
-				self._connectionStore.getPickListItems();
+			const picklist: IConnectionCredentialsQuickPickItem[] =
+				this._connectionStore.getPickListItems();
 			if (picklist.length === 0) {
 				// No connections - go to the create profile workflow
-				self.createAndSaveProfile().then((resolvedProfile) => {
+				this.createAndSaveProfile().then((resolvedProfile) => {
 					resolve(resolvedProfile);
 				});
 			} else {
 				// We have recent connections - show them in a picklist
-				self.promptItemChoice(
+				this.promptItemChoice(
 					{
 						placeHolder:
 							LocalizedConstants.recentConnectionsPlaceholder,
 						matchOnDescription: true,
 					},
-					picklist
+					picklist,
 				).then((selection) => {
 					if (selection) {
-						resolve(self.handleSelectedConnection(selection));
+						resolve(this.handleSelectedConnection(selection));
 					} else {
 						resolve(undefined);
 					}
@@ -112,9 +110,8 @@ export class ConnectionUI {
 	}
 
 	public promptLanguageFlavor(): Promise<string> {
-		const self = this;
 		return new Promise<string>((resolve, reject) => {
-			let picklist: ISqlProviderItem[] = [
+			const picklist: ISqlProviderItem[] = [
 				{
 					label: LocalizedConstants.pgsqlProviderName,
 					description: LocalizedConstants.flavorDescriptionPgsql,
@@ -126,12 +123,12 @@ export class ConnectionUI {
 					providerId: Constants.noneProviderName,
 				},
 			];
-			self.promptItemChoice(
+			this.promptItemChoice(
 				{
 					placeHolder: LocalizedConstants.flavorChooseLanguage,
 					matchOnDescription: true,
 				},
-				picklist
+				picklist,
 			).then((selection) => {
 				if (selection) {
 					resolve(selection.providerId);
@@ -145,9 +142,9 @@ export class ConnectionUI {
 	// requests the user to choose an item from the list
 	private promptItemChoice<T extends vscode.QuickPickItem>(
 		options: vscode.QuickPickOptions,
-		choices: T[]
+		choices: T[],
 	): Promise<T> {
-		let question: IQuestion = {
+		const question: IQuestion = {
 			type: QuestionTypes.expand,
 			name: "question",
 			message: options.placeHolder,
@@ -170,9 +167,9 @@ export class ConnectionUI {
 				this.waitForLanguageModeToBeSqlHelper.bind(
 					this,
 					resolve,
-					timer
+					timer,
 				),
-				50
+				50,
 			);
 		}
 	}
@@ -181,11 +178,10 @@ export class ConnectionUI {
 	 * Wait for up to 10 seconds for the language mode to change to SQL.
 	 */
 	private waitForLanguageModeToBeSql(): Promise<boolean> {
-		const self = this;
 		return new Promise((resolve, reject) => {
-			let timer: Timer = new Timer();
+			const timer: Timer = new Timer();
 			timer.start();
-			self.waitForLanguageModeToBeSqlHelper(resolve, timer);
+			this.waitForLanguageModeToBeSqlHelper(resolve, timer);
 		});
 	}
 
@@ -193,14 +189,13 @@ export class ConnectionUI {
 	 * Prompt the user if they would like to cancel connecting.
 	 */
 	public promptToCancelConnection(): Promise<boolean> {
-		const self = this;
 		return new Promise<boolean>((resolve, reject) => {
-			let question: IQuestion = {
+			const question: IQuestion = {
 				type: QuestionTypes.confirm,
 				name: LocalizedConstants.msgPromptCancelConnect,
 				message: LocalizedConstants.msgPromptCancelConnect,
 			};
-			self._prompter
+			this._prompter
 				.promptSingle(question)
 				.then((result) => {
 					resolve(result ? true : false);
@@ -216,26 +211,25 @@ export class ConnectionUI {
 	 * @returns resolves to true if the user changed the language mode to SQL.
 	 */
 	public promptToChangeLanguageMode(): Promise<boolean> {
-		const self = this;
 		return new Promise<boolean>((resolve, reject) => {
-			let question: IQuestion = {
+			const question: IQuestion = {
 				type: QuestionTypes.confirm,
 				name: LocalizedConstants.msgChangeLanguageMode,
 				message: LocalizedConstants.msgChangeLanguageMode,
 			};
-			self._prompter
+			this._prompter
 				.promptSingle(question)
 				.then((value) => {
 					if (value) {
 						vscode.commands
 							.executeCommand(
-								"workbench.action.editor.changeLanguageMode"
+								"workbench.action.editor.changeLanguageMode",
 							)
 							.then(() => {
-								self.waitForLanguageModeToBeSql().then(
+								this.waitForLanguageModeToBeSql().then(
 									(result) => {
 										resolve(result);
-									}
+									},
 								);
 							});
 					} else {
@@ -251,14 +245,13 @@ export class ConnectionUI {
 	// Helper to let the user choose a database on the current server
 	public showDatabasesOnCurrentServer(
 		currentCredentials: Interfaces.IConnectionCredentials,
-		databaseNames: Array<string>
+		databaseNames: Array<string>,
 	): Promise<Interfaces.IConnectionCredentials> {
-		const self = this;
 		return new Promise<Interfaces.IConnectionCredentials>(
 			(resolve, reject) => {
 				const pickListItems: vscode.QuickPickItem[] = databaseNames.map(
 					(name) => {
-						let newCredentials: Interfaces.IConnectionCredentials =
+						const newCredentials: Interfaces.IConnectionCredentials =
 							<any>{};
 						Object.assign<
 							Interfaces.IConnectionCredentials,
@@ -276,7 +269,7 @@ export class ConnectionUI {
 							connectionCreds: newCredentials,
 							quickPickItemType: CredentialsQuickPickItemType.Mru,
 						};
-					}
+					},
 				);
 
 				// Add an option to disconnect from the current server
@@ -292,70 +285,69 @@ export class ConnectionUI {
 				};
 
 				// show database picklist, and modify the current connection to switch the active database
-				self.vscodeWrapper
+				this.vscodeWrapper
 					.showQuickPick<vscode.QuickPickItem>(
 						pickListItems,
-						pickListOptions
+						pickListOptions,
 					)
 					.then((selection) => {
 						if (selection === disconnectItem) {
-							self.handleDisconnectChoice().then(
+							this.handleDisconnectChoice().then(
 								() => resolve(undefined),
-								(err) => reject(err)
+								(err) => reject(err),
 							);
 						} else if (typeof selection !== "undefined") {
 							resolve(
 								(
 									selection as Interfaces.IConnectionCredentialsQuickPickItem
-								).connectionCreds
+								).connectionCreds,
 							);
 						} else {
 							resolve(undefined);
 						}
 					});
-			}
+			},
 		);
 	}
 
 	private handleDisconnectChoice(): Promise<void> {
-		const self = this;
 		return new Promise<void>((resolve, reject) => {
-			let question: IQuestion = {
+			const question: IQuestion = {
 				type: QuestionTypes.confirm,
 				name: LocalizedConstants.disconnectConfirmationMsg,
 				message: LocalizedConstants.disconnectConfirmationMsg,
 			};
-			self._prompter.promptSingle<boolean>(question).then(
+			this._prompter.promptSingle<boolean>(question).then(
 				(result) => {
 					if (result === true) {
-						self.connectionManager.onDisconnect().then(
+						this.connectionManager.onDisconnect().then(
 							() => resolve(),
-							(err) => reject(err)
+							(err) => reject(err),
 						);
 					} else {
 						resolve();
 					}
 				},
-				(err) => reject(err)
+				(err) => reject(err),
 			);
 		});
 	}
 
 	public createProfileWithDifferentCredentials(
-		connection: IConnectionCredentials
+		connection: IConnectionCredentials,
 	): Promise<IConnectionCredentials> {
 		return new Promise<IConnectionCredentials>((resolve, reject) => {
 			this.promptForRetryConnectWithDifferentCredentials().then(
 				(result) => {
 					if (result) {
-						let connectionWithoutCredentials = Object.assign(
+						const connectionWithoutCredentials = Object.assign(
 							{},
 							connection,
 							{
 								user: "",
 								password: "",
 								emptyPasswordInput: false,
-							}
+							},
 						);
 						ConnectionCredentials.ensureRequiredPropertiesSet(
 							connectionWithoutCredentials, // connection profile
@@ -364,27 +356,26 @@ export class ConnectionUI {
 							true, // wasPasswordEmptyInConfigFile
 							this._prompter,
 							this._connectionStore,
-							connection
+							connection,
 						).then(
 							(connectionResult) => {
 								resolve(connectionResult);
 							},
 							(error) => {
 								reject(error);
-							}
+							},
 						);
 					} else {
 						resolve(undefined);
 					}
-				}
+				},
 			);
 		});
 	}
 
 	private handleSelectedConnection(
-		selection: IConnectionCredentialsQuickPickItem
+		selection: IConnectionCredentialsQuickPickItem,
 	): Promise<IConnectionCredentials> {
-		const self = this;
 		return new Promise<IConnectionCredentials>((resolve, reject) => {
 			if (selection !== undefined) {
 				let connectFunc: Promise<IConnectionCredentials>;
@@ -393,10 +384,10 @@ export class ConnectionUI {
 					CredentialsQuickPickItemType.NewConnection
 				) {
 					// call the workflow to create a new connection
-					connectFunc = self.createAndSaveProfile();
+					connectFunc = this.createAndSaveProfile();
 				} else {
 					// user chose a connection from picklist. Prompt for mandatory info that's missing (e.g. username and/or password)
-					connectFunc = self.fillOrPromptForMissingInfo(selection);
+					connectFunc = this.fillOrPromptForMissingInfo(selection);
 				}
 
 				connectFunc.then(
@@ -406,7 +397,7 @@ export class ConnectionUI {
 						}
 						resolve(resolvedConnectionCreds);
 					},
-					(err) => reject(err)
+					(err) => reject(err),
 				);
 			} else {
 				resolve(undefined);
@@ -415,14 +406,13 @@ export class ConnectionUI {
 	}
 
 	private promptToClearRecentConnectionsList(): Promise<boolean> {
-		const self = this;
 		return new Promise<boolean>((resolve, reject) => {
-			let question: IQuestion = {
+			const question: IQuestion = {
 				type: QuestionTypes.confirm,
 				name: LocalizedConstants.msgPromptClearRecentConnections,
 				message: LocalizedConstants.msgPromptClearRecentConnections,
 			};
-			self._prompter
+			this._prompter
 				.promptSingle(question)
 				.then((result) => {
 					resolve(result ? true : false);
@@ -434,10 +424,9 @@ export class ConnectionUI {
 	}
 
 	public promptToManageProfiles(): Promise<boolean> {
-		const self = this;
 		return new Promise<boolean>((resolve, reject) => {
 			// Create profile, clear recent connections, edit profiles, or remove profile?
-			let choices: INameValueChoice[] = [
+			const choices: INameValueChoice[] = [
 				{
 					name: LocalizedConstants.CreateProfileLabel,
 					value: ManageProfileTask.Create,
@@ -456,7 +445,7 @@ export class ConnectionUI {
 				},
 			];
 
-			let question: IQuestion = {
+			const question: IQuestion = {
 				type: QuestionTypes.expand,
 				name: LocalizedConstants.ManageProfilesPrompt,
 				message: LocalizedConstants.ManageProfilesPrompt,
@@ -464,41 +453,41 @@ export class ConnectionUI {
 				onAnswered: (value) => {
 					switch (value) {
 						case ManageProfileTask.Create:
-							self.connectionManager
+							this.connectionManager
 								.onCreateProfile()
 								.then((result) => {
 									resolve(result);
 								});
 							break;
 						case ManageProfileTask.ClearRecentlyUsed:
-							self.promptToClearRecentConnectionsList().then(
+							this.promptToClearRecentConnectionsList().then(
 								(result) => {
 									if (result) {
-										self.connectionManager
+										this.connectionManager
 											.clearRecentConnectionsList()
 											.then(() => {
-												self.vscodeWrapper.showInformationMessage(
-													LocalizedConstants.msgClearedRecentConnections
+												this.vscodeWrapper.showInformationMessage(
+													LocalizedConstants.msgClearedRecentConnections,
 												);
 												resolve(true);
 											});
 									} else {
 										resolve(false);
 									}
-								}
+								},
 							);
 							break;
 						case ManageProfileTask.Edit:
-							self.vscodeWrapper
+							this.vscodeWrapper
 								.executeCommand(
-									"workbench.action.openGlobalSettings"
+									"workbench.action.openGlobalSettings",
 								)
 								.then(() => {
 									resolve(true);
 								});
 							break;
 						case ManageProfileTask.Remove:
-							self.connectionManager
+							this.connectionManager
 								.onRemoveProfile()
 								.then((result) => {
 									resolve(result);
@@ -520,20 +509,16 @@ export class ConnectionUI {
 	 * @param validate whether the profile should be connected to and validated before saving
 	 * @returns undefined if profile creation failed
 	 */
-	public createAndSaveProfile(
-		validate: boolean = true
-	): Promise<IConnectionProfile> {
-		let self = this;
-		return self
-			.promptForCreateProfile()
+	public createAndSaveProfile(validate = true): Promise<IConnectionProfile> {
+		return this.promptForCreateProfile()
 			.then((profile) => {
 				if (profile) {
 					if (validate) {
 						// Validate the profile before saving
-						return self.validateAndSaveProfile(profile);
+						return this.validateAndSaveProfile(profile);
 					} else {
 						// Save the profile without validation
-						return self.saveProfile(profile);
+						return this.saveProfile(profile);
 					}
 				}
 				return undefined;
@@ -541,12 +526,12 @@ export class ConnectionUI {
 			.then((savedProfile) => {
 				if (savedProfile) {
 					if (validate) {
-						self.vscodeWrapper.showInformationMessage(
-							LocalizedConstants.msgProfileCreatedAndConnected
+						this.vscodeWrapper.showInformationMessage(
+							LocalizedConstants.msgProfileCreatedAndConnected,
 						);
 					} else {
-						self.vscodeWrapper.showInformationMessage(
-							LocalizedConstants.msgProfileCreated
+						this.vscodeWrapper.showInformationMessage(
+							LocalizedConstants.msgProfileCreated,
 						);
 					}
 				}
@@ -558,28 +543,27 @@ export class ConnectionUI {
 	 * Validate a connection profile by connecting to it, and save it if we are successful.
 	 */
 	private validateAndSaveProfile(
-		profile: Interfaces.IConnectionProfile
+		profile: Interfaces.IConnectionProfile,
 	): PromiseLike<Interfaces.IConnectionProfile> {
-		const self = this;
-		return self.connectionManager
-			.connect(self.vscodeWrapper.activeTextEditorUri, profile)
+		return this.connectionManager
+			.connect(this.vscodeWrapper.activeTextEditorUri, profile)
 			.then((result) => {
 				if (result) {
 					// Success! save it
-					return self.saveProfile(profile);
+					return this.saveProfile(profile);
 				} else {
 					// Error! let the user try again, prefilling values that they already entered
-					return self
-						.promptForRetryCreateProfile(profile)
-						.then((updatedProfile) => {
+					return this.promptForRetryCreateProfile(profile).then(
+						(updatedProfile) => {
 							if (updatedProfile) {
-								return self.validateAndSaveProfile(
-									updatedProfile
+								return this.validateAndSaveProfile(
+									updatedProfile,
 								);
 							} else {
 								return undefined;
 							}
-						});
+						},
+					);
 				}
 			});
 	}
@@ -588,7 +572,7 @@ export class ConnectionUI {
 	 * Save a connection profile using the connection store.
 	 */
 	private saveProfile(
-		profile: IConnectionProfile
+		profile: IConnectionProfile,
 	): Promise<IConnectionProfile> {
 		return this._connectionStore.saveProfile(profile);
 	}
@@ -598,19 +582,19 @@ export class ConnectionUI {
 	}
 
 	private promptForRetryCreateProfile(
-		profile: IConnectionProfile
+		profile: IConnectionProfile,
 	): PromiseLike<IConnectionProfile> {
 		// Ask if the user would like to fix the profile
 		return this._vscodeWrapper
 			.showErrorMessage(
 				LocalizedConstants.msgPromptRetryCreateProfile,
-				LocalizedConstants.retryLabel
+				LocalizedConstants.retryLabel,
 			)
 			.then((result) => {
 				if (result === LocalizedConstants.retryLabel) {
 					return ConnectionProfile.createProfile(
 						this._prompter,
-						profile
+						profile,
 					);
 				} else {
 					return undefined;
@@ -623,7 +607,7 @@ export class ConnectionUI {
 		return this._vscodeWrapper
 			.showErrorMessage(
 				LocalizedConstants.msgPromptRetryConnectionDifferentCredentials,
-				LocalizedConstants.retryLabel
+				LocalizedConstants.retryLabel,
 			)
 			.then((result) => {
 				if (result === LocalizedConstants.retryLabel) {
@@ -635,7 +619,7 @@ export class ConnectionUI {
 	}
 
 	private fillOrPromptForMissingInfo(
-		selection: IConnectionCredentialsQuickPickItem
+		selection: IConnectionCredentialsQuickPickItem,
 	): Promise<IConnectionCredentials> {
 		// If a connection string is present, don't prompt for any other info
 		if (selection.connectionCreds.connectionString) {
@@ -645,7 +629,7 @@ export class ConnectionUI {
 		}
 
 		const passwordEmptyInConfigFile: boolean = Utils.isEmpty(
-			selection.connectionCreds.password
+			selection.connectionCreds.password,
 		);
 		return this._connectionStore.addSavedPassword(selection).then((sel) => {
 			return ConnectionCredentials.ensureRequiredPropertiesSet(
@@ -655,22 +639,20 @@ export class ConnectionUI {
 				false,
 				passwordEmptyInConfigFile,
 				this._prompter,
-				this._connectionStore
+				this._connectionStore,
 			);
 		});
 	}
 
 	// Prompts the user to pick a profile for removal, then removes from the global saved state
 	public removeProfile(): Promise<boolean> {
-		let self = this;
 
 		// Flow: Select profile to remove, confirm removal, remove, notify
-		let profiles = self._connectionStore.getProfilePickListItems(false);
-		return self
-			.selectProfileForRemoval(profiles)
+		const profiles = this._connectionStore.getProfilePickListItems(false);
+		return this.selectProfileForRemoval(profiles)
 			.then((profile) => {
 				if (profile) {
-					return self._connectionStore.removeProfile(profile);
+					return this._connectionStore.removeProfile(profile);
 				}
 				return false;
 			})
@@ -678,7 +660,7 @@ export class ConnectionUI {
 				if (result) {
 					// TODO again consider moving information prompts to the prompt package
 					vscode.window.showInformationMessage(
-						LocalizedConstants.msgProfileRemoved
+						LocalizedConstants.msgProfileRemoved,
 					);
 				}
 				return result;
@@ -686,21 +668,20 @@ export class ConnectionUI {
 	}
 
 	private selectProfileForRemoval(
-		profiles: IConnectionCredentialsQuickPickItem[]
+		profiles: IConnectionCredentialsQuickPickItem[],
 	): Promise<IConnectionProfile> {
-		let self = this;
 		if (!profiles || profiles.length === 0) {
 			// Inform the user we have no profiles available for deletion
 			// TODO: consider moving to prompter if we separate all UI logic from workflows in the future
 			vscode.window.showErrorMessage(
-				LocalizedConstants.msgNoProfilesSaved
+				LocalizedConstants.msgNoProfilesSaved,
 			);
 			return Promise.resolve(undefined);
 		}
 
-		let chooseProfile = "ChooseProfile";
-		let confirm = "ConfirmRemoval";
-		let questions: IQuestion[] = [
+		const chooseProfile = "ChooseProfile";
+		const confirm = "ConfirmRemoval";
+		const questions: IQuestion[] = [
 			{
 				// 1: what profile should we remove?
 				type: QuestionTypes.expand,
@@ -718,9 +699,9 @@ export class ConnectionUI {
 		];
 
 		// Prompt and return the value if the user confirmed
-		return self._prompter.prompt(questions).then((answers) => {
+		return this._prompter.prompt(questions).then((answers) => {
 			if (answers && answers[confirm]) {
-				let profilePickItem = <IConnectionCredentialsQuickPickItem>(
+				const profilePickItem = <IConnectionCredentialsQuickPickItem>(
 					answers[chooseProfile]
 				);
 				return <IConnectionProfile>profilePickItem.connectionCreds;

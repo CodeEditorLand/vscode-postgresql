@@ -3,26 +3,26 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 import {
+	AfterViewChecked,
+	ChangeDetectorRef,
 	Component,
-	OnInit,
-	Inject,
-	forwardRef,
-	ViewChild,
-	ViewChildren,
-	QueryList,
 	ElementRef,
 	EventEmitter,
-	ChangeDetectorRef,
-	AfterViewChecked,
+	Inject,
+	OnInit,
+	QueryList,
+	ViewChild,
+	ViewChildren,
+	forwardRef,
 } from "@angular/core";
 import {
+	FieldType,
 	IColumnDefinition,
-	IObservableCollection,
 	IGridDataRow,
+	IObservableCollection,
 	ISlickRange,
 	SlickGrid,
 	VirtualizedCollection,
-	FieldType,
 } from "angular2-slickgrid";
 
 import { DataService } from "./../services/data.service";
@@ -191,32 +191,32 @@ export class AppComponent implements OnInit, AfterViewChecked {
 			this.navigateToGrid(this.activeGrid - 1);
 		},
 		"event.copySelection": () => {
-			let range: IRange = this.getSelectedRangeUnderMessages();
-			let messageText = range ? range.text() : "";
+			const range: IRange = this.getSelectedRangeUnderMessages();
+			const messageText = range ? range.text() : "";
 			if (messageText.length > 0) {
 				this.executeCopy(messageText);
 			} else {
-				let activeGrid = this.activeGrid;
-				let selection = this.slickgrids
+				const activeGrid = this.activeGrid;
+				const selection = this.slickgrids
 					.toArray()
 					[activeGrid].getSelectedRanges();
 				this.dataService.copyResults(
 					selection,
 					this.renderedDataSets[activeGrid].batchId,
-					this.renderedDataSets[activeGrid].resultId
+					this.renderedDataSets[activeGrid].resultId,
 				);
 			}
 		},
 		"event.copyWithHeaders": () => {
-			let activeGrid = this.activeGrid;
-			let selection = this.slickgrids
+			const activeGrid = this.activeGrid;
+			const selection = this.slickgrids
 				.toArray()
 				[activeGrid].getSelectedRanges();
 			this.dataService.copyResults(
 				selection,
 				this.renderedDataSets[activeGrid].batchId,
 				this.renderedDataSets[activeGrid].resultId,
-				true
+				true,
 			);
 		},
 		"event.maximizeGrid": () => {
@@ -266,7 +266,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 				return Constants.saveCSVLabel;
 			},
 			functionality: (batchId, resultId, index) => {
-				let selection = this.slickgrids
+				const selection = this.slickgrids
 					.toArray()
 					[index].getSelectedRanges();
 				if (selection.length <= 1) {
@@ -279,7 +279,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					});
 				} else {
 					this.dataService.showWarning(
-						Constants.msgCannotSaveMultipleSelections
+						Constants.msgCannotSaveMultipleSelections,
 					);
 				}
 			},
@@ -295,7 +295,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 				return Constants.saveJSONLabel;
 			},
 			functionality: (batchId, resultId, index) => {
-				let selection = this.slickgrids
+				const selection = this.slickgrids
 					.toArray()
 					[index].getSelectedRanges();
 				if (selection.length <= 1) {
@@ -308,7 +308,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					});
 				} else {
 					this.dataService.showWarning(
-						Constants.msgCannotSaveMultipleSelections
+						Constants.msgCannotSaveMultipleSelections,
 					);
 				}
 			},
@@ -324,7 +324,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 				return Constants.saveExcelLabel;
 			},
 			functionality: (batchId, resultId, index) => {
-				let selection = this.slickgrids
+				const selection = this.slickgrids
 					.toArray()
 					[index].getSelectedRanges();
 				if (selection.length <= 1) {
@@ -337,7 +337,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					});
 				} else {
 					this.dataService.showWarning(
-						Constants.msgCannotSaveMultipleSelections
+						Constants.msgCannotSaveMultipleSelections,
 					);
 				}
 			},
@@ -402,52 +402,51 @@ export class AppComponent implements OnInit, AfterViewChecked {
 	 * Called by Angular when the object is initialized
 	 */
 	ngOnInit(): void {
-		const self = this;
 		this.setupResizeBind();
 
 		this.dataService.config.then((config) => {
 			this.config = config;
-			self._messageActive = self.config.messagesDefaultOpen;
+			this._messageActive = this.config.messagesDefaultOpen;
 			this.shortcuts
 				.stringCodeFor("event.toggleMessagePane")
 				.then((result) => {
-					self.messageShortcut = result;
+					this.messageShortcut = result;
 				});
 			this.shortcuts
 				.stringCodeFor("event.toggleResultPane")
 				.then((result) => {
-					self.resultShortcut = result;
+					this.resultShortcut = result;
 				});
 		});
 		this.dataService.dataEventObs.subscribe((event) => {
 			switch (event.type) {
 				case "complete":
-					self.totalElapsedTimeSpan = event.data;
-					self.complete = true;
-					self.messagesAdded = true;
+					this.totalElapsedTimeSpan = event.data;
+					this.complete = true;
+					this.messagesAdded = true;
 					break;
 				case "message":
-					self.messages.push(event.data);
+					this.messages.push(event.data);
 					break;
 				case "resultSet":
-					let resultSet = event.data;
+					const resultSet = event.data;
 
 					// Setup a function for generating a promise to lookup result subsets
-					let loadDataFunction = (
+					const loadDataFunction = (
 						offset: number,
-						count: number
+						count: number,
 					): Promise<IGridDataRow[]> => {
 						return new Promise<IGridDataRow[]>(
 							(resolve, reject) => {
-								self.dataService
+								this.dataService
 									.getRows(
 										offset,
 										count,
 										resultSet.batchId,
-										resultSet.id
+										resultSet.id,
 									)
 									.subscribe((rows) => {
-										let gridData: IGridDataRow[] = [];
+										const gridData: IGridDataRow[] = [];
 										for (
 											let row = 0;
 											row < rows.rows.length;
@@ -460,27 +459,27 @@ export class AppComponent implements OnInit, AfterViewChecked {
 										}
 										resolve(gridData);
 									});
-							}
+							},
 						);
 					};
 
 					// Precalculate the max height and min height
-					let maxHeight =
-						resultSet.rowCount < self._defaultNumShowingRows
+					const maxHeight =
+						resultSet.rowCount < this._defaultNumShowingRows
 							? Math.max(
-									(resultSet.rowCount + 1) * self._rowHeight,
-									self.dataIcons.length * 30
-								) + 10
+									(resultSet.rowCount + 1) * this._rowHeight,
+									this.dataIcons.length * 30,
+							  ) + 10
 							: "inherit";
-					let minHeight =
-						resultSet.rowCount >= self._defaultNumShowingRows
-							? (self._defaultNumShowingRows + 1) *
-									self._rowHeight +
-								10
+					const minHeight =
+						resultSet.rowCount >= this._defaultNumShowingRows
+							? (this._defaultNumShowingRows + 1) *
+									this._rowHeight +
+							  10
 							: maxHeight;
 
 					// Store the result set from the event
-					let dataSet: IGridDataSet = {
+					const dataSet: IGridDataSet = {
 						resized: undefined,
 						batchId: resultSet.batchId,
 						resultId: resultSet.id,
@@ -488,16 +487,16 @@ export class AppComponent implements OnInit, AfterViewChecked {
 						maxHeight: maxHeight,
 						minHeight: minHeight,
 						dataRows: new VirtualizedCollection(
-							self.windowSize,
+							this.windowSize,
 							resultSet.rowCount,
 							loadDataFunction,
 							(index) => {
 								return { values: [] };
-							}
+							},
 						),
 						columnDefinitions: resultSet.columnInfo.map((c, i) => {
-							let isLinked = c.isXml || c.isJson;
-							let linkType = c.isXml ? "xml" : "json";
+							const isLinked = c.isXml || c.isJson;
+							const linkType = c.isXml ? "xml" : "json";
 							return {
 								id: i.toString(),
 								name:
@@ -505,33 +504,35 @@ export class AppComponent implements OnInit, AfterViewChecked {
 									"Microsoft SQL Server 2005 XML Showplan"
 										? "XML Showplan"
 										: Utils.htmlEntities(c.columnName),
-								type: self.stringToFieldType("string"),
+								type: this.stringToFieldType("string"),
 								formatter: isLinked
-									? self.hyperLinkFormatter
-									: self.textFormatter,
+									? this.hyperLinkFormatter
+									: this.textFormatter,
 								asyncPostRender: isLinked
-									? self.linkHandler(linkType)
+									? this.linkHandler(linkType)
 									: undefined,
 							};
 						}),
 					};
-					self.dataSets.push(dataSet);
+					this.dataSets.push(dataSet);
 
 					// Create a dataSet to render without rows to reduce DOM size
-					let undefinedDataSet = JSON.parse(JSON.stringify(dataSet));
+					const undefinedDataSet = JSON.parse(
+						JSON.stringify(dataSet),
+					);
 					undefinedDataSet.columnDefinitions =
 						dataSet.columnDefinitions;
 					undefinedDataSet.dataRows = undefined;
 					undefinedDataSet.resized = new EventEmitter();
-					self.placeHolderDataSets.push(undefinedDataSet);
-					self.messagesAdded = true;
-					self.onScroll(0);
+					this.placeHolderDataSets.push(undefinedDataSet);
+					this.messagesAdded = true;
+					this.onScroll(0);
 					break;
 				default:
 					console.error(
 						'Unexpected web socket event type "' +
 							event.type +
-							'" sent'
+							'" sent',
 					);
 					break;
 			}
@@ -577,7 +578,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					event.batchId,
 					event.resultId,
 					"csv",
-					event.selection
+					event.selection,
 				);
 				break;
 			case "savejson":
@@ -585,7 +586,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					event.batchId,
 					event.resultId,
 					"json",
-					event.selection
+					event.selection,
 				);
 				break;
 			case "saveexcel":
@@ -593,7 +594,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					event.batchId,
 					event.resultId,
 					"excel",
-					event.selection
+					event.selection,
 				);
 				break;
 			case "selectall":
@@ -604,7 +605,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 				this.dataService.copyResults(
 					event.selection,
 					event.batchId,
-					event.resultId
+					event.resultId,
 				);
 				break;
 			case "copyWithHeaders":
@@ -612,7 +613,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					event.selection,
 					event.batchId,
 					event.resultId,
-					true
+					true,
 				);
 				break;
 			default:
@@ -624,24 +625,24 @@ export class AppComponent implements OnInit, AfterViewChecked {
 		event: { x: number; y: number },
 		batchId,
 		resultId,
-		index
+		index,
 	): void {
-		let selection = this.slickgrids.toArray()[index].getSelectedRanges();
+		const selection = this.slickgrids.toArray()[index].getSelectedRanges();
 		this.contextMenu.show(
 			event.x,
 			event.y,
 			batchId,
 			resultId,
 			index,
-			selection
+			selection,
 		);
 	}
 
 	private sendSaveRequest(format: string): void {
-		let activeGrid = this.activeGrid;
-		let batchId = this.renderedDataSets[activeGrid].batchId;
-		let resultId = this.renderedDataSets[activeGrid].resultId;
-		let selection = this.slickgrids
+		const activeGrid = this.activeGrid;
+		const batchId = this.renderedDataSets[activeGrid].batchId;
+		const resultId = this.renderedDataSets[activeGrid].resultId;
+		const selection = this.slickgrids
 			.toArray()
 			[activeGrid].getSelectedRanges();
 		this.dataService.sendSaveRequest(batchId, resultId, format, selection);
@@ -656,7 +657,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 	}): void {
 		switch (event.type) {
 			case "copySelection":
-				let selectedText = event.selectedRange.text();
+				const selectedText = event.selectedRange.text();
 				this.executeCopy(selectedText);
 				break;
 			default:
@@ -666,17 +667,17 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
 	openMessagesContextMenu(event: any): void {
 		event.preventDefault();
-		let selectedRange: IRange = this.getSelectedRangeUnderMessages();
+		const selectedRange: IRange = this.getSelectedRangeUnderMessages();
 		this.messagesContextMenu.show(
 			event.clientX,
 			event.clientY,
-			selectedRange
+			selectedRange,
 		);
 	}
 
 	getSelectedRangeUnderMessages(): IRange {
 		let selectedRange: IRange = undefined;
-		let msgEl = this._el.nativeElement.querySelector("#messages");
+		const msgEl = this._el.nativeElement.querySelector("#messages");
 		if (msgEl) {
 			selectedRange = this.getSelectedRangeWithin(msgEl);
 		}
@@ -685,8 +686,8 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
 	getSelectedRangeWithin(el): IRange {
 		let selectedRange = undefined;
-		let sel = rangy.getSelection();
-		let elRange = <IRange>rangy.createRange();
+		const sel = rangy.getSelection();
+		const elRange = <IRange>rangy.createRange();
 		elRange.selectNodeContents(el);
 		if (sel.rangeCount) {
 			selectedRange = sel.getRangeAt(0).intersection(elRange);
@@ -697,7 +698,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
 	// Copy text as text
 	executeCopy(text: string): void {
-		let input = document.createElement("textarea");
+		const input = document.createElement("textarea");
 		document.body.appendChild(input);
 		input.value = text;
 		input.style.position = "absolute";
@@ -715,7 +716,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 		cellRef: string,
 		row: number,
 		dataContext: JSON,
-		colDef: any
+		colDef: any,
 	) => {
 		this.handleLink(cellRef, row, dataContext, colDef, "xml");
 	};
@@ -727,7 +728,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 		cellRef: string,
 		row: number,
 		dataContext: JSON,
-		colDef: any
+		colDef: any,
 	) => {
 		this.handleLink(cellRef, row, dataContext, colDef, "json");
 	};
@@ -737,14 +738,13 @@ export class AppComponent implements OnInit, AfterViewChecked {
 		row: number,
 		dataContext: JSON,
 		colDef: any,
-		linkType: string
+		linkType: string,
 	): void {
-		const self = this;
-		let value = self.getCellValueString(dataContext, colDef);
+		const value = this.getCellValueString(dataContext, colDef);
 		$(cellRef)
 			.children(".xmlLink")
-			.click(function (): void {
-				self.dataService.openLink(value, colDef.name, linkType);
+			.click((): void => {
+				this.dataService.openLink(value, colDef.name, linkType);
 			});
 	}
 
@@ -754,7 +754,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 			return returnVal;
 		}
 
-		let value = dataContext[colDef.field];
+		const value = dataContext[colDef.field];
 		if (Utils.isDbCellValue(value)) {
 			returnVal = value.displayValue;
 		} else if (typeof value === "string") {
@@ -782,7 +782,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 		cell: any,
 		value: any,
 		columnDef: any,
-		dataContext: any
+		dataContext: any,
 	): string {
 		let cellClasses = "grid-cell-value-container";
 		let valueToDisplay: string;
@@ -805,13 +805,13 @@ export class AppComponent implements OnInit, AfterViewChecked {
 		cell: any,
 		value: any,
 		columnDef: any,
-		dataContext: any
+		dataContext: any,
 	): string {
 		let cellClasses = "grid-cell-value-container";
 		let valueToDisplay: string;
 		if (Utils.isDbCellValue(value)) {
 			valueToDisplay = Utils.htmlEntities(
-				value.displayValue.replace(/(\r\n|\n|\r)/g, " ")
+				value.displayValue.replace(/(\r\n|\n|\r)/g, " "),
 			);
 			if (value.isNull) {
 				cellClasses += " missing-value";
@@ -829,43 +829,42 @@ export class AppComponent implements OnInit, AfterViewChecked {
 	 * @param scrollTop The scrolltop value, if not called by the scroll event should be 0
 	 */
 	onScroll(scrollTop): void {
-		const self = this;
-		clearTimeout(self.scrollTimeOut);
+		clearTimeout(this.scrollTimeOut);
 		this.scrollTimeOut = setTimeout(() => {
-			if (self.dataSets.length < self.maxScrollGrids) {
-				self.scrollEnabled = false;
-				for (let i = 0; i < self.placeHolderDataSets.length; i++) {
-					self.placeHolderDataSets[i].dataRows =
-						self.dataSets[i].dataRows;
-					self.placeHolderDataSets[i].resized.emit();
+			if (this.dataSets.length < this.maxScrollGrids) {
+				this.scrollEnabled = false;
+				for (let i = 0; i < this.placeHolderDataSets.length; i++) {
+					this.placeHolderDataSets[i].dataRows =
+						this.dataSets[i].dataRows;
+					this.placeHolderDataSets[i].resized.emit();
 				}
 			} else {
-				let gridHeight =
-					self._el.nativeElement.getElementsByTagName("slick-grid")[0]
+				const gridHeight =
+					this._el.nativeElement.getElementsByTagName("slick-grid")[0]
 						.offsetHeight;
-				let tabHeight =
-					self._el.nativeElement.querySelector(
-						"#results"
+				const tabHeight =
+					this._el.nativeElement.querySelector(
+						"#results",
 					).offsetHeight;
-				let numOfVisibleGrids = Math.ceil(
+				const numOfVisibleGrids = Math.ceil(
 					tabHeight / gridHeight +
-						(scrollTop % gridHeight) / gridHeight
+						(scrollTop % gridHeight) / gridHeight,
 				);
-				let min = Math.floor(scrollTop / gridHeight);
-				let max = min + numOfVisibleGrids;
-				for (let i = 0; i < self.placeHolderDataSets.length; i++) {
+				const min = Math.floor(scrollTop / gridHeight);
+				const max = min + numOfVisibleGrids;
+				for (let i = 0; i < this.placeHolderDataSets.length; i++) {
 					if (i >= min && i < max) {
 						if (
-							self.placeHolderDataSets[i].dataRows === undefined
+							this.placeHolderDataSets[i].dataRows === undefined
 						) {
-							self.placeHolderDataSets[i].dataRows =
-								self.dataSets[i].dataRows;
-							self.placeHolderDataSets[i].resized.emit();
+							this.placeHolderDataSets[i].dataRows =
+								this.dataSets[i].dataRows;
+							this.placeHolderDataSets[i].resized.emit();
 						}
 					} else if (
-						self.placeHolderDataSets[i].dataRows !== undefined
+						this.placeHolderDataSets[i].dataRows !== undefined
 					) {
-						self.placeHolderDataSets[i].dataRows = undefined;
+						this.placeHolderDataSets[i].dataRows = undefined;
 					}
 				}
 			}
@@ -876,7 +875,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					this.slickgrids.toArray()[0].setActive();
 				});
 			}
-		}, self.scrollTimeOutTime);
+		}, this.scrollTimeOutTime);
 	}
 
 	/**
@@ -891,27 +890,28 @@ export class AppComponent implements OnInit, AfterViewChecked {
 	 * Sets up the resize for the messages/results panes bar
 	 */
 	setupResizeBind(): void {
-		const self = this;
-		let $resizeHandle = $(
-			self._el.nativeElement.querySelector("#messageResizeHandle")
+		const $resizeHandle = $(
+			this._el.nativeElement.querySelector("#messageResizeHandle"),
 		);
-		let $messagePane = $(self._el.nativeElement.querySelector("#messages"));
+		const $messagePane = $(
+			this._el.nativeElement.querySelector("#messages"),
+		);
 		$resizeHandle.bind("dragstart", (e) => {
-			self.resizing = true;
-			self.resizeHandleTop = e.pageY;
+			this.resizing = true;
+			this.resizeHandleTop = e.pageY;
 			return true;
 		});
 
 		$resizeHandle.bind("drag", (e) => {
-			self.resizeHandleTop = e.pageY;
+			this.resizeHandleTop = e.pageY;
 		});
 
 		$resizeHandle.bind("dragend", (e) => {
-			self.resizing = false;
+			this.resizing = false;
 			// redefine the min size for the messages based on the final position
 			$messagePane.css("min-height", $(window).height() - (e.pageY + 22));
-			self.cd.detectChanges();
-			self.resizeGrids();
+			this.cd.detectChanges();
+			this.resizeGrids();
 		});
 	}
 
@@ -919,7 +919,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 	 * Ensures the messages tab is scrolled to the bottom
 	 */
 	scrollMessages(): void {
-		let messagesDiv = this._el.nativeElement.querySelector("#messages");
+		const messagesDiv = this._el.nativeElement.querySelector("#messages");
 		messagesDiv.scrollTop = messagesDiv.scrollHeight;
 	}
 
@@ -928,7 +928,6 @@ export class AppComponent implements OnInit, AfterViewChecked {
 	 * Otherwise rerenders the result sets from default
 	 */
 	magnify(index: number): void {
-		const self = this;
 		if (this.renderedDataSets.length > 1) {
 			this.renderedDataSets = [this.placeHolderDataSets[index]];
 		} else {
@@ -936,10 +935,10 @@ export class AppComponent implements OnInit, AfterViewChecked {
 			this.onScroll(0);
 		}
 		setTimeout(() => {
-			for (let grid of self.renderedDataSets) {
+			for (const grid of this.renderedDataSets) {
 				grid.resized.emit();
 			}
-			self.slickgrids.toArray()[0].setActive();
+			this.slickgrids.toArray()[0].setActive();
 		});
 	}
 
@@ -947,7 +946,6 @@ export class AppComponent implements OnInit, AfterViewChecked {
 	 *
 	 */
 	keyEvent(e): void {
-		const self = this;
 		if (e.detail) {
 			e.which = e.detail.which;
 			e.ctrlKey = e.detail.ctrlKey;
@@ -955,11 +953,11 @@ export class AppComponent implements OnInit, AfterViewChecked {
 			e.altKey = e.detail.altKey;
 			e.shiftKey = e.detail.shiftKey;
 		}
-		let eString = this.shortcuts.buildEventString(e);
+		const eString = this.shortcuts.buildEventString(e);
 		this.shortcuts.getEvent(eString).then((result) => {
 			if (result) {
-				let eventName = <string>result;
-				self.shortcutfunc[eventName]();
+				const eventName = <string>result;
+				this.shortcutfunc[eventName]();
 				e.stopImmediatePropagation();
 			}
 		});
@@ -991,10 +989,12 @@ export class AppComponent implements OnInit, AfterViewChecked {
 		this.activeGrid = targetIndex;
 
 		// scrolling logic
-		let resultsWindow = $("#results");
+		const resultsWindow = $("#results");
 		let scrollTop = resultsWindow.scrollTop();
-		let scrollBottom = scrollTop + resultsWindow.height();
-		let gridHeight = $(this._el.nativeElement).find("slick-grid").height();
+		const scrollBottom = scrollTop + resultsWindow.height();
+		const gridHeight = $(this._el.nativeElement)
+			.find("slick-grid")
+			.height();
 		if (scrollBottom < gridHeight * (targetIndex + 1)) {
 			scrollTop += gridHeight * (targetIndex + 1) - scrollBottom;
 			resultsWindow.scrollTop(scrollTop);
@@ -1008,9 +1008,8 @@ export class AppComponent implements OnInit, AfterViewChecked {
 	}
 
 	resizeGrids(): void {
-		const self = this;
 		setTimeout(() => {
-			for (let grid of self.renderedDataSets) {
+			for (const grid of this.renderedDataSets) {
 				grid.resized.emit();
 			}
 		});

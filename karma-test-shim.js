@@ -7,7 +7,7 @@ Error.stackTraceLimit = 0; // "No stacktrace"" is usually best for app testing.
 
 var builtPath = "/base/out/src/views/htmlcontent/dist/js/";
 
-__karma__.loaded = function () {};
+__karma__.loaded = () => {};
 
 function isJsFile(path) {
 	return path.slice(-3) == ".js";
@@ -56,7 +56,7 @@ function initTestBed() {
 	return Promise.all([
 		System.import("@angular/core/testing"),
 		System.import("@angular/platform-browser-dynamic/testing"),
-	]).then(function (providers) {
+	]).then((providers) => {
 		var coreTesting = providers[0];
 		var browserTesting = providers[1];
 
@@ -64,7 +64,7 @@ function initTestBed() {
 
 		coreTesting.TestBed.initTestEnvironment(
 			browserTesting.BrowserDynamicTestingModule,
-			browserTesting.platformBrowserDynamicTesting()
+			browserTesting.platformBrowserDynamicTesting(),
 		);
 	});
 }
@@ -72,8 +72,6 @@ function initTestBed() {
 // Import all spec files and start karma
 function initTesting() {
 	return Promise.all(
-		allSpecFiles.map(function (moduleName) {
-			return System.import(moduleName);
-		})
+		allSpecFiles.map((moduleName) => System.import(moduleName)),
 	).then(__karma__.start, __karma__.error);
 }

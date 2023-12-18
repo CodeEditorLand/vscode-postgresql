@@ -6,7 +6,7 @@ export function formatString(str: string, ...args: any[]): string {
 		result = str;
 	} else {
 		result = str.replace(/\{(\d+)\}/g, (match, rest) => {
-			let index = rest[0];
+			const index = rest[0];
 			return typeof args[index] !== "undefined" ? args[index] : match;
 		});
 	}
@@ -28,7 +28,7 @@ export function htmlEntities(str: string): string {
 	return typeof str === "string"
 		? str.replace(/[\u00A0-\u9999<>\&"']/gim, (i) => {
 				return `&#${i.charCodeAt(0)};`;
-			})
+		  })
 		: undefined;
 }
 

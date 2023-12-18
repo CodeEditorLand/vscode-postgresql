@@ -3,8 +3,6 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-"use strict";
-
 import { IStatusView } from "./interfaces";
 import vscode = require("vscode");
 import Constants = require("../constants/constants");
@@ -14,24 +12,24 @@ import Constants = require("../constants/constants");
  */
 export class ServerInitializationResult {
 	public constructor(
-		public installedBeforeInitializing: Boolean = false,
-		public isRunning: Boolean = false,
-		public serverPath: string = undefined
+		public installedBeforeInitializing: boolean = false,
+		public isRunning: boolean = false,
+		public serverPath: string = undefined,
 	) {}
 
 	public Clone(): ServerInitializationResult {
 		return new ServerInitializationResult(
 			this.installedBeforeInitializing,
 			this.isRunning,
-			this.serverPath
+			this.serverPath,
 		);
 	}
 
-	public WithRunning(isRunning: Boolean): ServerInitializationResult {
+	public WithRunning(isRunning: boolean): ServerInitializationResult {
 		return new ServerInitializationResult(
 			this.installedBeforeInitializing,
 			isRunning,
-			this.serverPath
+			this.serverPath,
 		);
 	}
 }
@@ -46,13 +44,13 @@ export class ServerStatusView implements IStatusView, vscode.Disposable {
 
 	constructor() {
 		this._statusBarItem = vscode.window.createStatusBarItem(
-			vscode.StatusBarAlignment.Right
+			vscode.StatusBarAlignment.Right,
 		);
 		vscode.window.onDidChangeActiveTextEditor((params) =>
-			this.onDidChangeActiveTextEditor(params)
+			this.onDidChangeActiveTextEditor(params),
 		);
 		vscode.workspace.onDidCloseTextDocument((params) =>
-			this.onDidCloseTextDocument(params)
+			this.onDidCloseTextDocument(params),
 		);
 	}
 
@@ -88,7 +86,7 @@ export class ServerStatusView implements IStatusView, vscode.Disposable {
 
 	private showProgress(statusText: string): void {
 		let index = 0;
-		let progressTicks = ["|", "/", "-", "\\"];
+		const progressTicks = ["|", "/", "-", "\\"];
 
 		this._progressTimerId = setInterval(() => {
 			index++;
@@ -96,7 +94,7 @@ export class ServerStatusView implements IStatusView, vscode.Disposable {
 				index = 0;
 			}
 
-			let progressTick = progressTicks[index];
+			const progressTick = progressTicks[index];
 			if (this._statusBarItem.text !== Constants.serviceInstalled) {
 				this._statusBarItem.text = statusText + " " + progressTick;
 				this._statusBarItem.show();

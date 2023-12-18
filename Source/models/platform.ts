@@ -3,8 +3,6 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-"use strict";
-
 import * as child_process from "child_process";
 import * as fs from "fs";
 import * as os from "os";
@@ -64,13 +62,13 @@ export class PlatformInformation {
 	public constructor(
 		public platform: string,
 		public architecture: string,
-		public distribution: LinuxDistribution = undefined
+		public distribution: LinuxDistribution = undefined,
 	) {
 		try {
 			this.runtimeId = PlatformInformation.getRuntimeId(
 				platform,
 				architecture,
-				distribution
+				distribution,
 			);
 		} catch (err) {
 			this.runtimeId = undefined;
@@ -104,11 +102,11 @@ export class PlatformInformation {
 	public isMacVersionLessThan(version: string): boolean {
 		if (this.isMacOS) {
 			try {
-				let versionInfo = plist.parse(
+				const versionInfo = plist.parse(
 					fs.readFileSync(
 						"/System/Library/CoreServices/SystemVersion.plist",
-						"utf-8"
-					)
+						"utf-8",
+					),
 				);
 				if (
 					versionInfo &&
@@ -147,7 +145,7 @@ export class PlatformInformation {
 	}
 
 	public static GetCurrent(): Promise<PlatformInformation> {
-		let platform = os.platform();
+		const platform = os.platform();
 		let architecturePromise: Promise<string>;
 		let distributionPromise: Promise<LinuxDistribution>;
 
@@ -219,7 +217,7 @@ export class PlatformInformation {
 					}
 
 					resolve(stdout);
-				}
+				},
 			);
 		});
 	}
@@ -231,7 +229,7 @@ export class PlatformInformation {
 	private static getRuntimeId(
 		platform: string,
 		architecture: string,
-		distribution: LinuxDistribution
+		distribution: LinuxDistribution,
 	): Runtime {
 		// Note: We could do much better here. Currently, we only return a limited number of RIDs that
 		// are officially supported.
@@ -247,7 +245,7 @@ export class PlatformInformation {
 				}
 
 				throw new Error(
-					`Unsupported Windows architecture: ${architecture}`
+					`Unsupported Windows architecture: ${architecture}`,
 				);
 
 			case "darwin":
@@ -257,7 +255,7 @@ export class PlatformInformation {
 				}
 
 				throw new Error(
-					`Unsupported macOS architecture: ${architecture}`
+					`Unsupported macOS architecture: ${architecture}`,
 				);
 
 			case "linux":
@@ -265,7 +263,7 @@ export class PlatformInformation {
 					// First try the distribution name
 					let runtimeId = PlatformInformation.getRuntimeIdHelper(
 						distribution.name,
-						distribution.version
+						distribution.version,
 					);
 
 					// If the distribution isn't one that we understand, but the 'ID_LIKE' field has something that we understand, use that
@@ -277,10 +275,10 @@ export class PlatformInformation {
 						distribution.idLike &&
 						distribution.idLike.length > 0
 					) {
-						for (let id of distribution.idLike) {
+						for (const id of distribution.idLike) {
 							runtimeId = PlatformInformation.getRuntimeIdHelper(
 								id,
-								distribution.version
+								distribution.version,
 							);
 							if (runtimeId !== Runtime.UnknownRuntime) {
 								break;
@@ -298,7 +296,7 @@ export class PlatformInformation {
 
 				// If we got here, this is not a Linux distro or architecture that we currently support.
 				throw new Error(
-					`Unsupported Linux distro: ${distribution.name}, ${distribution.version}, ${architecture}`
+					`Unsupported Linux distro: ${distribution.name}, ${distribution.version}, ${architecture}`,
 				);
 			default:
 				// If we got here, we've ended up with a platform we don't support  like 'freebsd' or 'sunos'.
@@ -309,7 +307,7 @@ export class PlatformInformation {
 
 	private static getRuntimeIdHelper(
 		distributionName: string,
-		distributionVersion: string
+		distributionVersion: string,
 	): Runtime {
 		switch (distributionName) {
 			case "arch":
@@ -385,7 +383,7 @@ export class LinuxDistribution {
 	public constructor(
 		public name: string,
 		public version: string,
-		public idLike?: string[]
+		public idLike?: string[],
 	) {}
 
 	public static GetCurrent(): Promise<LinuxDistribution> {
@@ -394,7 +392,7 @@ export class LinuxDistribution {
 		return LinuxDistribution.FromFilePath("/etc/os-release")
 			.catch(() => LinuxDistribution.FromFilePath("/usr/lib/os-release"))
 			.catch(() =>
-				Promise.resolve(new LinuxDistribution(unknown, unknown))
+				Promise.resolve(new LinuxDistribution(unknown, unknown)),
 			);
 	}
 
@@ -416,7 +414,7 @@ export class LinuxDistribution {
 
 	public static FromReleaseInfo(
 		releaseInfo: string,
-		eol: string = os.EOL
+		eol: string = os.EOL,
 	): LinuxDistribution {
 		let name = unknown;
 		let version = unknown;
@@ -426,9 +424,9 @@ export class LinuxDistribution {
 		for (let line of lines) {
 			line = line.trim();
 
-			let equalsIndex = line.indexOf("=");
+			const equalsIndex = line.indexOf("=");
 			if (equalsIndex >= 0) {
-				let key = line.substring(0, equalsIndex);
+				const key = line.substring(0, equalsIndex);
 				let value = line.substring(equalsIndex + 1);
 
 				// Strip quotes if necessary

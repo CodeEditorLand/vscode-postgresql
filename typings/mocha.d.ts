@@ -123,7 +123,7 @@ declare class Mocha {
 }
 
 // merge the Mocha class declaration with a module
-declare module Mocha {
+declare namespace Mocha {
 	/** Partial interface for Mocha's `Runnable` class. */
 	interface IRunnable {
 		title: string;
@@ -171,7 +171,7 @@ declare module Mocha {
 		timeout(ms: number): void;
 	}
 
-	export module reporters {
+	export namespace reporters {
 		export class Base {
 			stats: {
 				suites: number;
@@ -210,7 +210,7 @@ declare module Mocha {
 					complete?: string;
 					incomplete?: string;
 					close?: string;
-				}
+				},
 			);
 		}
 		export class Spec extends Base {}

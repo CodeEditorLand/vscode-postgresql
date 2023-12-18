@@ -2,49 +2,48 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-"use strict";
 
-import * as path from "path";
 import * as os from "os";
+import * as path from "path";
 
 import {
 	ExtensionContext,
-	workspace,
-	window,
 	OutputChannel,
 	languages,
+	window,
+	workspace,
 } from "vscode";
 import {
+	CloseAction,
+	ErrorAction,
 	LanguageClient,
 	LanguageClientOptions,
+	NotificationHandler,
+	NotificationType,
+	RequestType,
 	ServerOptions,
 	TransportKind,
-	RequestType,
-	NotificationType,
-	NotificationHandler,
-	ErrorAction,
-	CloseAction,
 } from "vscode-languageclient";
 
 import VscodeWrapper from "../controllers/vscodeWrapper";
-import Telemetry from "../models/telemetry";
-import * as Utils from "../models/utils";
 import { VersionRequest } from "../models/contracts";
 import { Logger } from "../models/logger";
+import Telemetry from "../models/telemetry";
+import * as Utils from "../models/utils";
 import Constants = require("../constants/constants");
-import ServerProvider from "./server";
-import ServiceDownloadProvider from "./serviceDownloadProvider";
+import ExtConfig from "../configurations/extConfig";
+import { IConfig } from "../languageservice/interfaces";
+import * as LanguageServiceContracts from "../models/contracts/languageService";
+import { PlatformInformation, getRuntimeDisplayName } from "../models/platform";
+import StatusView from "../views/statusView";
 import DecompressProvider from "./decompressProvider";
 import HttpClient from "./httpClient";
-import ExtConfig from "../configurations/extConfig";
-import { PlatformInformation, getRuntimeDisplayName } from "../models/platform";
+import ServerProvider from "./server";
 import { ServerInitializationResult, ServerStatusView } from "./serverStatus";
-import StatusView from "../views/statusView";
-import * as LanguageServiceContracts from "../models/contracts/languageService";
-import { IConfig } from "../languageservice/interfaces";
+import ServiceDownloadProvider from "./serviceDownloadProvider";
 
-let vscode = require("vscode");
-let opener = require("opener");
+const vscode = require("vscode");
+const opener = require("opener");
 
 let _channel: OutputChannel = undefined;
 
@@ -80,7 +79,7 @@ class LanguageClientErrorHandler {
 		this.vscodeWrapper
 			.showErrorMessage(
 				Constants.sqlToolsServiceCrashMessage,
-				Constants.sqlToolsServiceCrashButton
+				Constants.sqlToolsServiceCrashButton,
 			)
 			.then((action) => {
 				if (action && action === Constants.sqlToolsServiceCrashButton) {
@@ -144,40 +143,40 @@ export default class SqlToolsServiceClient {
 		private _server: ServerProvider,
 		private _logger: Logger,
 		private _statusView: StatusView,
-		private _vscodeWrapper: VscodeWrapper
+		private _vscodeWrapper: VscodeWrapper,
 	) {}
 
 	// gets or creates the singleton SQL Tools service client instance
 	public static get instance(): SqlToolsServiceClient {
 		if (this._instance === undefined) {
-			let config = new ExtConfig();
+			const config = new ExtConfig();
 			_channel = window.createOutputChannel(
-				Constants.serviceInitializingOutputChannelName
+				Constants.serviceInitializingOutputChannelName,
 			);
-			let logger = new Logger((text) => _channel.append(text));
-			let serverStatusView = new ServerStatusView();
-			let httpClient = new HttpClient();
-			let decompressProvider = new DecompressProvider();
-			let downloadProvider = new ServiceDownloadProvider(
+			const logger = new Logger((text) => _channel.append(text));
+			const serverStatusView = new ServerStatusView();
+			const httpClient = new HttpClient();
+			const decompressProvider = new DecompressProvider();
+			const downloadProvider = new ServiceDownloadProvider(
 				config,
 				logger,
 				serverStatusView,
 				httpClient,
-				decompressProvider
+				decompressProvider,
 			);
-			let serviceProvider = new ServerProvider(
+			const serviceProvider = new ServerProvider(
 				downloadProvider,
 				config,
-				serverStatusView
+				serverStatusView,
 			);
-			let vscodeWrapper = new VscodeWrapper();
-			let statusView = new StatusView(vscodeWrapper);
+			const vscodeWrapper = new VscodeWrapper();
+			const statusView = new StatusView(vscodeWrapper);
 			this._instance = new SqlToolsServiceClient(
 				config,
 				serviceProvider,
 				logger,
 				statusView,
-				vscodeWrapper
+				vscodeWrapper,
 			);
 		}
 		return this._instance;
@@ -186,7 +185,7 @@ export default class SqlToolsServiceClient {
 	// initialize the SQL Tools Service Client instance by launching
 	// out-of-proc server through the LanguageClient
 	public initialize(
-		context: ExtensionContext
+		context: ExtensionContext,
 	): Promise<ServerInitializationResult> {
 		this._logger.appendLine(Constants.serviceInitializing);
 
@@ -197,28 +196,20 @@ export default class SqlToolsServiceClient {
 
 	public initializeForPlatform(
 		platformInfo: PlatformInformation,
-		context: ExtensionContext
+		context: ExtensionContext,
 	): Promise<ServerInitializationResult> {
 		return new Promise<ServerInitializationResult>((resolve, reject) => {
 			this._logger.appendLine(
-				Constants.commandsNotAvailableWhileInstallingTheService
+				Constants.commandsNotAvailableWhileInstallingTheService,
 			);
 			this._logger.appendLine();
 			this._logger.append(
-				`Platform-------------: ${platformInfo.toString()}`
+				`Platform-------------: ${platformInfo.toString()}`,
 			);
-			if (!platformInfo.isValidRuntime) {
-				this._logger.appendLine();
-				this._logger.append("Platform invalid");
-				Utils.showErrorMsg(Constants.unsupportedPlatformErrorMessage);
-				Telemetry.sendTelemetryEvent("UnsupportedPlatform", {
-					platform: platformInfo.toString(),
-				});
-				reject("Invalid Platform");
-			} else {
+			if (platformInfo.isValidRuntime) {
 				if (platformInfo.runtimeId) {
 					this._logger.appendLine(
-						` (${getRuntimeDisplayName(platformInfo.runtimeId)})`
+						` (${getRuntimeDisplayName(platformInfo.runtimeId)})`,
 					);
 				} else {
 					this._logger.appendLine();
@@ -234,21 +225,21 @@ export default class SqlToolsServiceClient {
 							if (_channel !== undefined) {
 								_channel.show();
 							}
-							let installedServerPath =
+							const installedServerPath =
 								await this._server.downloadServerFiles(
-									platformInfo.runtimeId
+									platformInfo.runtimeId,
 								);
 							this.initializeLanguageClient(
 								installedServerPath,
-								context
+								context,
 							);
 							await this._client.onReady();
 							resolve(
 								new ServerInitializationResult(
 									true,
 									true,
-									installedServerPath
-								)
+									installedServerPath,
+								),
 							);
 						} else {
 							this.initializeLanguageClient(serverPath, context);
@@ -257,21 +248,29 @@ export default class SqlToolsServiceClient {
 								new ServerInitializationResult(
 									false,
 									true,
-									serverPath
-								)
+									serverPath,
+								),
 							);
 						}
 					})
 					.catch((err) => {
 						Utils.logDebug(
-							Constants.serviceLoadingFailed + " " + err
+							Constants.serviceLoadingFailed + " " + err,
 						);
 						Utils.showErrorMsg(Constants.serviceLoadingFailed);
 						Telemetry.sendTelemetryEvent(
-							"ServiceInitializingFailed"
+							"ServiceInitializingFailed",
 						);
 						reject(err);
 					});
+			} else {
+				this._logger.appendLine();
+				this._logger.append("Platform invalid");
+				Utils.showErrorMsg(Constants.unsupportedPlatformErrorMessage);
+				Telemetry.sendTelemetryEvent("UnsupportedPlatform", {
+					platform: platformInfo.toString(),
+				});
+				reject("Invalid Platform");
 			}
 		});
 	}
@@ -319,21 +318,20 @@ export default class SqlToolsServiceClient {
 
 	private initializeLanguageClient(
 		serverPath: string,
-		context: ExtensionContext
+		context: ExtensionContext,
 	): void {
 		if (serverPath === undefined) {
 			Utils.logDebug(Constants.invalidServiceFilePath);
 			throw new Error(Constants.invalidServiceFilePath);
 		} else {
-			let self = this;
-			self.initializeLanguageConfiguration();
-			let serverOptions: ServerOptions =
+			this.initializeLanguageConfiguration();
+			const serverOptions: ServerOptions =
 				this.createServerOptions(serverPath);
 			this.client = this.createLanguageClient(serverOptions);
 
 			if (context !== undefined) {
 				// Create the language client and start the client.
-				let disposable = this.client.start();
+				const disposable = this.client.start();
 
 				// Push the disposable to the context's subscriptions so that the
 				// client can be deactivated on extension deactivation
@@ -345,7 +343,7 @@ export default class SqlToolsServiceClient {
 
 	private createLanguageClient(serverOptions: ServerOptions): LanguageClient {
 		// Options to control the language client
-		let clientOptions: LanguageClientOptions = {
+		const clientOptions: LanguageClientOptions = {
 			documentSelector: ["sql"],
 			synchronize: {
 				configurationSection: "pgsql",
@@ -354,21 +352,21 @@ export default class SqlToolsServiceClient {
 		};
 
 		// cache the client instance for later use
-		let client = new LanguageClient(
+		const client = new LanguageClient(
 			Constants.sqlToolsServiceName,
 			serverOptions,
-			clientOptions
+			clientOptions,
 		);
 		client.onReady().then(() => {
 			this.checkServiceCompatibility();
 
 			client.onNotification(
 				LanguageServiceContracts.TelemetryNotification.type,
-				this.handleLanguageServiceTelemetryNotification()
+				this.handleLanguageServiceTelemetryNotification(),
 			);
 			client.onNotification(
 				LanguageServiceContracts.StatusChangedNotification.type,
-				this.handleLanguageServiceStatusNotification()
+				this.handleLanguageServiceStatusNotification(),
 			);
 		});
 
@@ -380,7 +378,7 @@ export default class SqlToolsServiceClient {
 			Telemetry.sendTelemetryEvent(
 				event.params.eventName,
 				event.params.properties,
-				event.params.measures
+				event.params.measures,
 			);
 		};
 	}
@@ -392,7 +390,7 @@ export default class SqlToolsServiceClient {
 		return (event: LanguageServiceContracts.StatusChangeParams): void => {
 			this._statusView.languageServiceStatusChanged(
 				event.ownerUri,
-				event.status
+				event.status,
 			);
 		};
 	}
@@ -401,49 +399,49 @@ export default class SqlToolsServiceClient {
 		let serverArgs = [];
 		let serverCommand: string = servicePath;
 
-		let config = workspace.getConfiguration(
-			Constants.extensionConfigSectionName
+		const config = workspace.getConfiguration(
+			Constants.extensionConfigSectionName,
 		);
 
 		if (config) {
 			// Override the server path with the local debug path if enabled
 
-			let useLocalSource = config["useDebugSource"];
+			const useLocalSource = config["useDebugSource"];
 			if (useLocalSource) {
-				let localSourcePath = config["debugSourcePath"];
-				let filePath = path.join(
+				const localSourcePath = config["debugSourcePath"];
+				const filePath = path.join(
 					localSourcePath,
-					"pgsqltoolsservice/pgtoolsservice_main.py"
+					"pgsqltoolsservice/pgtoolsservice_main.py",
 				);
 				process.env.PYTHONPATH = localSourcePath;
 				serverCommand =
 					process.platform === "win32" ? "python" : "python3";
 
-				let enableStartupDebugging = config["enableStartupDebugging"];
+				const enableStartupDebugging = config["enableStartupDebugging"];
 				let debuggingArg = enableStartupDebugging
 					? "--enable-remote-debugging-wait"
 					: "--enable-remote-debugging";
-				let debugPort = config["debugServerPort"];
+				const debugPort = config["debugServerPort"];
 				debuggingArg += "=" + debugPort;
 				serverArgs = [filePath, debuggingArg];
 			}
 
-			let logFileLocation = path.join(
+			const logFileLocation = path.join(
 				this.getDefaultLogLocation(),
-				"pgsql"
+				"pgsql",
 			);
 
 			serverArgs.push("--log-dir=" + logFileLocation);
 			serverArgs.push(logFileLocation);
 
 			// Enable diagnostic logging in the service if it is configured
-			let logDebugInfo = config["logDebugInfo"];
+			const logDebugInfo = config["logDebugInfo"];
 			if (logDebugInfo) {
 				serverArgs.push("--enable-logging");
 			}
-			let applyLocalization = config[Constants.configApplyLocalization];
+			const applyLocalization = config[Constants.configApplyLocalization];
 			if (applyLocalization) {
-				let locale = vscode.env.language;
+				const locale = vscode.env.language;
 				serverArgs.push("--locale");
 				serverArgs.push(locale);
 			}
@@ -465,7 +463,7 @@ export default class SqlToolsServiceClient {
 	 */
 	public sendRequest<P, R, E, R0>(
 		type: RequestType<P, R, E, R0>,
-		params?: P
+		params?: P,
 	): Thenable<R> {
 		if (this.client !== undefined) {
 			return this.client.sendRequest(type, params);
@@ -478,7 +476,7 @@ export default class SqlToolsServiceClient {
 	 */
 	public sendNotification<P, R0>(
 		type: NotificationType<P, R0>,
-		params?: P
+		params?: P,
 	): void {
 		if (this.client !== undefined) {
 			this.client.sendNotification(type, params);
@@ -492,7 +490,7 @@ export default class SqlToolsServiceClient {
 	 */
 	public onNotification<P, R0>(
 		type: NotificationType<P, R0>,
-		handler: NotificationHandler<P>
+		handler: NotificationHandler<P>,
 	): void {
 		if (this._client !== undefined) {
 			return this.client.onNotification(type, handler);
@@ -514,7 +512,7 @@ export default class SqlToolsServiceClient {
 	// The function is a duplicate of \src\paths.js. IT would be better to import path.js but it doesn't
 	// work for now because the extension is running in different process.
 	private getAppDataPath(): string {
-		let platform = process.platform;
+		const platform = process.platform;
 		switch (platform) {
 			case "win32":
 				return (
@@ -525,7 +523,7 @@ export default class SqlToolsServiceClient {
 				return path.join(
 					os.homedir(),
 					"Library",
-					"Application Support"
+					"Application Support",
 				);
 			case "linux":
 				return (

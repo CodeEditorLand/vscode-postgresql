@@ -3,23 +3,21 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-"use strict";
-
-import { Runtime, getRuntimeDisplayName } from "../models/platform";
 import * as path from "path";
+import { ILogger } from "../models/interfaces";
+import { Runtime, getRuntimeDisplayName } from "../models/platform";
 import {
 	IConfig,
-	IStatusView,
-	IPackage,
-	PackageError,
-	IHttpClient,
 	IDecompressProvider,
+	IHttpClient,
+	IPackage,
+	IStatusView,
+	PackageError,
 } from "./interfaces";
-import { ILogger } from "../models/interfaces";
 import Constants = require("../constants/constants");
 import * as tmp from "tmp";
 
-let fse = require("fs-extra");
+const fse = require("fs-extra");
 
 /*
  * Service Download Provider class which handles downloading the SQL Tools service.
@@ -35,7 +33,7 @@ export default class ServiceDownloadProvider {
 		private _logger: ILogger,
 		private _statusView: IStatusView,
 		private _httpClient: IHttpClient,
-		private _decompressProvider: IDecompressProvider
+		private _decompressProvider: IDecompressProvider,
 	) {
 		// Ensure our temp files get cleaned up in case of error.
 		tmp.setGracefulCleanup();
@@ -45,9 +43,9 @@ export default class ServiceDownloadProvider {
 	 * Returns the download url for given platform
 	 */
 	public getDownloadFileName(platform: Runtime): string {
-		let fileNamesJson =
+		const fileNamesJson =
 			this._config.getSqlToolsConfigValue("downloadFileNames");
-		let fileName = fileNamesJson[platform.toString()];
+		const fileName = fileNamesJson[platform.toString()];
 
 		if (fileName === undefined) {
 			if (process.platform === "linux") {
@@ -65,11 +63,11 @@ export default class ServiceDownloadProvider {
 	 */
 	public getInstallDirectory(platform: Runtime): string {
 		let basePath = this.getInstallDirectoryRoot();
-		let versionFromConfig = this._config.getSqlToolsPackageVersion();
+		const versionFromConfig = this._config.getSqlToolsPackageVersion();
 		basePath = basePath.replace("{#version#}", versionFromConfig);
 		basePath = basePath.replace(
 			"{#platform#}",
-			getRuntimeDisplayName(platform)
+			getRuntimeDisplayName(platform),
 		);
 		if (!fse.existsSync(basePath)) {
 			fse.mkdirsSync(basePath);
@@ -81,7 +79,7 @@ export default class ServiceDownloadProvider {
 	 * Returns SQL tools service installed folder root.
 	 */
 	public getInstallDirectoryRoot(): string {
-		let installDirFromConfig = this._config.getSqlToolsInstallDirectory();
+		const installDirFromConfig = this._config.getSqlToolsInstallDirectory();
 		let basePath: string;
 		if (path.isAbsolute(installDirFromConfig)) {
 			basePath = installDirFromConfig;
@@ -94,12 +92,12 @@ export default class ServiceDownloadProvider {
 
 	private getGetDownloadUrl(fileName: string): string {
 		let baseDownloadUrl = this._config.getSqlToolsServiceDownloadUrl();
-		let version = this._config.getSqlToolsPackageVersion();
+		const version = this._config.getSqlToolsPackageVersion();
 		baseDownloadUrl = baseDownloadUrl.replace("{#version#}", version);
 		baseDownloadUrl = baseDownloadUrl.replace("{#fileName#}", fileName);
 		baseDownloadUrl = baseDownloadUrl.replace(
 			"{#token#}",
-			ServiceDownloadProvider.TOKEN
+			ServiceDownloadProvider.TOKEN,
 		);
 		return baseDownloadUrl;
 	}
@@ -111,10 +109,10 @@ export default class ServiceDownloadProvider {
 		const proxy = <string>this._config.getWorkspaceConfig("http.proxy");
 		const strictSSL = this._config.getWorkspaceConfig(
 			"http.proxyStrictSSL",
-			true
+			true,
 		);
 		const authorization = this._config.getWorkspaceConfig(
-			"http.proxyAuthorization"
+			"http.proxyAuthorization",
 		);
 
 		return new Promise<boolean>((resolve, reject) => {
@@ -122,14 +120,14 @@ export default class ServiceDownloadProvider {
 			const installDirectory = this.getInstallDirectory(platform);
 
 			this._logger.appendLine(
-				`${Constants.serviceInstallingTo} ${installDirectory}.`
+				`${Constants.serviceInstallingTo} ${installDirectory}.`,
 			);
 			const urlString = this.getGetDownloadUrl(fileName);
 
 			this._logger.appendLine(
-				`${Constants.serviceDownloading} ${urlString}`
+				`${Constants.serviceDownloading} ${urlString}`,
 			);
-			let pkg: IPackage = {
+			const pkg: IPackage = {
 				installPath: installDirectory,
 				url: urlString,
 				tmpFile: undefined,
@@ -145,11 +143,11 @@ export default class ServiceDownloadProvider {
 						this._statusView,
 						proxy,
 						strictSSL,
-						authorization
+						authorization,
 					)
 					.then((_) => {
 						this._logger.logDebug(
-							`Downloaded to ${pkg.tmpFile.name}...`
+							`Downloaded to ${pkg.tmpFile.name}...`,
 						);
 						this._logger.appendLine(" Done!");
 						this.install(pkg)
@@ -175,7 +173,7 @@ export default class ServiceDownloadProvider {
 				(err, path, fd, cleanupCallback) => {
 					if (err) {
 						return reject(
-							new PackageError("Error from tmp.file", pkg, err)
+							new PackageError("Error from tmp.file", pkg, err),
 						);
 					}
 
@@ -184,7 +182,7 @@ export default class ServiceDownloadProvider {
 						fd: fd,
 						removeCallback: cleanupCallback,
 					});
-				}
+				},
 			);
 		});
 	}

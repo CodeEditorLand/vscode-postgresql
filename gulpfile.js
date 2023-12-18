@@ -1,5 +1,4 @@
-﻿"use strict";
-var gulp = require("gulp");
+﻿var gulp = require("gulp");
 var rename = require("gulp-rename");
 var install = require("gulp-install");
 var tslint = require("gulp-tslint");
@@ -33,7 +32,7 @@ gulp.task("ext:lint", () => {
 		.pipe(
 			tslint({
 				formatter: "verbose",
-			})
+			}),
 		)
 		.pipe(tslint.report());
 });
@@ -48,7 +47,7 @@ gulp.task("ext:compile-src", (done) => {
 		])
 		.pipe(srcmap.init())
 		.pipe(tsProject())
-		.on("error", function () {
+		.on("error", () => {
 			if (process.env.BUILDMACHINE) {
 				done("Extension Tests failed to build. See Above.");
 				process.exit(1);
@@ -60,15 +59,13 @@ gulp.task("ext:compile-src", (done) => {
 				nls.coreLanguages,
 				config.paths.project.root + "/localization/i18n",
 				undefined,
-				false
-			)
+				false,
+			),
 		)
 		.pipe(
 			srcmap.write(".", {
-				sourceRoot: function (file) {
-					return file.cwd + "/src";
-				},
-			})
+				sourceRoot: (file) => file.cwd + "/src",
+			}),
 		)
 		.pipe(gulp.dest("out/src/"));
 });
@@ -81,7 +78,7 @@ gulp.task("ext:compile-tests", (done) => {
 		])
 		.pipe(srcmap.init())
 		.pipe(tsProject())
-		.on("error", function () {
+		.on("error", () => {
 			if (process.env.BUILDMACHINE) {
 				done("Extension Tests failed to build. See Above.");
 				process.exit(1);
@@ -89,10 +86,8 @@ gulp.task("ext:compile-tests", (done) => {
 		})
 		.pipe(
 			srcmap.write(".", {
-				sourceRoot: function (file) {
-					return file.cwd + "/test";
-				},
-			})
+				sourceRoot: (file) => file.cwd + "/test",
+			}),
 		)
 		.pipe(gulp.dest("out/test/"));
 });
@@ -113,7 +108,7 @@ gulp.task("ext:copy-config", () => {
 			config.paths.project.root +
 				"/src/configurations/" +
 				env +
-				".config.json"
+				".config.json",
 		)
 		.pipe(rename("config.json"))
 		.pipe(gulp.dest(config.paths.project.root + "/out/src"));
@@ -134,15 +129,15 @@ gulp.task("ext:appinsights-version", () => {
 	return gulp
 		.src("./node_modules/vscode-extension-telemetry/package.json")
 		.pipe(
-			jeditor(function (json) {
+			jeditor((json) => {
 				json.dependencies.applicationinsights = "0.15.19";
 				return json; // must return JSON object.
-			})
+			}),
 		)
 		.pipe(
 			gulp.dest("./node_modules/vscode-extension-telemetry", {
 				overwrite: true,
-			})
+			}),
 		);
 });
 
@@ -154,13 +149,13 @@ gulp.task("ext:copy-appinsights", () => {
 	return gulp.src(filesToMove, { base: "./" }).pipe(
 		gulp.dest("./node_modules/vscode-extension-telemetry", {
 			overwrite: true,
-		})
+		}),
 	);
 });
 
 gulp.task(
 	"ext:copy",
-	gulp.series("ext:copy-tests", "ext:copy-js", "ext:copy-config")
+	gulp.series("ext:copy-tests", "ext:copy-js", "ext:copy-config"),
 );
 
 gulp.task(
@@ -168,13 +163,13 @@ gulp.task(
 	gulp.series(
 		"ext:localization:xliff-to-ts",
 		"ext:localization:xliff-to-json",
-		"ext:localization:xliff-to-package.nls"
-	)
+		"ext:localization:xliff-to-package.nls",
+	),
 );
 
 gulp.task(
 	"ext:build",
-	gulp.series("ext:localization", "ext:lint", "ext:compile", "ext:copy")
+	gulp.series("ext:localization", "ext:lint", "ext:compile", "ext:copy"),
 );
 
 gulp.task("ext:test", (done) => {
@@ -193,7 +188,7 @@ gulp.task("ext:test", (done) => {
 			console.log(`stdout: ${stdout}`);
 			console.log(`stderr: ${stderr}`);
 			done();
-		}
+		},
 	);
 });
 
@@ -201,9 +196,7 @@ gulp.task("test", gulp.series("html:test", "ext:test"));
 
 require("./tasks/covertasks");
 
-gulp.task("clean", function (done) {
-	return del("out", done);
-});
+gulp.task("clean", (done) => del("out", done));
 
 gulp.task(
 	"build",
@@ -212,19 +205,16 @@ gulp.task(
 		"html:build",
 		"ext:build",
 		"ext:install-service",
-		"ext:appinsights-version"
-	)
+		"ext:appinsights-version",
+	),
 );
 
-gulp.task("install", function () {
-	return gulp
+gulp.task("install", () =>
+	gulp
 		.src(["./package.json", "./src/views/htmlcontent/package.json"])
-		.pipe(install());
-});
+		.pipe(install()),
+);
 
-gulp.task("watch", function () {
-	return gulp.watch(
-		config.paths.project.root + "/src/**/*",
-		gulp.series("build")
-	);
-});
+gulp.task("watch", () =>
+	gulp.watch(config.paths.project.root + "/src/**/*", gulp.series("build")),
+);

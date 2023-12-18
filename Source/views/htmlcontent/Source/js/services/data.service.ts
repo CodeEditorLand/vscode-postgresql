@@ -2,18 +2,18 @@
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
-import { Injectable, Inject, forwardRef } from "@angular/core";
-import { Http, Headers } from "@angular/http";
-import { Observable, Subject, Observer } from "rxjs/Rx";
+import { Inject, Injectable, forwardRef } from "@angular/core";
+import { Headers, Http } from "@angular/http";
+import { Observable, Observer, Subject } from "rxjs/Rx";
 
 import { ISlickRange } from "angular2-slickgrid";
 
 import * as Utils from "./../utils";
 
 import {
-	ResultSetSubset,
-	ISelectionData,
 	IResultsConfig,
+	ISelectionData,
+	ResultSetSubset,
 	WebSocketEvent,
 } from "./../interfaces";
 
@@ -38,8 +38,7 @@ export class DataService {
 		return this.ws;
 	}
 
-	constructor(@Inject(forwardRef(() => Http)) private http) {
-		const self = this;
+	constructor(@Inject(forwardRef(() => Http)) private http) {;
 		// grab the uri from the document for requests
 		this.uri = encodeURI(
 			document.getElementById("uri")
@@ -47,25 +46,25 @@ export class DataService {
 				: ""
 		);
 		this.ws = new WebSocket(WS_URL + "?uri=" + this.uri);
-		let observable = Observable.create((obs: Observer<MessageEvent>) => {
-			self.ws.onmessage = obs.next.bind(obs);
-			self.ws.onerror = obs.error.bind(obs);
-			self.ws.onclose = obs.complete.bind(obs);
+		const observable = Observable.create((obs: Observer<MessageEvent>) => {
+			this.ws.onmessage = obs.next.bind(obs);
+			this.ws.onerror = obs.error.bind(obs);
+			this.ws.onclose = obs.complete.bind(obs);
 
-			return self.ws.close.bind(self.ws);
+			return this.ws.close.bind(this.ws);
 		});
 
-		let observer = {
+		const observer = {
 			next: (data: Object) => {
-				if (self.ws.readyState === WebSocket.OPEN) {
-					self.ws.send(JSON.stringify(data));
+				if (this.ws.readyState === WebSocket.OPEN) {
+					this.ws.send(JSON.stringify(data));
 				}
 			},
 		};
 
 		this.dataEventObs = Subject.create(observer, observable).map(
 			(response: MessageEvent): WebSocketEvent => {
-				let data = JSON.parse(response.data);
+				const data = JSON.parse(response.data);
 				return data;
 			}
 		);
@@ -89,15 +88,15 @@ export class DataService {
 		start: number,
 		numberOfRows: number,
 		batchId: number,
-		resultId: number
+		resultId: number,
 	): Observable<ResultSetSubset> {
-		let uriFormat = "/{0}?batchId={1}&resultId={2}&uri={3}";
-		let uri = Utils.formatString(
+		const uriFormat = "/{0}?batchId={1}&resultId={2}&uri={3}";
+		const uri = Utils.formatString(
 			uriFormat,
 			"rows",
 			batchId,
 			resultId,
-			this.uri
+			this.uri,
 		);
 		return this.http
 			.get(uri + "&rowStart=" + start + "&numberOfRows=" + numberOfRows)
@@ -117,24 +116,23 @@ export class DataService {
 		batchIndex: number,
 		resultSetNumber: number,
 		format: string,
-		selection: ISlickRange[]
+		selection: ISlickRange[],
 	): void {
-		const self = this;
-		let headers = new Headers();
-		let url =
+		const headers = new Headers();
+		const url =
 			"/saveResults?" +
 			"&uri=" +
-			self.uri +
+			this.uri +
 			"&format=" +
 			format +
 			"&batchIndex=" +
 			batchIndex +
 			"&resultSetNo=" +
 			resultSetNumber;
-		self.http
+		this.http
 			.post(url, selection, { headers: headers })
 			.subscribe(undefined, (err) => {
-				self.showError(err.statusText);
+				this.showError(err.statusText);
 			});
 	}
 
@@ -142,12 +140,11 @@ export class DataService {
 	 * send request to get all the localized texts
 	 */
 	getLocalizedTextsRequest(): Promise<{ [key: string]: any }> {
-		const self = this;
-		let headers = new Headers();
-		let url = "/localizedTexts";
+		const headers = new Headers();
+		const url = "/localizedTexts";
 
 		return new Promise<{ [key: string]: any }>((resolve, reject) => {
-			self.http.get(url, { headers: headers }).subscribe((result) => {
+			this.http.get(url, { headers: headers }).subscribe((result) => {
 				resolve(result.json());
 			});
 		});
@@ -159,10 +156,9 @@ export class DataService {
 	 * @param columnName The column name of the content
 	 */
 	openLink(content: string, columnName: string, linkType: string): void {
-		const self = this;
-		let headers = new Headers();
+		const headers = new Headers();
 		headers.append("Content-Type", "application/json");
-		self.http
+		this.http
 			.post(
 				"/openLink",
 				JSON.stringify({
@@ -170,10 +166,10 @@ export class DataService {
 					columnName: columnName,
 					type: linkType,
 				}),
-				{ headers: headers }
+				{ headers: headers },
 			)
 			.subscribe(undefined, (err) => {
-				self.showError(err.statusText);
+				this.showError(err.statusText);
 			});
 	}
 
@@ -188,14 +184,13 @@ export class DataService {
 		selection: ISlickRange[],
 		batchId: number,
 		resultId: number,
-		includeHeaders?: boolean
+		includeHeaders?: boolean,
 	): void {
-		const self = this;
-		let headers = new Headers();
+		const headers = new Headers();
 		let url =
 			"/copyResults?" +
 			"&uri=" +
-			self.uri +
+			this.uri +
 			"&batchId=" +
 			batchId +
 			"&resultId=" +
@@ -203,7 +198,7 @@ export class DataService {
 		if (includeHeaders !== undefined) {
 			url += "&includeHeaders=" + includeHeaders;
 		}
-		self.http.post(url, selection, { headers: headers }).subscribe();
+		this.http.post(url, selection, { headers: headers }).subscribe();
 	}
 
 	/**
@@ -211,10 +206,9 @@ export class DataService {
 	 * @param selection The selection range in the VSCode window
 	 */
 	set editorSelection(selection: ISelectionData) {
-		const self = this;
-		let headers = new Headers();
-		let url = "/setEditorSelection?" + "&uri=" + self.uri;
-		self.http.post(url, selection, { headers: headers }).subscribe();
+		const headers = new Headers();
+		const url = "/setEditorSelection?" + "&uri=" + this.uri;
+		this.http.post(url, selection, { headers: headers }).subscribe();
 	}
 
 	/**
@@ -222,17 +216,15 @@ export class DataService {
 	 * @param uri The uri to send the GET request to
 	 */
 	sendGetRequest(uri: string): void {
-		const self = this;
-		let headers = new Headers();
-		self.http.get(uri, { headers: headers }).subscribe();
+		const headers = new Headers();
+		this.http.get(uri, { headers: headers }).subscribe();
 	}
 
 	showWarning(message: string): void {
-		const self = this;
-		let url = "/showWarning?" + "&uri=" + self.uri;
-		let headers = new Headers();
+		const url = "/showWarning?" + "&uri=" + this.uri;
+		const headers = new Headers();
 		headers.append("Content-Type", "application/json");
-		self.http
+		this.http
 			.post(url, JSON.stringify({ message: message }), {
 				headers: headers,
 			})
@@ -240,11 +232,10 @@ export class DataService {
 	}
 
 	showError(message: string): void {
-		const self = this;
-		let url = "/showError?" + "&uri=" + self.uri;
-		let headers = new Headers();
+		const url = "/showError?" + "&uri=" + this.uri;
+		const headers = new Headers();
 		headers.append("Content-Type", "application/json");
-		self.http
+		this.http
 			.post(url, JSON.stringify({ message: message }), {
 				headers: headers,
 			})
@@ -252,44 +243,42 @@ export class DataService {
 	}
 
 	get config(): Promise<{ [key: string]: any }> {
-		const self = this;
 		if (this._config) {
 			return Promise.resolve(this._config);
 		} else {
 			return new Promise<{ [key: string]: string }>((resolve, reject) => {
-				let url = "/config?" + "&uri=" + self.uri;
-				self.http
+				const url = "/config?" + "&uri=" + this.uri;
+				this.http
 					.get(url)
 					.map((res): IResultsConfig => {
 						return res.json();
 					})
 					.subscribe((result: IResultsConfig) => {
-						self._shortcuts = result.shortcuts;
+						this._shortcuts = result.shortcuts;
 						delete result.shortcuts;
-						self._config = result;
-						resolve(self._config);
+						this._config = result;
+						resolve(this._config);
 					});
 			});
 		}
 	}
 
 	get shortcuts(): Promise<any> {
-		const self = this;
 		if (this._shortcuts) {
 			return Promise.resolve(this._shortcuts);
 		} else {
 			return new Promise<any>((resolve, reject) => {
-				let url = "/config?" + "&uri=" + self.uri;
-				self.http
+				const url = "/config?" + "&uri=" + this.uri;
+				this.http
 					.get(url)
 					.map((res): IResultsConfig => {
 						return res.json();
 					})
 					.subscribe((result) => {
-						self._shortcuts = result.shortcuts;
+						this._shortcuts = result.shortcuts;
 						delete result.resultShortcuts;
-						self._config = result;
-						resolve(self._shortcuts);
+						this._config = result;
+						resolve(this._shortcuts);
 					});
 			});
 		}

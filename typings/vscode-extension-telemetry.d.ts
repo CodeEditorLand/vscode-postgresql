@@ -4,7 +4,7 @@ declare module "vscode-extension-telemetry" {
 		sendTelemetryEvent(
 			eventName: string,
 			properties?: { [key: string]: string },
-			measures?: { [key: string]: number }
+			measures?: { [key: string]: number },
 		): void;
 	}
 }

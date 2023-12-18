@@ -1,4 +1,4 @@
-let builder = require("xmlbuilder");
+const builder = require("xmlbuilder");
 var dom = require("xmldom").DOMParser;
 var gulp = require("gulp");
 var config = require("./config");
@@ -39,24 +39,24 @@ function convertDictionaryToJson(dict) {
 
 // converts an xml file into a json object
 function convertXmlToDictionary(xmlInput, escapeChar = true) {
-	let xmlDom = new dom().parseFromString(xmlInput);
-	let transUnits = xmlDom.getElementsByTagName("trans-unit");
-	let dict = {};
+	const xmlDom = new dom().parseFromString(xmlInput);
+	const transUnits = xmlDom.getElementsByTagName("trans-unit");
+	const dict = {};
 	for (var i = 0; i < transUnits.length; ++i) {
-		let unit = transUnits[i];
+		const unit = transUnits[i];
 
 		// Extract ID attribute
-		let id = unit.getAttribute("id");
+		const id = unit.getAttribute("id");
 
 		// Extract source element if possible
-		let sourceElement = unit.getElementsByTagName("source");
+		const sourceElement = unit.getElementsByTagName("source");
 		let source = "";
 		if (sourceElement.length >= 1) {
 			source = escapeChars(sourceElement[0].textContent, escapeChar);
 		}
 
 		// Extract target element if possible
-		let targetElement = unit.getElementsByTagName("target");
+		const targetElement = unit.getElementsByTagName("target");
 		let target = "";
 		if (targetElement.length >= 1) {
 			target = escapeChars(targetElement[0].textContent, escapeChar);
@@ -85,8 +85,8 @@ function convertJsonToDictionary(jsonInput) {
 
 // export json files from *.xlf
 // mirrors the file paths and names
-gulp.task("ext:localization:xliff-to-json", function () {
-	return gulp
+gulp.task("ext:localization:xliff-to-json", () =>
+	gulp
 		.src([
 			config.paths.project.localization + "/xliff/**/*.xlf",
 			"!" + config.paths.project.localization + "/xliff/enu/**/*.xlf",
@@ -95,10 +95,10 @@ gulp.task("ext:localization:xliff-to-json", function () {
 				"/xliff/**/*localizedPackage.json.*.xlf",
 		])
 		.pipe(
-			through.obj(function (file, enc, callback) {
+			through.obj((file, enc, callback) => {
 				// convert xliff into json document
-				let dict = convertXmlToDictionary(String(file.contents));
-				Object.keys(dict).map(function (key, index) {
+				const dict = convertXmlToDictionary(String(file.contents));
+				Object.keys(dict).map((key, index) => {
 					dict[key] = dict[key]["target"];
 				});
 				file.contents = new Buffer(convertDictionaryToJson(dict));
@@ -110,22 +110,22 @@ gulp.task("ext:localization:xliff-to-json", function () {
 
 				// callback to notify we have completed the current file
 				callback(null, file);
-			})
+			}),
 		)
-		.pipe(gulp.dest(config.paths.project.localization + "/i18n/"));
-});
+		.pipe(gulp.dest(config.paths.project.localization + "/i18n/")),
+);
 
 // Generates a localized constants file from the en xliff file
-gulp.task("ext:localization:xliff-to-ts", function () {
-	return gulp
+gulp.task("ext:localization:xliff-to-ts", () =>
+	gulp
 		.src([
 			config.paths.project.localization +
 				"/xliff/enu/constants/localizedConstants.enu.xlf",
 		])
 		.pipe(
-			through.obj(function (file, enc, callback) {
+			through.obj((file, enc, callback) => {
 				// convert xliff into json document
-				let dict = convertXmlToDictionary(String(file.contents));
+				const dict = convertXmlToDictionary(String(file.contents));
 				var contents = [
 					"/* tslint:disable */",
 					"// THIS IS A COMPUTER GENERATED FILE. CHANGES IN THIS FILE WILL BE OVERWRITTEN.",
@@ -134,7 +134,7 @@ gulp.task("ext:localization:xliff-to-ts", function () {
 				];
 				for (var key in dict) {
 					if (dict.hasOwnProperty(key)) {
-						let instantiation =
+						const instantiation =
 							"export let " +
 							key +
 							" = '" +
@@ -146,15 +146,15 @@ gulp.task("ext:localization:xliff-to-ts", function () {
 
 				// add headers to export localization function
 				contents.push(
-					"export let loadLocalizedConstants = (locale: string) => {"
+					"export let loadLocalizedConstants = (locale: string) => {",
 				);
 				contents.push(
-					"\tlet localize = nls.config({ locale: locale })();"
+					"\tlet localize = nls.config({ locale: locale })();",
 				);
 				// Re-export each constant
 				for (var key in dict) {
 					if (dict.hasOwnProperty(key)) {
-						let instantiation =
+						const instantiation =
 							"\t" +
 							key +
 							" = localize('" +
@@ -169,7 +169,7 @@ gulp.task("ext:localization:xliff-to-ts", function () {
 				contents.push("};");
 
 				// Join with new lines in between
-				let fullFileContents = contents.join("\r\n") + "\r\n";
+				const fullFileContents = contents.join("\r\n") + "\r\n";
 				file.contents = new Buffer(fullFileContents);
 
 				// Name our file
@@ -177,14 +177,14 @@ gulp.task("ext:localization:xliff-to-ts", function () {
 
 				// callback to notify we have completed the current file
 				callback(null, file);
-			})
+			}),
 		)
-		.pipe(gulp.dest(config.paths.project.root + "/src/constants/"));
-});
+		.pipe(gulp.dest(config.paths.project.root + "/src/constants/")),
+);
 
 // Generates a localized package.nls.*.json
-gulp.task("ext:localization:xliff-to-package.nls", function () {
-	return gulp
+gulp.task("ext:localization:xliff-to-package.nls", () =>
+	gulp
 		.src(
 			[
 				config.paths.project.localization +
@@ -193,12 +193,15 @@ gulp.task("ext:localization:xliff-to-package.nls", function () {
 					config.paths.project.localization +
 					"/xliff/en/localizedPackage.json.*.xlf",
 			],
-			{ base: "" }
+			{ base: "" },
 		)
 		.pipe(
-			through.obj(function (file, enc, callback) {
+			through.obj((file, enc, callback) => {
 				// convert xliff into json document
-				let dict = convertXmlToDictionary(String(file.contents), false);
+				const dict = convertXmlToDictionary(
+					String(file.contents),
+					false,
+				);
 
 				var contents = ["{"];
 
@@ -216,7 +219,7 @@ gulp.task("ext:localization:xliff-to-package.nls", function () {
 					if (value === "") {
 						value = packageAllKeys[key];
 					}
-					let instantiation = '"' + key + '":"' + value + '"';
+					const instantiation = '"' + key + '":"' + value + '"';
 					contents.push(instantiation);
 				});
 
@@ -224,14 +227,14 @@ gulp.task("ext:localization:xliff-to-package.nls", function () {
 				contents.push("}");
 
 				// Join with new lines in between
-				let fullFileContents = contents.join("\r\n") + "\r\n";
+				const fullFileContents = contents.join("\r\n") + "\r\n";
 				file.contents = new Buffer(fullFileContents);
 
-				let indexToStart = "localizedPackage.json.".length + 1;
-				let languageIndex = file.basename.indexOf(".", indexToStart);
-				let language = file.basename.substr(
+				const indexToStart = "localizedPackage.json.".length + 1;
+				const languageIndex = file.basename.indexOf(".", indexToStart);
+				const language = file.basename.substr(
 					indexToStart - 1,
-					languageIndex - indexToStart + 1
+					languageIndex - indexToStart + 1,
 				);
 
 				// Name our file
@@ -247,7 +250,7 @@ gulp.task("ext:localization:xliff-to-package.nls", function () {
 
 				// callback to notify we have completed the current file
 				callback(null, file);
-			})
+			}),
 		)
-		.pipe(gulp.dest(config.paths.project.root));
-});
+		.pipe(gulp.dest(config.paths.project.root)),
+);

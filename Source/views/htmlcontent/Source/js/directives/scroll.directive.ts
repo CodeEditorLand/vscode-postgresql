@@ -4,12 +4,12 @@
  * ------------------------------------------------------------------------------------------ */
 import {
 	Directive,
-	Output,
-	EventEmitter,
 	ElementRef,
+	EventEmitter,
 	Inject,
-	forwardRef,
 	Input,
+	Output,
+	forwardRef,
 } from "@angular/core";
 import { Observable } from "rxjs/Rx";
 
@@ -17,16 +17,15 @@ import { Observable } from "rxjs/Rx";
 	selector: "[onScroll]",
 })
 export class ScrollDirective {
-	@Input() scrollEnabled: boolean = true;
+	@Input() scrollEnabled = true;
 	@Output("onScroll") onScroll: EventEmitter<number> =
 		new EventEmitter<number>();
 
-	constructor(@Inject(forwardRef(() => ElementRef)) private _el: ElementRef) {
-		const self = this;
+	constructor(@Inject(forwardRef(() => ElementRef)) private _el: ElementRef) {;
 		Observable.fromEvent(this._el.nativeElement, "scroll").subscribe(
 			(event) => {
-				if (self.scrollEnabled) {
-					self.onScroll.emit(self._el.nativeElement.scrollTop);
+				if (this.scrollEnabled) {
+					this.onScroll.emit(this._el.nativeElement.scrollTop);
 				}
 			}
 		);

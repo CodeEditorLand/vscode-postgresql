@@ -1,9 +1,8 @@
-"use strict";
 import Constants = require("../constants/constants");
 import LocalizedConstants = require("../constants/localizedConstants");
 import Interfaces = require("./interfaces");
-import { IConnectionProfile } from "../models/interfaces";
 import * as ConnectionContracts from "../models/contracts/connection";
+import { IConnectionProfile } from "../models/interfaces";
 import * as Utils from "./utils";
 
 /**
@@ -15,7 +14,7 @@ import * as Utils from "./utils";
  * @returns {Interfaces.IConnectionCredentials} the updated connection
  */
 export function fixupConnectionCredentials(
-	connCreds: Interfaces.IConnectionCredentials
+	connCreds: Interfaces.IConnectionCredentials,
 ): Interfaces.IConnectionCredentials {
 	if (!connCreds.host) {
 		connCreds.host = "";
@@ -119,9 +118,9 @@ function isAzureDatabase(server: string): boolean {
  */
 export function getPicklistLabel(
 	connCreds: Interfaces.IConnectionCredentials,
-	itemType: Interfaces.CredentialsQuickPickItemType
+	itemType: Interfaces.CredentialsQuickPickItemType,
 ): string {
-	let profile: Interfaces.IConnectionProfile = <
+	const profile: Interfaces.IConnectionProfile = <
 		Interfaces.IConnectionProfile
 	>connCreds;
 
@@ -140,9 +139,9 @@ export function getPicklistLabel(
  * @returns {string} description
  */
 export function getPicklistDescription(
-	connCreds: Interfaces.IConnectionCredentials
+	connCreds: Interfaces.IConnectionCredentials,
 ): string {
-	let desc: string = `[${getConnectionDisplayString(connCreds)}]`;
+	const desc = `[${getConnectionDisplayString(connCreds)}]`;
 	return desc;
 }
 
@@ -154,7 +153,7 @@ export function getPicklistDescription(
  * @returns {string} details
  */
 export function getPicklistDetails(
-	connCreds: Interfaces.IConnectionCredentials
+	connCreds: Interfaces.IConnectionCredentials,
 ): string {
 	// In the current spec this is left empty intentionally. Leaving the method as this may change in the future
 	return undefined;
@@ -169,7 +168,7 @@ export function getPicklistDetails(
  * @returns {string} display string that can be used in status view or other locations
  */
 export function getConnectionDisplayString(
-	creds: Interfaces.IConnectionCredentials
+	creds: Interfaces.IConnectionCredentials,
 ): string {
 	// Update the connection text
 	let text: string;
@@ -188,10 +187,10 @@ export function getConnectionDisplayString(
 		} else {
 			text = appendIfNotEmpty(
 				text,
-				LocalizedConstants.defaultDatabaseLabel
+				LocalizedConstants.defaultDatabaseLabel,
 			);
 		}
-		let user: string = getUserNameOrDomainLogin(creds);
+		const user: string = getUserNameOrDomainLogin(creds);
 		text = appendIfNotEmpty(text, user);
 	}
 
@@ -221,7 +220,7 @@ function appendIfNotEmpty(connectionText: string, value: string): string {
  */
 export function getUserNameOrDomainLogin(
 	creds: Interfaces.IConnectionCredentials,
-	defaultValue?: string
+	defaultValue?: string,
 ): string {
 	if (!defaultValue) {
 		defaultValue = "";
@@ -250,22 +249,22 @@ export function getUserNameOrDomainLogin(
  */
 export function getTooltip(
 	connCreds: Interfaces.IConnectionCredentials,
-	serverInfo?: ConnectionContracts.ServerInfo
+	serverInfo?: ConnectionContracts.ServerInfo,
 ): string {
 	let tooltip: string = connCreds.connectionString
 		? "Connection string: " + connCreds.connectionString + "\r\n"
 		: "Server name: " +
-			connCreds.host +
-			"\r\n" +
-			"Database name: " +
-			(connCreds.dbname ? connCreds.dbname : "<connection default>") +
-			"\r\n" +
-			"Login name: " +
-			connCreds.user +
-			"\r\n" +
-			"Connection encryption: " +
-			(connCreds.encrypt ? "Encrypted" : "Not encrypted") +
-			"\r\n";
+		  connCreds.host +
+		  "\r\n" +
+		  "Database name: " +
+		  (connCreds.dbname ? connCreds.dbname : "<connection default>") +
+		  "\r\n" +
+		  "Login name: " +
+		  connCreds.user +
+		  "\r\n" +
+		  "Connection encryption: " +
+		  (connCreds.encrypt ? "Encrypted" : "Not encrypted") +
+		  "\r\n";
 	if (serverInfo && serverInfo.serverVersion) {
 		tooltip += "Server version: " + serverInfo.serverVersion + "\r\n";
 	}

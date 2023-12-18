@@ -2,14 +2,13 @@
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
-"use strict";
 
 import * as Constants from "../constants/constants";
 import * as LocalizedConstants from "../constants/localizedConstants";
-import * as Utils from "../models/utils";
-import { IConnectionProfile } from "../models/interfaces";
-import { IConnectionConfig } from "./iconnectionconfig";
 import VscodeWrapper from "../controllers/vscodeWrapper";
+import { IConnectionProfile } from "../models/interfaces";
+import * as Utils from "../models/utils";
+import { IConnectionConfig } from "./iconnectionconfig";
 
 /**
  * Implements connection profile file storage.
@@ -40,7 +39,7 @@ export class ConnectionConfig implements IConnectionConfig {
 
 		// Remove the profile if already set
 		profiles = profiles.filter(
-			(value) => !Utils.isSameProfile(value, profile)
+			(value) => !Utils.isSameProfile(value, profile),
 		);
 		profiles.push(profile);
 
@@ -53,33 +52,33 @@ export class ConnectionConfig implements IConnectionConfig {
 	 * and next alphabetically by profile/server name.
 	 */
 	public getConnections(
-		getWorkspaceConnections: boolean
+		getWorkspaceConnections: boolean,
 	): IConnectionProfile[] {
 		let profiles: IConnectionProfile[] = [];
-		let compareProfileFunc = (a, b) => {
+		const compareProfileFunc = (a, b) => {
 			// Sort by profile name if available, otherwise fall back to server name or connection string
-			let nameA = a.profileName
+			const nameA = a.profileName
 				? a.profileName
 				: a.server
-					? a.server
-					: a.connectionString;
-			let nameB = b.profileName
+				  ? a.server
+				  : a.connectionString;
+			const nameB = b.profileName
 				? b.profileName
 				: b.server
-					? b.server
-					: b.connectionString;
+				  ? b.server
+				  : b.connectionString;
 			return nameA.localeCompare(nameB);
 		};
 
 		// Read from user settings
-		let userProfiles = this.getProfilesFromSettings();
+		const userProfiles = this.getProfilesFromSettings();
 
 		userProfiles.sort(compareProfileFunc);
 		profiles = profiles.concat(userProfiles);
 
 		if (getWorkspaceConnections) {
 			// Read from workspace settings
-			let workspaceProfiles = this.getProfilesFromSettings(false);
+			const workspaceProfiles = this.getProfilesFromSettings(false);
 			workspaceProfiles.sort(compareProfileFunc);
 			profiles = profiles.concat(workspaceProfiles);
 		}
@@ -104,7 +103,7 @@ export class ConnectionConfig implements IConnectionConfig {
 		let profiles = this.getProfilesFromSettings();
 
 		// Remove the profile if already set
-		let found: boolean = false;
+		let found = false;
 		profiles = profiles.filter((value) => {
 			if (Utils.isSameProfile(value, profile)) {
 				// remove just this profile
@@ -132,17 +131,15 @@ export class ConnectionConfig implements IConnectionConfig {
 	 * @param global When `true` profiles come from user settings, otherwise from workspace settings
 	 * @returns the set of connection profiles found in the settings.
 	 */
-	public getProfilesFromSettings(
-		global: boolean = true
-	): IConnectionProfile[] {
-		let configuration = this._vscodeWrapper.getConfiguration(
+	public getProfilesFromSettings(global = true): IConnectionProfile[] {
+		const configuration = this._vscodeWrapper.getConfiguration(
 			Constants.extensionName,
-			this._vscodeWrapper.activeTextEditorUri
+			this._vscodeWrapper.activeTextEditorUri,
 		);
 		let profiles: IConnectionProfile[] = [];
 
-		let configValue = configuration.inspect<IConnectionProfile[]>(
-			Constants.connectionsArrayName
+		const configValue = configuration.inspect<IConnectionProfile[]>(
+			Constants.connectionsArrayName,
 		);
 		if (global) {
 			profiles = configValue.globalValue;
@@ -150,7 +147,7 @@ export class ConnectionConfig implements IConnectionConfig {
 			profiles = configValue.workspaceValue;
 			if (profiles !== undefined) {
 				profiles = profiles.concat(
-					configValue.workspaceFolderValue || []
+					configValue.workspaceFolderValue || [],
 				);
 			} else {
 				profiles = configValue.workspaceFolderValue;
@@ -169,12 +166,10 @@ export class ConnectionConfig implements IConnectionConfig {
 	 * @param profiles the set of profiles to insert into the settings file.
 	 */
 	private writeProfilesToSettings(
-		profiles: IConnectionProfile[]
+		profiles: IConnectionProfile[],
 	): Promise<void> {
-		// Save the file
-		const self = this;
 		return new Promise<void>((resolve, reject) => {
-			self._vscodeWrapper
+			this._vscodeWrapper
 				.getConfiguration(Constants.extensionName)
 				.update(Constants.connectionsArrayName, profiles, true)
 				.then(
@@ -183,7 +178,7 @@ export class ConnectionConfig implements IConnectionConfig {
 					},
 					(err) => {
 						reject(err);
-					}
+					},
 				);
 		});
 	}

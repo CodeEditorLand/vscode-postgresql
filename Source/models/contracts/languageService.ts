@@ -8,7 +8,7 @@ import { Telemetry } from "../telemetry";
  */
 export namespace IntelliSenseReadyNotification {
 	export const type = new NotificationType<IntelliSenseReadyParams, void>(
-		"textDocument/intelliSenseReady"
+		"textDocument/intelliSenseReady",
 	);
 }
 
@@ -27,7 +27,7 @@ export class IntelliSenseReadyParams {
  */
 export namespace RebuildIntelliSenseNotification {
 	export const type = new NotificationType<RebuildIntelliSenseParams, void>(
-		"textDocument/rebuildIntelliSense"
+		"textDocument/rebuildIntelliSense",
 	);
 }
 
@@ -49,7 +49,7 @@ export class RebuildIntelliSenseParams {
  */
 export namespace TelemetryNotification {
 	export const type = new NotificationType<TelemetryParams, void>(
-		"telemetry/sqlevent"
+		"telemetry/sqlevent",
 	);
 }
 
@@ -72,7 +72,7 @@ export class TelemetryParams {
  */
 export namespace StatusChangedNotification {
 	export const type = new NotificationType<StatusChangeParams, void>(
-		"textDocument/statusChanged"
+		"textDocument/statusChanged",
 	);
 }
 

@@ -1,11 +1,9 @@
-"use strict";
-
 // This code is originally from https://github.com/DonJayamanne/bowerVSCode
 // License: https://github.com/DonJayamanne/bowerVSCode/blob/master/LICENSE
 
 import vscode = require("vscode");
-import Prompt from "./prompt";
 import EscapeException from "../utils/EscapeException";
+import Prompt from "./prompt";
 import { INameValueChoice } from "./question";
 
 const figures = require("figures");
@@ -25,7 +23,7 @@ export default class ExpandPrompt extends Prompt {
 	}
 
 	private renderQuickPick(choices: vscode.QuickPickItem[]): any {
-		let options = this.defaultQuickPickOptions;
+		const options = this.defaultQuickPickOptions;
 		options.placeHolder = this._question.message;
 
 		return vscode.window.showQuickPick(choices, options).then((result) => {
@@ -42,7 +40,7 @@ export default class ExpandPrompt extends Prompt {
 			return result;
 		}, {});
 
-		let options = this.defaultQuickPickOptions;
+		const options = this.defaultQuickPickOptions;
 		options.placeHolder = this._question.message;
 
 		return vscode.window
@@ -53,7 +51,7 @@ export default class ExpandPrompt extends Prompt {
 				}
 
 				// Note: cannot be used with 0 or false responses
-				let returnVal = choiceMap[result] || false;
+				const returnVal = choiceMap[result] || false;
 				return this.validateAndReturn(returnVal);
 			});
 	}

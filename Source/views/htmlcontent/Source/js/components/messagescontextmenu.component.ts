@@ -4,11 +4,11 @@
  * ------------------------------------------------------------------------------------------ */
 import {
 	Component,
-	Output,
 	EventEmitter,
 	Inject,
-	forwardRef,
 	OnInit,
+	Output,
+	forwardRef,
 } from "@angular/core";
 
 import { ShortcutService } from "./../services/shortcuts.service";
@@ -48,7 +48,7 @@ export class MessagesContextMenu implements OnInit {
 	private selectedRange: IRange;
 	private isDisabled: boolean;
 	private position: { x: number; y: number } = { x: 0, y: 0 };
-	private visible: boolean = false;
+	private visible = false;
 	private keys = {
 		"event.copySelection": "",
 	};
@@ -56,27 +56,25 @@ export class MessagesContextMenu implements OnInit {
 	constructor(
 		@Inject(forwardRef(() => ShortcutService))
 		private shortcuts: ShortcutService
-	) {
-		const self = this;
-		for (let key in this.keys) {
+	) {;
+		for (const key in this.keys) {
 			if (this.keys.hasOwnProperty(key)) {
 				this.shortcuts.stringCodeFor(key).then((result) => {
-					self.keys[key] = result;
+					this.keys[key] = result;
 				});
 			}
 		}
 	}
 
 	ngOnInit(): void {
-		const self = this;
 		$(document).on("click", () => {
-			self.hide();
+			this.hide();
 		});
 	}
 
 	show(x: number, y: number, selectedRange: IRange): void {
 		this.selectedRange = selectedRange;
-		let selectedText =
+		const selectedText =
 			selectedRange && selectedRange.toString
 				? selectedRange.toString()
 				: "";

@@ -3,13 +3,11 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-"use strict";
-
 import * as path from "path";
 import { Runtime } from "../models/platform";
-import ServiceDownloadProvider from "./serviceDownloadProvider";
 import { IConfig, IStatusView } from "./interfaces";
-let fs = require("fs-extra-promise");
+import ServiceDownloadProvider from "./serviceDownloadProvider";
+const fs = require("fs-extra-promise");
 
 /*
  * Service Provider class finds the SQL tools service executable file or downloads it if doesn't exist.
@@ -18,7 +16,7 @@ export default class ServerProvider {
 	constructor(
 		private _downloadProvider: ServiceDownloadProvider,
 		private _config: IConfig,
-		private _statusView: IStatusView
+		private _statusView: IStatusView,
 	) {}
 
 	/**
@@ -35,10 +33,10 @@ export default class ServerProvider {
 			let candidate: string;
 
 			if (this._config !== undefined) {
-				let executableFiles: string[] =
+				const executableFiles: string[] =
 					this._config.getSqlToolsExecutableFiles();
 				executableFiles.forEach((element) => {
-					let executableFile = path.join(filePath, element);
+					const executableFile = path.join(filePath, element);
 					if (
 						candidate === undefined &&
 						fs.existsSync(executableFile)
@@ -67,7 +65,7 @@ export default class ServerProvider {
 						return this.downloadServerFiles(runtime).then(
 							(downloadResult) => {
 								resolve(downloadResult);
-							}
+							},
 						);
 					} else {
 						return resolve(result);
@@ -103,7 +101,7 @@ export default class ServerProvider {
 					return this.findServerPath(installDirectory).then(
 						(result) => {
 							return resolve(result);
-						}
+						},
 					);
 				})
 				.catch((err) => {

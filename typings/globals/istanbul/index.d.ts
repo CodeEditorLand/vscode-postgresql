@@ -23,11 +23,11 @@ declare module "istanbul" {
 			add(coverage: any, testName?: string): void;
 		}
 
-		interface Config {}
+		type Config = {};
 
-		interface ContentWriter {}
+		type ContentWriter = {};
 
-		interface FileWriter {}
+		type FileWriter = {};
 
 		interface Hook {
 			hookRequire(matcher: any, transformer: any, options: any): void;
@@ -39,7 +39,7 @@ declare module "istanbul" {
 			instrumentSync(code: string, filename: string): string;
 		}
 
-		interface Report {}
+		type Report = {};
 
 		interface Configuration {
 			new (obj: any, overrides: any): Configuration;
@@ -52,15 +52,15 @@ declare module "istanbul" {
 			write(
 				collector: Collector,
 				sync: boolean,
-				callback: Function
+				callback: Function,
 			): void;
 		}
 
-		interface Store {}
+		type Store = {};
 
-		interface ObjectUtils {}
+		type ObjectUtils = {};
 
-		interface Writer {}
+		type Writer = {};
 	}
 
 	var istanbul: istanbul.Istanbul;

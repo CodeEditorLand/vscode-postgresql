@@ -3,14 +3,14 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { Runtime, PlatformInformation } from "../models/platform";
 import Config from "../configurations/config";
-import ServiceDownloadProvider from "./serviceDownloadProvider";
+import { ILogger } from "../models/interfaces";
+import { PlatformInformation, Runtime } from "../models/platform";
 import DecompressProvider from "./decompressProvider";
 import HttpClient from "./httpClient";
-import ServerProvider from "./server";
 import { IStatusView } from "./interfaces";
-import { ILogger } from "../models/interfaces";
+import ServerProvider from "./server";
+import ServiceDownloadProvider from "./serviceDownloadProvider";
 
 class StubStatusView implements IStatusView {
 	installingService(): void {
@@ -55,24 +55,24 @@ const logger = new StubLogger();
 const statusView = new StubStatusView();
 const httpClient = new HttpClient();
 const decompressProvider = new DecompressProvider();
-let downloadProvider = new ServiceDownloadProvider(
+const downloadProvider = new ServiceDownloadProvider(
 	config,
 	logger,
 	statusView,
 	httpClient,
-	decompressProvider
+	decompressProvider,
 );
-let serverProvider = new ServerProvider(downloadProvider, config, statusView);
+const serverProvider = new ServerProvider(downloadProvider, config, statusView);
 
 /*
  * Installs the service for the given platform if it's not already installed.
  */
-export function installService(runtime: Runtime): Promise<String> {
+export function installService(runtime: Runtime): Promise<string> {
 	if (runtime === undefined) {
 		return PlatformInformation.GetCurrent().then((platformInfo) => {
 			if (platformInfo.isValidRuntime) {
 				return serverProvider.getOrDownloadServer(
-					platformInfo.runtimeId
+					platformInfo.runtimeId,
 				);
 			} else {
 				throw new Error("unsupported runtime");
@@ -94,8 +94,8 @@ export function getServiceInstallDirectory(runtime: Runtime): Promise<string> {
 					if (platformInfo.isValidRuntime) {
 						resolve(
 							downloadProvider.getInstallDirectory(
-								platformInfo.runtimeId
-							)
+								platformInfo.runtimeId,
+							),
 						);
 					} else {
 						reject("unsupported runtime");

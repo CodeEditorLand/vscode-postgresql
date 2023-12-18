@@ -9,32 +9,32 @@ export class PropertyUpdater<T> {
 		public inputBoxOptions: InputBoxOptions,
 		public quickPickOptions: QuickPickOptions,
 		private propertyChecker: (obj: T) => boolean,
-		private propertySetter: (obj: T, input: string) => void
+		private propertySetter: (obj: T, input: string) => void,
 	) {}
 
 	public static CreateQuickPickUpdater<T>(
 		quickPickOptions: QuickPickOptions,
 		propertyChecker: (obj: T) => boolean,
-		propertySetter: (obj: T, input: string) => void
+		propertySetter: (obj: T, input: string) => void,
 	): PropertyUpdater<T> {
 		return new PropertyUpdater<T>(
 			undefined,
 			quickPickOptions,
 			propertyChecker,
-			propertySetter
+			propertySetter,
 		);
 	}
 
 	public static CreateInputBoxUpdater<T>(
 		inputBoxOptions: InputBoxOptions,
 		propertyChecker: (obj: T) => boolean,
-		propertySetter: (obj: T, input: string) => void
+		propertySetter: (obj: T, input: string) => void,
 	): PropertyUpdater<T> {
 		return new PropertyUpdater<T>(
 			inputBoxOptions,
 			undefined,
 			propertyChecker,
-			propertySetter
+			propertySetter,
 		);
 	}
 

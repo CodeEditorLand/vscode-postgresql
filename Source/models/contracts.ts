@@ -5,7 +5,7 @@ import { RequestType } from "vscode-languageclient";
 // Version request message callback declaration
 export namespace VersionRequest {
 	export const type = new RequestType<void, VersionResult, void, void>(
-		"version"
+		"version",
 	);
 }
 
@@ -19,7 +19,7 @@ export type VersionResult = string;
 // Read Credential request message callback declaration
 export namespace ReadCredentialRequest {
 	export const type = new RequestType<Credential, Credential, void, void>(
-		"credential/read"
+		"credential/read",
 	);
 }
 
@@ -45,7 +45,7 @@ export class Credential {
 // Save Credential request message callback declaration
 export namespace SaveCredentialRequest {
 	export const type = new RequestType<Credential, boolean, void, void>(
-		"credential/save"
+		"credential/save",
 	);
 }
 // --------------------------------- </ Save Credential Request > -------------------------------------------------
@@ -55,7 +55,7 @@ export namespace SaveCredentialRequest {
 // Delete Credential request message callback declaration
 export namespace DeleteCredentialRequest {
 	export const type = new RequestType<Credential, boolean, void, void>(
-		"credential/delete"
+		"credential/delete",
 	);
 }
 // --------------------------------- </ Delete Credential Request > -------------------------------------------------
@@ -72,7 +72,7 @@ export class SaveResultsRequestParams {
 }
 
 export class SaveResultsAsCsvRequestParams extends SaveResultsRequestParams {
-	includeHeaders: boolean = true;
+	includeHeaders = true;
 }
 
 export class SaveResultsAsJsonRequestParams extends SaveResultsRequestParams {
@@ -80,7 +80,7 @@ export class SaveResultsAsJsonRequestParams extends SaveResultsRequestParams {
 }
 
 export class SaveResultsAsExcelRequestParams extends SaveResultsRequestParams {
-	includeHeaders: boolean = true;
+	includeHeaders = true;
 }
 
 export class SaveResultRequestResult {

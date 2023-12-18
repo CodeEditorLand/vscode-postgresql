@@ -1,4 +1,3 @@
-"use strict";
 import vscode = require("vscode");
 import TelemetryReporter from "vscode-extension-telemetry";
 import Utils = require("./utils");
@@ -8,14 +7,14 @@ export namespace Telemetry {
 	let reporter: TelemetryReporter;
 	let userId: string;
 	let platformInformation: PlatformInformation;
-	let disabled: boolean = true; // Disable telemetry for public preview
+	let disabled = true; // Disable telemetry for public preview
 
 	// Get the unique ID for the current user of the extension
 	function getUserId(): Promise<string> {
 		return new Promise<string>((resolve) => {
 			// Generate the user id if it has not been created already
 			if (typeof userId === "undefined") {
-				let id = Utils.generateUserId();
+				const id = Utils.generateUserId();
 				id.then((newId) => {
 					userId = newId;
 					resolve(userId);
@@ -69,11 +68,11 @@ export namespace Telemetry {
 				return;
 			}
 
-			let packageInfo = Utils.getPackageInfo(context);
+			const packageInfo = Utils.getPackageInfo(context);
 			reporter = new TelemetryReporter(
 				"vscode-pgsql",
 				packageInfo.version,
-				packageInfo.aiKey
+				packageInfo.aiKey,
 			);
 		}
 	}
@@ -83,7 +82,7 @@ export namespace Telemetry {
 	 */
 	export function FilterErrorPath(line: string): string {
 		if (line) {
-			let values: string[] = line.split("/out/");
+			const values: string[] = line.split("/out/");
 			if (values.length <= 1) {
 				// Didn't match expected format
 				return line;
@@ -98,11 +97,11 @@ export namespace Telemetry {
 	 */
 	export function sendTelemetryEventForException(
 		err: any,
-		methodName: string
+		methodName: string,
 	): void {
 		try {
 			let stackArray: string[];
-			let firstLine: string = "";
+			let firstLine = "";
 			if (err !== undefined && err.stack !== undefined) {
 				stackArray = err.stack.split("\n");
 				if (stackArray !== undefined && stackArray.length >= 2) {
@@ -120,12 +119,12 @@ export namespace Telemetry {
 				"Unhandled Exception occurred. error: " +
 					err +
 					" method: " +
-					methodName
+					methodName,
 			);
 		} catch (telemetryErr) {
 			// If sending telemetry event fails ignore it so it won't break the extension
 			Utils.logDebug(
-				"Failed to send telemetry event. error: " + telemetryErr
+				"Failed to send telemetry event. error: " + telemetryErr,
 			);
 		}
 	}
@@ -136,7 +135,7 @@ export namespace Telemetry {
 	export function sendTelemetryEvent(
 		eventName: string,
 		properties?: ITelemetryEventProperties,
-		measures?: ITelemetryEventMeasures
+		measures?: ITelemetryEventMeasures,
 	): void {
 		if (typeof disabled === "undefined") {
 			disabled = false;

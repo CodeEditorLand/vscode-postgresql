@@ -1,5 +1,3 @@
-"use strict";
-
 // This code is originally from https://github.com/DonJayamanne/bowerVSCode
 // License: https://github.com/DonJayamanne/bowerVSCode/blob/master/LICENSE
 
@@ -14,11 +12,11 @@ export default class ConfirmPrompt extends Prompt {
 	}
 
 	public render(): any {
-		let choices: { [id: string]: boolean } = {};
+		const choices: { [id: string]: boolean } = {};
 		choices[LocalizedConstants.msgYes] = true;
 		choices[LocalizedConstants.msgNo] = false;
 
-		let options = this.defaultQuickPickOptions;
+		const options = this.defaultQuickPickOptions;
 		options.placeHolder = this._question.message;
 
 		return window

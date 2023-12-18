@@ -3,15 +3,14 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-"use strict";
-import { IPackage, IStatusView, PackageError, IHttpClient } from "./interfaces";
-import { ILogger } from "../models/interfaces";
-import { parse as parseUrl, Url } from "url";
-import * as https from "https";
 import * as http from "http";
+import * as https from "https";
+import { Url, parse as parseUrl } from "url";
+import { ILogger } from "../models/interfaces";
+import { IHttpClient, IPackage, IStatusView, PackageError } from "./interfaces";
 import { getProxyAgent, isBoolean } from "./proxy";
 
-let fs = require("fs");
+const fs = require("fs");
 
 /*
  * Http client class to handle downloading files using http or https urls
@@ -27,26 +26,26 @@ export default class HttpClient implements IHttpClient {
 		statusView: IStatusView,
 		proxy?: string,
 		strictSSL?: boolean,
-		authorization?: string
+		authorization?: string,
 	): Promise<void> {
 		const url = parseUrl(urlString);
-		let options = this.getHttpClientOptions(
+		const options = this.getHttpClientOptions(
 			url,
 			proxy,
 			strictSSL,
-			authorization
+			authorization,
 		);
-		let clientRequest =
+		const clientRequest =
 			url.protocol === "http:" ? http.request : https.request;
 
 		return new Promise<void>((resolve, reject) => {
 			if (!pkg.tmpFile || pkg.tmpFile.fd === 0) {
 				return reject(
-					new PackageError("Temporary package file unavailable", pkg)
+					new PackageError("Temporary package file unavailable", pkg),
 				);
 			}
 
-			let request = clientRequest(options, (response) => {
+			const request = clientRequest(options, (response) => {
 				if (
 					response.statusCode === 301 ||
 					response.statusCode === 302
@@ -60,18 +59,18 @@ export default class HttpClient implements IHttpClient {
 							statusView,
 							proxy,
 							strictSSL,
-							authorization
-						)
+							authorization,
+						),
 					);
 				}
 
 				if (response.statusCode !== 200) {
 					// Download failed - print error message
 					logger.appendLine(
-						`failed (error code '${response.statusCode}')`
+						`failed (error code '${response.statusCode}')`,
 					);
 					return reject(
-						new PackageError(response.statusCode.toString(), pkg)
+						new PackageError(response.statusCode.toString(), pkg),
 					);
 				}
 
@@ -90,8 +89,8 @@ export default class HttpClient implements IHttpClient {
 					new PackageError(
 						`Request error: ${error.code || "NONE"}`,
 						pkg,
-						error
-					)
+						error,
+					),
 				);
 			});
 
@@ -104,7 +103,7 @@ export default class HttpClient implements IHttpClient {
 		url: Url,
 		proxy?: string,
 		strictSSL?: boolean,
-		authorization?: string
+		authorization?: string,
 	): any {
 		const agent = getProxyAgent(url, proxy, strictSSL);
 
@@ -115,7 +114,7 @@ export default class HttpClient implements IHttpClient {
 		};
 
 		if (url.protocol === "https:") {
-			let httpsOptions: https.RequestOptions = {
+			const httpsOptions: https.RequestOptions = {
 				host: url.hostname,
 				path: url.path,
 				agent: agent,
@@ -139,24 +138,24 @@ export default class HttpClient implements IHttpClient {
 		progress: IDownloadProgress,
 		data: any,
 		logger: ILogger,
-		statusView: IStatusView
+		statusView: IStatusView,
 	): void {
 		progress.downloadedBytes += data.length;
 
 		// Update status bar item with percentage
 		if (progress.packageSize > 0) {
-			let newPercentage = Math.ceil(
-				100 * (progress.downloadedBytes / progress.packageSize)
+			const newPercentage = Math.ceil(
+				100 * (progress.downloadedBytes / progress.packageSize),
 			);
 			if (newPercentage !== progress.downloadPercentage) {
 				statusView.updateServiceDownloadingProgress(
-					progress.downloadPercentage
+					progress.downloadPercentage,
 				);
 				progress.downloadPercentage = newPercentage;
 			}
 
 			// Update dots after package name in output console
-			let newDots = Math.ceil(progress.downloadPercentage / 5);
+			const newDots = Math.ceil(progress.downloadPercentage / 5);
 			if (newDots > progress.dots) {
 				logger.append(".".repeat(newDots - progress.dots));
 				progress.dots = newDots;
@@ -169,10 +168,10 @@ export default class HttpClient implements IHttpClient {
 		pkg: IPackage,
 		response: http.IncomingMessage,
 		logger: ILogger,
-		statusView: IStatusView
+		statusView: IStatusView,
 	): Promise<void> {
 		return new Promise<void>((resolve, reject) => {
-			let progress: IDownloadProgress = {
+			const progress: IDownloadProgress = {
 				packageSize: parseInt(response.headers["content-length"], 10),
 				dots: 0,
 				downloadedBytes: 0,
@@ -184,10 +183,10 @@ export default class HttpClient implements IHttpClient {
 					progress,
 					data,
 					logger,
-					statusView
+					statusView,
 				);
 			});
-			let tmpFile = fs.createWriteStream(undefined, {
+			const tmpFile = fs.createWriteStream(undefined, {
 				fd: pkg.tmpFile.fd,
 			});
 			response.on("end", () => {
@@ -199,8 +198,8 @@ export default class HttpClient implements IHttpClient {
 					new PackageError(
 						`Response error: ${err.code || "NONE"}`,
 						pkg,
-						err
-					)
+						err,
+					),
 				);
 			});
 

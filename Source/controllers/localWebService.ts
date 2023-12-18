@@ -1,4 +1,3 @@
-"use strict";
 import path = require("path");
 import * as ws from "ws";
 import url = require("url");
@@ -32,36 +31,34 @@ export default class LocalWebService {
 	static _staticContentPath: string;
 
 	constructor(extensionPath: string) {
-		// add static content for express web server to serve
-		const self = this;
 		LocalWebService._vscodeExtensionPath = extensionPath;
 		LocalWebService._staticContentPath = path.join(
 			extensionPath,
-			LocalWebService._htmlContentLocation
+			LocalWebService._htmlContentLocation,
 		);
 		this.app.use(express.static(LocalWebService.staticContentPath));
 		this.app.use(
-			bodyParser.json({ limit: "50mb", type: "application/json" })
+			bodyParser.json({ limit: "50mb", type: "application/json" }),
 		);
 		this.app.set("view engine", "ejs");
 		Utils.logDebug(
-			`LocalWebService: added static html content path: ${LocalWebService.staticContentPath}`
+			`LocalWebService: added static html content path: ${LocalWebService.staticContentPath}`,
 		);
 		this.server.on("request", this.app);
 
 		// Handle new connections to the web socket server
 		this.wss.on("connection", (ws) => {
-			let parse: any = querystring.parse(
-				<string>url.parse(ws.upgradeReq.url).query
+			const parse: any = querystring.parse(
+				<string>url.parse(ws.upgradeReq.url).query,
 			);
 
 			// Attempt to find the mapping for the web socket server
-			let mapping = self.wsMap.get(parse.uri);
+			let mapping = this.wsMap.get(parse.uri);
 
 			// If the mapping does not exist, create it now
 			if (mapping === undefined) {
 				mapping = new WebSocketMapping();
-				self.wsMap.set(parse.uri, mapping);
+				this.wsMap.set(parse.uri, mapping);
 			}
 
 			// Assign the web socket server to the mapping
@@ -92,7 +89,7 @@ export default class LocalWebService {
 
 	broadcast(uri: string, event: string, data?: any): void {
 		// Create a message to send out
-		let message: WebSocketMessage = {
+		const message: WebSocketMessage = {
 			type: event,
 			data: data ? data : undefined,
 		};
@@ -131,17 +128,17 @@ export default class LocalWebService {
 
 	addHandler(
 		type: Interfaces.ContentType,
-		handler: (req, res) => void
+		handler: (req, res) => void,
 	): void {
-		let segment = "/" + Interfaces.ContentTypes[type];
+		const segment = "/" + Interfaces.ContentTypes[type];
 		this.app.get(segment, handler);
 	}
 
 	addPostHandler(
 		type: Interfaces.ContentType,
-		handler: (req, res) => void
+		handler: (req, res) => void,
 	): void {
-		let segment = "/" + Interfaces.ContentTypes[type];
+		const segment = "/" + Interfaces.ContentTypes[type];
 		this.app.post(segment, handler);
 	}
 

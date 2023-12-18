@@ -7,31 +7,31 @@
 
 declare function describe(
 	description: string,
-	specDefinitions: () => void
+	specDefinitions: () => void,
 ): void;
 declare function fdescribe(
 	description: string,
-	specDefinitions: () => void
+	specDefinitions: () => void,
 ): void;
 declare function xdescribe(
 	description: string,
-	specDefinitions: () => void
+	specDefinitions: () => void,
 ): void;
 
 declare function it(
 	expectation: string,
 	assertion?: (done: DoneFn) => void,
-	timeout?: number
+	timeout?: number,
 ): void;
 declare function fit(
 	expectation: string,
 	assertion?: (done: DoneFn) => void,
-	timeout?: number
+	timeout?: number,
 ): void;
 declare function xit(
 	expectation: string,
 	assertion?: (done: DoneFn) => void,
-	timeout?: number
+	timeout?: number,
 ): void;
 
 /** If you call the function pending anywhere in the spec body, no matter the expectations, the spec will be marked pending. */
@@ -39,20 +39,20 @@ declare function pending(reason?: string): void;
 
 declare function beforeEach(
 	action: (done: DoneFn) => void,
-	timeout?: number
+	timeout?: number,
 ): void;
 declare function afterEach(
 	action: (done: DoneFn) => void,
-	timeout?: number
+	timeout?: number,
 ): void;
 
 declare function beforeAll(
 	action: (done: DoneFn) => void,
-	timeout?: number
+	timeout?: number,
 ): void;
 declare function afterAll(
 	action: (done: DoneFn) => void,
-	timeout?: number
+	timeout?: number,
 ): void;
 
 declare function expect(spy: Function): jasmine.Matchers;
@@ -73,7 +73,7 @@ declare function runs(asyncMethod: Function): void;
 declare function waitsFor(
 	latchMethod: () => boolean,
 	failureMessage?: string,
-	timeout?: number
+	timeout?: number,
 ): void;
 declare function waits(timeout?: number): void;
 
@@ -90,14 +90,14 @@ declare namespace jasmine {
 	function pp(value: any): string;
 	function getEnv(): Env;
 	function addCustomEqualityTester(
-		equalityTester: CustomEqualityTester
+		equalityTester: CustomEqualityTester,
 	): void;
 	function addMatchers(matchers: CustomMatcherFactories): void;
 	function stringMatching(str: string): Any;
 	function stringMatching(str: RegExp): Any;
 	function formatErrorMsg(
 		domain: string,
-		usage: string
+		usage: string,
 	): (msg: string) => string;
 
 	interface Any {
@@ -126,7 +126,7 @@ declare namespace jasmine {
 		jasmineMatches(
 			other: any,
 			mismatchKeys: any[],
-			mismatchValues: any[]
+			mismatchValues: any[],
 		): boolean;
 		jasmineToString(): string;
 	}
@@ -147,7 +147,7 @@ declare namespace jasmine {
 			timeout: number,
 			latchFunction: SpecFunction,
 			message: string,
-			spec: Spec
+			spec: Spec,
 		): any;
 	}
 
@@ -172,7 +172,7 @@ declare namespace jasmine {
 	interface CustomMatcherFactory {
 		(
 			util: MatchersUtil,
-			customEqualityTesters: Array<CustomEqualityTester>
+			customEqualityTesters: Array<CustomEqualityTester>,
 		): CustomMatcher;
 	}
 
@@ -189,12 +189,12 @@ declare namespace jasmine {
 		equals(
 			a: any,
 			b: any,
-			customTesters?: Array<CustomEqualityTester>
+			customTesters?: Array<CustomEqualityTester>,
 		): boolean;
 		contains<T>(
 			haystack: ArrayLike<T> | string,
 			needle: any,
-			customTesters?: Array<CustomEqualityTester>
+			customTesters?: Array<CustomEqualityTester>,
 		): boolean;
 		buildFailureMessage(
 			matcherName: string,
@@ -235,19 +235,19 @@ declare namespace jasmine {
 			a: RegExp,
 			b: RegExp,
 			mismatchKeys: string[],
-			mismatchValues: string[]
+			mismatchValues: string[],
 		): boolean;
 		compareObjects_(
 			a: any,
 			b: any,
 			mismatchKeys: string[],
-			mismatchValues: string[]
+			mismatchValues: string[],
 		): boolean;
 		equals_(
 			a: any,
 			b: any,
 			mismatchKeys: string[],
-			mismatchValues: string[]
+			mismatchValues: string[],
 		): boolean;
 		contains_(haystack: any, needle: any): boolean;
 		addCustomEqualityTester(equalityTester: CustomEqualityTester): void;
@@ -272,7 +272,7 @@ declare namespace jasmine {
 			timeoutKey: any,
 			funcToCall: () => void,
 			millis: number,
-			recurring: boolean
+			recurring: boolean,
 		): void;
 	}
 
@@ -350,7 +350,7 @@ declare namespace jasmine {
 		format(value: any): void;
 		iterateObject(
 			obj: any,
-			fn: (property: string, isGetter: boolean) => void
+			fn: (property: string, isGetter: boolean) => void,
 		): void;
 		emitScalar(value: any): void;
 		emitString(value: string): void;
@@ -359,7 +359,7 @@ declare namespace jasmine {
 		append(value: any): void;
 	}
 
-	interface StringPrettyPrinter extends PrettyPrinter {}
+	type StringPrettyPrinter = PrettyPrinter;
 
 	interface Queue {
 		new (env: any): any;
@@ -394,7 +394,7 @@ declare namespace jasmine {
 		toEqual(expected: any, expectationFailOutput?: any): boolean;
 		toMatch(
 			expected: string | RegExp,
-			expectationFailOutput?: any
+			expectationFailOutput?: any,
 		): boolean;
 		toBeDefined(expectationFailOutput?: any): boolean;
 		toBeUndefined(expectationFailOutput?: any): boolean;
@@ -409,23 +409,23 @@ declare namespace jasmine {
 		toBeLessThan(expected: number, expectationFailOutput?: any): boolean;
 		toBeLessThanOrEqual(
 			expected: number,
-			expectationFailOutput?: any
+			expectationFailOutput?: any,
 		): boolean;
 		toBeGreaterThan(expected: number, expectationFailOutput?: any): boolean;
 		toBeGreaterThanOrEqual(
 			expected: number,
-			expectationFailOutput?: any
+			expectationFailOutput?: any,
 		): boolean;
 		toBeCloseTo(
 			expected: number,
 			precision?: any,
-			expectationFailOutput?: any
+			expectationFailOutput?: any,
 		): boolean;
 		toThrow(expected?: any): boolean;
 		toThrowError(message?: string | RegExp): boolean;
 		toThrowError(
 			expected?: new (...args: any[]) => Error,
-			message?: string | RegExp
+			message?: string | RegExp,
 		): boolean;
 		not: Matchers;
 
@@ -496,7 +496,7 @@ declare namespace jasmine {
 		waitsFor(
 			latchFunction: SpecFunction,
 			timeoutMessage?: string,
-			timeout?: number
+			timeout?: number,
 		): Spec;
 		fail(e?: any): void;
 		getMatchersClass_(): Matchers;
@@ -510,7 +510,7 @@ declare namespace jasmine {
 		spyOn(
 			obj: any,
 			methodName: string,
-			ignoreMethodDoesntExist: boolean
+			ignoreMethodDoesntExist: boolean,
 		): Spy;
 		removeAllSpies(): void;
 		throwOnExpectationFailure: boolean;
@@ -526,7 +526,7 @@ declare namespace jasmine {
 			env: Env,
 			description: string,
 			specDefinitions: () => void,
-			parentSuite: Suite
+			parentSuite: Suite,
 		): any;
 
 		parentSuite: Suite;

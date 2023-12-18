@@ -4,11 +4,11 @@
  * ------------------------------------------------------------------------------------------ */
 import {
 	Component,
-	Output,
 	EventEmitter,
 	Inject,
-	forwardRef,
 	OnInit,
+	Output,
+	forwardRef,
 } from "@angular/core";
 import { ISlickRange } from "angular2-slickgrid";
 
@@ -67,7 +67,7 @@ export class ContextMenu implements OnInit {
 	private selection: ISlickRange[];
 	private isDisabled: boolean;
 	private position: { x: number; y: number } = { x: 0, y: 0 };
-	private visible: boolean = false;
+	private visible = false;
 	private keys = {
 		"event.saveAsCSV": "",
 		"event.saveAsJSON": "",
@@ -79,21 +79,19 @@ export class ContextMenu implements OnInit {
 	constructor(
 		@Inject(forwardRef(() => ShortcutService))
 		private shortcuts: ShortcutService
-	) {
-		const self = this;
-		for (let key in this.keys) {
+	) {;
+		for (const key in this.keys) {
 			if (this.keys.hasOwnProperty(key)) {
 				this.shortcuts.stringCodeFor(key).then((result) => {
-					self.keys[key] = result;
+					this.keys[key] = result;
 				});
 			}
 		}
 	}
 
 	ngOnInit(): void {
-		const self = this;
 		$(document).on("click", () => {
-			self.hide();
+			this.hide();
 		});
 	}
 
@@ -103,7 +101,7 @@ export class ContextMenu implements OnInit {
 		batchId: number,
 		resultId: number,
 		index: number,
-		selection: ISlickRange[]
+		selection: ISlickRange[],
 	): void {
 		this.batchId = batchId;
 		this.resultId = resultId;

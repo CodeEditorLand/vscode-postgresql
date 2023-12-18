@@ -1,4 +1,3 @@
-"use strict";
 import vscode = require("vscode");
 import Constants = require("../constants/constants");
 
@@ -260,9 +259,9 @@ export interface IConnectionProfile extends IConnectionCredentials {
 }
 
 export enum CredentialsQuickPickItemType {
-	Profile,
-	Mru,
-	NewConnection,
+	Profile = 0,
+	Mru = 1,
+	NewConnection = 2,
 }
 export interface IConnectionCredentialsQuickPickItem
 	extends vscode.QuickPickItem {
@@ -351,8 +350,8 @@ export interface ILogger {
 	appendLine(message?: string): void;
 }
 
-export const enum ErrorCodes {
-	ERR_PLATFORM_NOT_SUPPORTED,
-	ERR_DISTRIBUTION_NOT_SUPPORTED,
-	ERR_ARCHITECTURE_NOT_SUPPORTED,
+export enum ErrorCodes {
+	ERR_PLATFORM_NOT_SUPPORTED = 0,
+	ERR_DISTRIBUTION_NOT_SUPPORTED = 1,
+	ERR_ARCHITECTURE_NOT_SUPPORTED = 2,
 }

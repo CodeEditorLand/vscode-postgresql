@@ -1,4 +1,3 @@
-"use strict";
 var gulp = require("gulp");
 var tslint = require("gulp-tslint");
 var ts = require("gulp-typescript");
@@ -22,7 +21,7 @@ gulp.task("html:lint", () => {
 		.pipe(
 			tslint({
 				formatter: "verbose",
-			})
+			}),
 		)
 		.pipe(tslint.report());
 });
@@ -38,10 +37,8 @@ gulp.task("html:compile-src", () => {
 		.pipe(tsProject())
 		.pipe(
 			srcmap.write(".", {
-				sourceRoot: function (file) {
-					return file.cwd + "/src/views/htmlcontent";
-				},
-			})
+				sourceRoot: (file) => file.cwd + "/src/views/htmlcontent",
+			}),
 		)
 		.pipe(gulp.dest(config.paths.html.out + "/dist/js"));
 });
@@ -56,10 +53,8 @@ gulp.task("html:compile-test", () => {
 		.pipe(tsProject())
 		.pipe(
 			srcmap.write(".", {
-				sourceRoot: function (file) {
-					return file.cwd + "/src/views/htmlcontent";
-				},
-			})
+				sourceRoot: (file) => file.cwd + "/src/views/htmlcontent",
+			}),
 		)
 		.pipe(gulp.dest(config.paths.html.out + "/test"));
 });
@@ -69,23 +64,23 @@ gulp.task("html:bundle:app", (done) => {
 	if (min) {
 		var builder = new sysBuilder(
 			"./out/src/views/htmlcontent",
-			"./src/views/htmlcontent/systemjs.config.js"
+			"./src/views/htmlcontent/systemjs.config.js",
 		);
 		return builder
 			.buildStatic(
 				"app",
-				"./out/src/views/htmlcontent/dist/js/app.min.js"
+				"./out/src/views/htmlcontent/dist/js/app.min.js",
 			)
-			.then(function () {
-				return del([
+			.then(() =>
+				del([
 					"./out/src/views/htmlcontent/dist/js/**/*",
 					"!" + "./out/src/views/htmlcontent/dist/js/app.min.js",
-				]);
-			})
-			.catch(function (err) {
+				]),
+			)
+			.catch((err) => {
 				console.error(
 					">>> [systemjs-builder] Bundling failed".bold.green,
-					err
+					err,
 				);
 			});
 	} else {
@@ -126,13 +121,13 @@ gulp.task("html:bundle:css", () => {
 // system.config.js can also bundled for convenience
 gulp.task("html:vendor", (done) => {
 	gulp.src([config.paths.html.root + "/node_modules/rxjs/**/*"]).pipe(
-		gulp.dest(config.paths.html.out + "/lib/js/rxjs")
+		gulp.dest(config.paths.html.out + "/lib/js/rxjs"),
 	);
 
 	gulp.src([
 		config.paths.html.root + "/node_modules/angular-in-memory-web-api/**/*",
 	]).pipe(
-		gulp.dest(config.paths.html.out + "/lib/js/angular-in-memory-web-api")
+		gulp.dest(config.paths.html.out + "/lib/js/angular-in-memory-web-api"),
 	);
 
 	// concatenate non-angular2 libs, shims & systemjs-config
@@ -189,7 +184,7 @@ gulp.task("html:vendor", (done) => {
 		]).pipe(gulp.dest(config.paths.html.out + "/lib/js"));
 
 		gulp.src([config.paths.html.root + "/node_modules/zone.js/**/*"]).pipe(
-			gulp.dest(config.paths.html.out + "/lib/js/zone.js")
+			gulp.dest(config.paths.html.out + "/lib/js/zone.js"),
 		);
 	}
 
@@ -215,7 +210,7 @@ gulp.task("html:vendor", (done) => {
 			config.paths.html.root +
 				"/node_modules/angular2-slickgrid/components/**/*.js",
 		],
-		{ base: config.paths.html.root + "/node_modules/angular2-slickgrid" }
+		{ base: config.paths.html.root + "/node_modules/angular2-slickgrid" },
 	).pipe(gulp.dest(config.paths.html.out + "/lib/js/angular2-slickgrid"));
 
 	return gulp
@@ -224,7 +219,7 @@ gulp.task("html:vendor", (done) => {
 });
 
 gulp.task("html:copy:assets", (done) => {
-	let promises = [];
+	const promises = [];
 	promises.push(
 		new Promise((resolve) => {
 			gulp.src([config.paths.html.root + "/src/html/*"])
@@ -232,7 +227,7 @@ gulp.task("html:copy:assets", (done) => {
 				.on("end", () => {
 					resolve();
 				});
-		})
+		}),
 	);
 
 	promises.push(
@@ -242,7 +237,7 @@ gulp.task("html:copy:assets", (done) => {
 				.on("end", () => {
 					resolve();
 				});
-		})
+		}),
 	);
 
 	promises.push(
@@ -252,7 +247,7 @@ gulp.task("html:copy:assets", (done) => {
 				.on("end", () => {
 					resolve();
 				});
-		})
+		}),
 	);
 
 	promises.push(
@@ -262,19 +257,19 @@ gulp.task("html:copy:assets", (done) => {
 				.on("end", () => {
 					resolve();
 				});
-		})
+		}),
 	);
 
 	Promise.all(promises).then(() => done());
 });
 
-gulp.task("html:test", function (done) {
+gulp.task("html:test", (done) => {
 	new Server(
 		{
 			configFile: __dirname + "/../karma.conf.js",
 			singleRun: true,
 		},
-		done
+		done,
 	).start();
 });
 
@@ -288,7 +283,7 @@ gulp.task(
 		"html:bundle:app",
 		"html:min-js",
 		"html:bundle:css",
-	])
+	]),
 );
 
 gulp.task("html:bundle", (done) => {
@@ -307,5 +302,5 @@ gulp.task("html:bundle", (done) => {
 
 gulp.task(
 	"html:build",
-	gulp.series("html:lint", "html:vendor", "html:app", "html:bundle")
+	gulp.series("html:lint", "html:vendor", "html:app", "html:bundle"),
 );

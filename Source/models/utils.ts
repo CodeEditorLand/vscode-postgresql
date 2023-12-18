@@ -1,11 +1,10 @@
-"use strict";
-import * as getmac from "getmac";
 import * as crypto from "crypto";
 import * as os from "os";
+import * as getmac from "getmac";
 import vscode = require("vscode");
 import Constants = require("../constants/constants");
-import * as interfaces from "./interfaces";
 import { ExtensionContext } from "vscode";
+import * as interfaces from "./interfaces";
 import fs = require("fs");
 
 // CONSTANTS //////////////////////////////////////////////////////////////////////////////////////
@@ -26,7 +25,7 @@ export interface IPackageInfo {
 
 // Get information from the extension's package.json file
 export function getPackageInfo(context: ExtensionContext): IPackageInfo {
-	let extensionPackage = require(context.asAbsolutePath("./package.json"));
+	const extensionPackage = require(context.asAbsolutePath("./package.json"));
 	if (extensionPackage) {
 		return {
 			name: extensionPackage.name,
@@ -38,7 +37,7 @@ export function getPackageInfo(context: ExtensionContext): IPackageInfo {
 
 // Generate a new GUID
 export function generateGuid(): string {
-	let hexValues: string[] = [
+	const hexValues: string[] = [
 		"0",
 		"1",
 		"2",
@@ -57,10 +56,10 @@ export function generateGuid(): string {
 		"F",
 	];
 	// c.f. rfc4122 (UUID version 4 = xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx)
-	let oct: string = "";
+	let oct = "";
 	let tmp: number;
 	/* tslint:disable:no-bitwise */
-	for (let a: number = 0; a < 4; a++) {
+	for (let a = 0; a < 4; a++) {
 		tmp = (4294967296 * Math.random()) | 0;
 		oct +=
 			hexValues[tmp & 0xf] +
@@ -74,7 +73,7 @@ export function generateGuid(): string {
 	}
 
 	// 'Set the two most significant bits (bits 6 and 7) of the clock_seq_hi_and_reserved to zero and one, respectively'
-	let clockSequenceHi: string = hexValues[(8 + Math.random() * 4) | 0];
+	const clockSequenceHi: string = hexValues[(8 + Math.random() * 4) | 0];
 	return (
 		oct.substr(0, 8) +
 		"-" +
@@ -95,15 +94,15 @@ export function generateUserId(): Promise<string> {
 	return new Promise<string>((resolve) => {
 		try {
 			getmac.getMac((error, macAddress) => {
-				if (!error) {
+				if (error) {
+					resolve(generateGuid()); // fallback
+				} else {
 					resolve(
 						crypto
 							.createHash("sha256")
 							.update(macAddress + os.homedir(), "utf8")
-							.digest("hex")
+							.digest("hex"),
 					);
-				} else {
-					resolve(generateGuid()); // fallback
 				}
 			});
 		} catch (err) {
@@ -115,7 +114,7 @@ export function generateUserId(): Promise<string> {
 // Return 'true' if the active editor window has a .sql file, false otherwise
 export function isEditingSqlFile(): boolean {
 	let sqlFile = false;
-	let editor = getActiveTextEditor();
+	const editor = getActiveTextEditor();
 	if (editor) {
 		if (editor.document.languageId === Constants.languageId) {
 			sqlFile = true;
@@ -146,8 +145,8 @@ export function getActiveTextEditorUri(): string {
 
 // Helper to log messages to "PGSQL" output channel
 export function logToOutputChannel(msg: any): void {
-	let outputChannel = vscode.window.createOutputChannel(
-		Constants.outputChannelName
+	const outputChannel = vscode.window.createOutputChannel(
+		Constants.outputChannelName,
 	);
 	outputChannel.show();
 	if (msg instanceof Array) {
@@ -161,13 +160,13 @@ export function logToOutputChannel(msg: any): void {
 
 // Helper to log debug messages
 export function logDebug(msg: any): void {
-	let config = vscode.workspace.getConfiguration(
-		Constants.extensionConfigSectionName
+	const config = vscode.workspace.getConfiguration(
+		Constants.extensionConfigSectionName,
 	);
-	let logDebugInfo = config[Constants.configLogDebugInfo];
+	const logDebugInfo = config[Constants.configLogDebugInfo];
 	if (logDebugInfo === true) {
-		let currentTime = new Date().toLocaleTimeString();
-		let outputMsg = "[" + currentTime + "]: " + msg ? msg.toString() : "";
+		const currentTime = new Date().toLocaleTimeString();
+		const outputMsg = "[" + currentTime + "]: " + msg ? msg.toString() : "";
 		console.log(outputMsg);
 	}
 }
@@ -175,14 +174,14 @@ export function logDebug(msg: any): void {
 // Helper to show an info message
 export function showInfoMsg(msg: string): void {
 	vscode.window.showInformationMessage(
-		Constants.extensionDisplayName + ": " + msg
+		Constants.extensionDisplayName + ": " + msg,
 	);
 }
 
 // Helper to show an warn message
 export function showWarnMsg(msg: string): void {
 	vscode.window.showWarningMessage(
-		Constants.extensionDisplayName + ": " + msg
+		Constants.extensionDisplayName + ": " + msg,
 	);
 }
 
@@ -200,7 +199,7 @@ export function isNotEmpty(str: any): boolean {
 }
 
 export function authTypeToString(
-	value: interfaces.AuthenticationTypes
+	value: interfaces.AuthenticationTypes,
 ): string {
 	return interfaces.AuthenticationTypes[value];
 }
@@ -216,7 +215,7 @@ export function formatString(str: string, ...args: any[]): string {
 		result = str;
 	} else {
 		result = str.replace(/\{(\d+)\}/g, (match, rest) => {
-			let index = rest[0];
+			const index = rest[0];
 			return typeof args[index] !== "undefined" ? args[index] : match;
 		});
 	}
@@ -229,7 +228,7 @@ export function formatString(str: string, ...args: any[]): string {
  */
 function isSameDatabase(
 	currentDatabase: string,
-	expectedDatabase: string
+	expectedDatabase: string,
 ): boolean {
 	if (isEmpty(currentDatabase)) {
 		currentDatabase = Constants.defaultDatabase;
@@ -246,7 +245,7 @@ function isSameDatabase(
  */
 function isSameAuthenticationType(
 	currentAuthenticationType: string,
-	expectedAuthenticationType: string
+	expectedAuthenticationType: string,
 ): boolean {
 	if (isEmpty(currentAuthenticationType)) {
 		currentAuthenticationType = Constants.sqlAuthentication;
@@ -269,7 +268,7 @@ function isSameAuthenticationType(
  */
 export function isSameProfile(
 	currentProfile: interfaces.IConnectionProfile,
-	expectedProfile: interfaces.IConnectionProfile
+	expectedProfile: interfaces.IConnectionProfile,
 ): boolean {
 	if (currentProfile === undefined) {
 		return false;
@@ -294,7 +293,7 @@ export function isSameProfile(
 		isSameDatabase(expectedProfile.dbname, currentProfile.dbname) &&
 		isSameAuthenticationType(
 			expectedProfile.authenticationType,
-			currentProfile.authenticationType
+			currentProfile.authenticationType,
 		) &&
 		((isEmpty(expectedProfile.user) && isEmpty(currentProfile.user)) ||
 			expectedProfile.user === currentProfile.user)
@@ -312,7 +311,7 @@ export function isSameProfile(
  */
 export function isSameConnection(
 	conn: interfaces.IConnectionCredentials,
-	expectedConn: interfaces.IConnectionCredentials
+	expectedConn: interfaces.IConnectionCredentials,
 ): boolean {
 	return conn.connectionString || expectedConn.connectionString
 		? conn.connectionString === expectedConn.connectionString
@@ -320,7 +319,7 @@ export function isSameConnection(
 				isSameDatabase(expectedConn.dbname, conn.dbname) &&
 				isSameAuthenticationType(
 					expectedConn.authenticationType,
-					conn.authenticationType
+					conn.authenticationType,
 				) &&
 				expectedConn.user === conn.user;
 }
@@ -350,11 +349,11 @@ export class Timer {
 	public getDuration(): number {
 		if (!this._startTime) {
 			return -1;
-		} else if (!this._endTime) {
-			let endTime = process.hrtime(<any>this._startTime);
-			return endTime[0] * 1000 + endTime[1] / 1000000;
-		} else {
+		} else if (this._endTime) {
 			return this._endTime[0] * 1000 + this._endTime[1] / 1000000;
+		} else {
+			const endTime = process.hrtime(<any>this._startTime);
+			return endTime[0] * 1000 + endTime[1] / 1000000;
 		}
 	}
 
@@ -389,9 +388,9 @@ export function parseTimeString(value: string): number | boolean {
 		return false;
 	}
 
-	let msString = tempVal[1];
-	let msStringEnd = msString.length < 3 ? msString.length : 3;
-	let ms = parseInt(tempVal[1].substring(0, msStringEnd), 10);
+	const msString = tempVal[1];
+	const msStringEnd = msString.length < 3 ? msString.length : 3;
+	const ms = parseInt(tempVal[1].substring(0, msStringEnd), 10);
 
 	tempVal = tempVal[0].split(":");
 
@@ -399,9 +398,9 @@ export function parseTimeString(value: string): number | boolean {
 		return false;
 	}
 
-	let h = parseInt(tempVal[0], 10);
-	let m = parseInt(tempVal[1], 10);
-	let s = parseInt(tempVal[2], 10);
+	const h = parseInt(tempVal[0], 10);
+	const m = parseInt(tempVal[1], 10);
+	const s = parseInt(tempVal[2], 10);
 
 	return ms + h * msInH + m * msInM + s * msInS;
 }
@@ -417,24 +416,24 @@ export function isBoolean(obj: any): obj is boolean {
  */
 export function parseNumAsTimeString(value: number): string {
 	let tempVal = value;
-	let h = Math.floor(tempVal / msInH);
+	const h = Math.floor(tempVal / msInH);
 	tempVal %= msInH;
-	let m = Math.floor(tempVal / msInM);
+	const m = Math.floor(tempVal / msInM);
 	tempVal %= msInM;
-	let s = Math.floor(tempVal / msInS);
+	const s = Math.floor(tempVal / msInS);
 	tempVal %= msInS;
 
-	let hs = h < 10 ? "0" + h : "" + h;
-	let ms = m < 10 ? "0" + m : "" + m;
-	let ss = s < 10 ? "0" + s : "" + s;
-	let mss =
+	const hs = h < 10 ? "0" + h : "" + h;
+	const ms = m < 10 ? "0" + m : "" + m;
+	const ss = s < 10 ? "0" + s : "" + s;
+	const mss =
 		tempVal < 10
 			? "00" + tempVal
 			: tempVal < 100
-				? "0" + tempVal
-				: "" + tempVal;
+			  ? "0" + tempVal
+			  : "" + tempVal;
 
-	let rs = hs + ":" + ms + ":" + ss;
+	const rs = hs + ":" + ms + ":" + ss;
 
 	return tempVal > 0 ? rs + "." + mss : rs;
 }

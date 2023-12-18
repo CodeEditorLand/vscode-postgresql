@@ -1,11 +1,9 @@
-"use strict";
-
 // This code is originally from https://github.com/DonJayamanne/bowerVSCode
 // License: https://github.com/DonJayamanne/bowerVSCode/blob/master/LICENSE
 
 import { window } from "vscode";
-import Prompt from "./prompt";
 import EscapeException from "../utils/EscapeException";
+import Prompt from "./prompt";
 
 const figures = require("figures");
 
@@ -15,8 +13,8 @@ export default class CheckboxPrompt extends Prompt {
 	}
 
 	public render(): any {
-		let choices = this._question.choices.reduce((result, choice) => {
-			let choiceName = choice.name || choice;
+		const choices = this._question.choices.reduce((result, choice) => {
+			const choiceName = choice.name || choice;
 			result[
 				`${
 					choice.checked === true ? figures.radioOn : figures.radioOff
@@ -25,10 +23,10 @@ export default class CheckboxPrompt extends Prompt {
 			return result;
 		}, {});
 
-		let options = this.defaultQuickPickOptions;
+		const options = this.defaultQuickPickOptions;
 		options.placeHolder = this._question.message;
 
-		let quickPickOptions = Object.keys(choices);
+		const quickPickOptions = Object.keys(choices);
 		quickPickOptions.push(figures.tick);
 
 		return window

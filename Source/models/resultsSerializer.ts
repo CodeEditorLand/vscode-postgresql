@@ -2,15 +2,15 @@ import vscode = require("vscode");
 import Constants = require("../constants/constants");
 import LocalizedConstants = require("../constants/localizedConstants");
 import Interfaces = require("./interfaces");
+import * as path from "path";
+import { RequestType } from "vscode-languageclient";
+import VscodeWrapper from "../controllers/vscodeWrapper";
 import SqlToolsServerClient from "../languageservice/serviceclient";
 import * as Contracts from "../models/contracts";
-import { RequestType } from "vscode-languageclient";
-import * as Utils from "../models/utils";
-import VscodeWrapper from "../controllers/vscodeWrapper";
 import Telemetry from "../models/telemetry";
-import * as path from "path";
+import * as Utils from "../models/utils";
 
-let opener = require("opener");
+const opener = require("opener");
 
 type SaveAsRequestParams =
 	| Contracts.SaveResultsAsCsvRequestParams
@@ -46,7 +46,7 @@ export default class ResultsSerializer {
 		} else {
 			defaultUri = vscode.Uri.parse(path.dirname(this._uri));
 		}
-		let fileTypeFilter: { [name: string]: string[] } = {};
+		const fileTypeFilter: { [name: string]: string[] } = {};
 		if (format === "csv") {
 			fileTypeFilter[LocalizedConstants.fileTypeCSVLabel] = ["csv"];
 		} else if (format === "json") {
@@ -54,7 +54,7 @@ export default class ResultsSerializer {
 		} else if (format === "excel") {
 			fileTypeFilter[LocalizedConstants.fileTypeExcelLabel] = ["xlsx"];
 		}
-		let options = <vscode.SaveDialogOptions>{
+		const options = <vscode.SaveDialogOptions>{
 			defaultUri: defaultUri,
 			filters: fileTypeFilter,
 		};
@@ -68,12 +68,12 @@ export default class ResultsSerializer {
 
 	private getConfigForCsv(): Contracts.SaveResultsAsCsvRequestParams {
 		// get save results config from vscode config
-		let config = this._vscodeWrapper.getConfiguration(
+		const config = this._vscodeWrapper.getConfiguration(
 			Constants.extensionConfigSectionName,
-			this._uri
+			this._uri,
 		);
-		let saveConfig = config[Constants.configSaveAsCsv];
-		let saveResultsParams = new Contracts.SaveResultsAsCsvRequestParams();
+		const saveConfig = config[Constants.configSaveAsCsv];
+		const saveResultsParams = new Contracts.SaveResultsAsCsvRequestParams();
 
 		// if user entered config, set options
 		if (saveConfig) {
@@ -86,12 +86,13 @@ export default class ResultsSerializer {
 
 	private getConfigForJson(): Contracts.SaveResultsAsJsonRequestParams {
 		// get save results config from vscode config
-		let config = this._vscodeWrapper.getConfiguration(
+		const config = this._vscodeWrapper.getConfiguration(
 			Constants.extensionConfigSectionName,
-			this._uri
+			this._uri,
 		);
-		let saveConfig = config[Constants.configSaveAsJson];
-		let saveResultsParams = new Contracts.SaveResultsAsJsonRequestParams();
+		const saveConfig = config[Constants.configSaveAsJson];
+		const saveResultsParams =
+			new Contracts.SaveResultsAsJsonRequestParams();
 
 		if (saveConfig) {
 			// TODO: assign config
@@ -103,12 +104,13 @@ export default class ResultsSerializer {
 		// get save results config from vscode config
 		// Note: we are currently using the configSaveAsCsv setting since it has the option pgsql.saveAsCsv.includeHeaders
 		// and we want to have just 1 setting that lists this.
-		let config = this._vscodeWrapper.getConfiguration(
+		const config = this._vscodeWrapper.getConfiguration(
 			Constants.extensionConfigSectionName,
-			this._uri
+			this._uri,
 		);
-		let saveConfig = config[Constants.configSaveAsCsv];
-		let saveResultsParams = new Contracts.SaveResultsAsExcelRequestParams();
+		const saveConfig = config[Constants.configSaveAsCsv];
+		const saveResultsParams =
+			new Contracts.SaveResultsAsExcelRequestParams();
 
 		// if user entered config, set options
 		if (saveConfig) {
@@ -124,18 +126,17 @@ export default class ResultsSerializer {
 		batchIndex: number,
 		resultSetNo: number,
 		format: string,
-		selection: Interfaces.ISlickRange
+		selection: Interfaces.ISlickRange,
 	): SaveAsRequestParams {
-		const self = this;
 		let saveResultsParams: SaveAsRequestParams;
 		this._filePath = filePath;
 
 		if (format === "csv") {
-			saveResultsParams = self.getConfigForCsv();
+			saveResultsParams = this.getConfigForCsv();
 		} else if (format === "json") {
-			saveResultsParams = self.getConfigForJson();
+			saveResultsParams = this.getConfigForJson();
 		} else if (format === "excel") {
-			saveResultsParams = self.getConfigForExcel();
+			saveResultsParams = this.getConfigForExcel();
 		}
 
 		saveResultsParams.filePath = this._filePath;
@@ -172,15 +173,14 @@ export default class ResultsSerializer {
 		batchIndex: number,
 		resultSetNo: number,
 		format: string,
-		selection: Interfaces.ISlickRange
+		selection: Interfaces.ISlickRange,
 	): Thenable<void> {
-		const self = this;
-		let saveResultsParams = self.getParameters(
+		const saveResultsParams = this.getParameters(
 			filePath,
 			batchIndex,
 			resultSetNo,
 			format,
-			selection
+			selection,
 		);
 		let type: RequestType<
 			Contracts.SaveResultsRequestParams,
@@ -196,40 +196,40 @@ export default class ResultsSerializer {
 			type = Contracts.SaveResultsAsExcelRequest.type;
 		}
 
-		self._vscodeWrapper.logToOutputChannel(
-			LocalizedConstants.msgSaveStarted + this._filePath
+		this._vscodeWrapper.logToOutputChannel(
+			LocalizedConstants.msgSaveStarted + this._filePath,
 		);
 
 		// send message to the sqlserverclient for converting resuts to the requested format and saving to filepath
-		return self._client.sendRequest(type, saveResultsParams).then(
+		return this._client.sendRequest(type, saveResultsParams).then(
 			(result: any) => {
 				if (result.messages) {
-					self._vscodeWrapper.showErrorMessage(
-						LocalizedConstants.msgSaveFailed + result.messages
+					this._vscodeWrapper.showErrorMessage(
+						LocalizedConstants.msgSaveFailed + result.messages,
 					);
-					self._vscodeWrapper.logToOutputChannel(
-						LocalizedConstants.msgSaveFailed + result.messages
+					this._vscodeWrapper.logToOutputChannel(
+						LocalizedConstants.msgSaveFailed + result.messages,
 					);
 				} else {
-					self._vscodeWrapper.showInformationMessage(
-						LocalizedConstants.msgSaveSucceeded + this._filePath
+					this._vscodeWrapper.showInformationMessage(
+						LocalizedConstants.msgSaveSucceeded + this._filePath,
 					);
-					self._vscodeWrapper.logToOutputChannel(
-						LocalizedConstants.msgSaveSucceeded + filePath
+					this._vscodeWrapper.logToOutputChannel(
+						LocalizedConstants.msgSaveSucceeded + filePath,
 					);
-					self.openSavedFile(self._filePath, format);
+					this.openSavedFile(this._filePath, format);
 				}
 				// telemetry for save results
 				Telemetry.sendTelemetryEvent("SavedResults", { type: format });
 			},
 			(error) => {
-				self._vscodeWrapper.showErrorMessage(
-					LocalizedConstants.msgSaveFailed + error.message
+				this._vscodeWrapper.showErrorMessage(
+					LocalizedConstants.msgSaveFailed + error.message,
 				);
-				self._vscodeWrapper.logToOutputChannel(
-					LocalizedConstants.msgSaveFailed + error.message
+				this._vscodeWrapper.logToOutputChannel(
+					LocalizedConstants.msgSaveFailed + error.message,
 				);
-			}
+			},
 		);
 	}
 
@@ -241,28 +241,27 @@ export default class ResultsSerializer {
 		batchIndex: number,
 		resultSetNo: number,
 		format: string,
-		selection: Interfaces.ISlickRange[]
+		selection: Interfaces.ISlickRange[],
 	): Thenable<void> {
-		const self = this;
 		this._uri = uri;
 
 		// prompt for filepath
-		return self.promptForFilepath(format).then(
-			function (filePath): void {
+		return this.promptForFilepath(format).then(
+			(filePath): void => {
 				if (!Utils.isEmpty(filePath)) {
-					self.sendRequestToService(
+					this.sendRequestToService(
 						filePath,
 						batchIndex,
 						resultSetNo,
 						format,
-						selection ? selection[0] : undefined
+						selection ? selection[0] : undefined,
 					);
 				}
 			},
 			(error) => {
-				self._vscodeWrapper.showErrorMessage(error.message);
-				self._vscodeWrapper.logToOutputChannel(error.message);
-			}
+				this._vscodeWrapper.showErrorMessage(error.message);
+				this._vscodeWrapper.logToOutputChannel(error.message);
+			},
 		);
 	}
 
@@ -270,29 +269,28 @@ export default class ResultsSerializer {
 	 * Open the saved file in a new vscode editor pane
 	 */
 	public openSavedFile(filePath: string, format: string): void {
-		const self = this;
 		if (format === "excel") {
 			// This will not open in VSCode as it's treated as binary. Use the native file opener instead
 			// Note: must use filePath here, URI does not open correctly
 			opener(filePath, undefined, (error, stdout, stderr) => {
 				if (error) {
-					self._vscodeWrapper.showErrorMessage(error);
+					this._vscodeWrapper.showErrorMessage(error);
 				}
 			});
 		} else {
-			let uri = vscode.Uri.file(filePath);
-			self._vscodeWrapper.openTextDocument(uri).then(
+			const uri = vscode.Uri.file(filePath);
+			this._vscodeWrapper.openTextDocument(uri).then(
 				(doc: vscode.TextDocument) => {
 					// Show open document and set focus
-					self._vscodeWrapper
+					this._vscodeWrapper
 						.showTextDocument(doc, 1, false)
 						.then(undefined, (error: any) => {
-							self._vscodeWrapper.showErrorMessage(error);
+							this._vscodeWrapper.showErrorMessage(error);
 						});
 				},
 				(error: any) => {
-					self._vscodeWrapper.showErrorMessage(error);
-				}
+					this._vscodeWrapper.showErrorMessage(error);
+				},
 			);
 		}
 	}
