@@ -73,7 +73,7 @@ export namespace Telemetry {
 			reporter = new TelemetryReporter(
 				"vscode-pgsql",
 				packageInfo.version,
-				packageInfo.aiKey,
+				packageInfo.aiKey
 			);
 		}
 	}
@@ -98,7 +98,7 @@ export namespace Telemetry {
 	 */
 	export function sendTelemetryEventForException(
 		err: any,
-		methodName: string,
+		methodName: string
 	): void {
 		try {
 			let stackArray: string[];
@@ -120,12 +120,12 @@ export namespace Telemetry {
 				"Unhandled Exception occurred. error: " +
 					err +
 					" method: " +
-					methodName,
+					methodName
 			);
 		} catch (telemetryErr) {
 			// If sending telemetry event fails ignore it so it won't break the extension
 			Utils.logDebug(
-				"Failed to send telemetry event. error: " + telemetryErr,
+				"Failed to send telemetry event. error: " + telemetryErr
 			);
 		}
 	}
@@ -136,7 +136,7 @@ export namespace Telemetry {
 	export function sendTelemetryEvent(
 		eventName: string,
 		properties?: ITelemetryEventProperties,
-		measures?: ITelemetryEventMeasures,
+		measures?: ITelemetryEventMeasures
 	): void {
 		if (typeof disabled === "undefined") {
 			disabled = false;

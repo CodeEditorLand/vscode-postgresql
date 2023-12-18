@@ -37,14 +37,14 @@ export class CredentialStore implements ICredentialStore {
 					(returnedCred) => {
 						resolve(returnedCred);
 					},
-					(err) => reject(err),
+					(err) => reject(err)
 				);
 		});
 	}
 
 	public saveCredential(
 		credentialId: string,
-		password: any,
+		password: any
 	): Promise<boolean> {
 		let self = this;
 		let cred: Contracts.Credential = new Contracts.Credential();
@@ -57,7 +57,7 @@ export class CredentialStore implements ICredentialStore {
 					(status) => {
 						resolve(status);
 					},
-					(err) => reject(err),
+					(err) => reject(err)
 				);
 		});
 	}
@@ -73,7 +73,7 @@ export class CredentialStore implements ICredentialStore {
 					(status) => {
 						resolve(status);
 					},
-					(err) => reject(err),
+					(err) => reject(err)
 				);
 		});
 	}

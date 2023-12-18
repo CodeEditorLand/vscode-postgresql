@@ -10,7 +10,7 @@ export default class ProgressIndicator {
 
 	constructor() {
 		this._statusBarItem = window.createStatusBarItem(
-			StatusBarAlignment.Left,
+			StatusBarAlignment.Left
 		);
 	}
 
@@ -45,7 +45,7 @@ export default class ProgressIndicator {
 		this.hideProgressIndicator();
 		this._interval = setInterval(
 			() => this.onDisplayProgressIndicator(),
-			100,
+			100
 		);
 	}
 	private hideProgressIndicator(): void {

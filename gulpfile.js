@@ -33,7 +33,7 @@ gulp.task("ext:lint", () => {
 		.pipe(
 			tslint({
 				formatter: "verbose",
-			}),
+			})
 		)
 		.pipe(tslint.report());
 });
@@ -60,15 +60,15 @@ gulp.task("ext:compile-src", (done) => {
 				nls.coreLanguages,
 				config.paths.project.root + "/localization/i18n",
 				undefined,
-				false,
-			),
+				false
+			)
 		)
 		.pipe(
 			srcmap.write(".", {
 				sourceRoot: function (file) {
 					return file.cwd + "/src";
 				},
-			}),
+			})
 		)
 		.pipe(gulp.dest("out/src/"));
 });
@@ -92,7 +92,7 @@ gulp.task("ext:compile-tests", (done) => {
 				sourceRoot: function (file) {
 					return file.cwd + "/test";
 				},
-			}),
+			})
 		)
 		.pipe(gulp.dest("out/test/"));
 });
@@ -113,7 +113,7 @@ gulp.task("ext:copy-config", () => {
 			config.paths.project.root +
 				"/src/configurations/" +
 				env +
-				".config.json",
+				".config.json"
 		)
 		.pipe(rename("config.json"))
 		.pipe(gulp.dest(config.paths.project.root + "/out/src"));
@@ -137,12 +137,12 @@ gulp.task("ext:appinsights-version", () => {
 			jeditor(function (json) {
 				json.dependencies.applicationinsights = "0.15.19";
 				return json; // must return JSON object.
-			}),
+			})
 		)
 		.pipe(
 			gulp.dest("./node_modules/vscode-extension-telemetry", {
 				overwrite: true,
-			}),
+			})
 		);
 });
 
@@ -154,13 +154,13 @@ gulp.task("ext:copy-appinsights", () => {
 	return gulp.src(filesToMove, { base: "./" }).pipe(
 		gulp.dest("./node_modules/vscode-extension-telemetry", {
 			overwrite: true,
-		}),
+		})
 	);
 });
 
 gulp.task(
 	"ext:copy",
-	gulp.series("ext:copy-tests", "ext:copy-js", "ext:copy-config"),
+	gulp.series("ext:copy-tests", "ext:copy-js", "ext:copy-config")
 );
 
 gulp.task(
@@ -168,13 +168,13 @@ gulp.task(
 	gulp.series(
 		"ext:localization:xliff-to-ts",
 		"ext:localization:xliff-to-json",
-		"ext:localization:xliff-to-package.nls",
-	),
+		"ext:localization:xliff-to-package.nls"
+	)
 );
 
 gulp.task(
 	"ext:build",
-	gulp.series("ext:localization", "ext:lint", "ext:compile", "ext:copy"),
+	gulp.series("ext:localization", "ext:lint", "ext:compile", "ext:copy")
 );
 
 gulp.task("ext:test", (done) => {
@@ -193,7 +193,7 @@ gulp.task("ext:test", (done) => {
 			console.log(`stdout: ${stdout}`);
 			console.log(`stderr: ${stderr}`);
 			done();
-		},
+		}
 	);
 });
 
@@ -212,8 +212,8 @@ gulp.task(
 		"html:build",
 		"ext:build",
 		"ext:install-service",
-		"ext:appinsights-version",
-	),
+		"ext:appinsights-version"
+	)
 );
 
 gulp.task("install", function () {
@@ -225,6 +225,6 @@ gulp.task("install", function () {
 gulp.task("watch", function () {
 	return gulp.watch(
 		config.paths.project.root + "/src/**/*",
-		gulp.series("build"),
+		gulp.series("build")
 	);
 });

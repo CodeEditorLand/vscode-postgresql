@@ -229,7 +229,7 @@ interface RequireConfig {
 		node: HTMLScriptElement,
 		config: RequireConfig,
 		moduleName: string,
-		url: string,
+		url: string
 	) => void;
 }
 
@@ -346,7 +346,7 @@ interface Require {
 	onResourceLoad(
 		context: Object,
 		map: RequireMap,
-		depArray: RequireMap[],
+		depArray: RequireMap[]
 	): void;
 }
 
@@ -384,8 +384,8 @@ interface RequireDefine {
 		ready: (
 			require: Require,
 			exports: { [key: string]: any },
-			module: RequireModule,
-		) => any,
+			module: RequireModule
+		) => any
 	): void;
 
 	/**

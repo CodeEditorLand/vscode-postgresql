@@ -36,23 +36,23 @@ export class QueryNotificationHandler {
 	private initialize(): void {
 		SqlToolsServiceClient.instance.onNotification(
 			QueryExecuteCompleteNotification.type,
-			this.handleQueryCompleteNotification(),
+			this.handleQueryCompleteNotification()
 		);
 		SqlToolsServiceClient.instance.onNotification(
 			QueryExecuteBatchStartNotification.type,
-			this.handleBatchStartNotification(),
+			this.handleBatchStartNotification()
 		);
 		SqlToolsServiceClient.instance.onNotification(
 			QueryExecuteBatchCompleteNotification.type,
-			this.handleBatchCompleteNotification(),
+			this.handleBatchCompleteNotification()
 		);
 		SqlToolsServiceClient.instance.onNotification(
 			QueryExecuteResultSetCompleteNotification.type,
-			this.handleResultSetCompleteNotification(),
+			this.handleResultSetCompleteNotification()
 		);
 		SqlToolsServiceClient.instance.onNotification(
 			QueryExecuteMessageNotification.type,
-			this.handleMessageNotification(),
+			this.handleMessageNotification()
 		);
 	}
 
@@ -82,7 +82,7 @@ export class QueryNotificationHandler {
 	// public for testing only
 	private enqueueOrRun(
 		handlerCallback: (runnerParam: QueryRunner) => void,
-		runner: QueryRunner,
+		runner: QueryRunner
 	): void {
 		if (runner === undefined) {
 			this._handlerCallbackQueue.push(handlerCallback);
@@ -109,7 +109,7 @@ export class QueryNotificationHandler {
 
 			self.enqueueOrRun(
 				handlerCallback,
-				self._queryRunners.get(event.ownerUri),
+				self._queryRunners.get(event.ownerUri)
 			);
 		};
 	}
@@ -124,7 +124,7 @@ export class QueryNotificationHandler {
 			};
 			self.enqueueOrRun(
 				handlerCallback,
-				self._queryRunners.get(event.ownerUri),
+				self._queryRunners.get(event.ownerUri)
 			);
 		};
 	}
@@ -139,7 +139,7 @@ export class QueryNotificationHandler {
 			};
 			self.enqueueOrRun(
 				handlerCallback,
-				self._queryRunners.get(event.ownerUri),
+				self._queryRunners.get(event.ownerUri)
 			);
 		};
 	}
@@ -154,7 +154,7 @@ export class QueryNotificationHandler {
 			};
 			self.enqueueOrRun(
 				handlerCallback,
-				self._queryRunners.get(event.ownerUri),
+				self._queryRunners.get(event.ownerUri)
 			);
 		};
 	}
@@ -169,7 +169,7 @@ export class QueryNotificationHandler {
 			};
 			self.enqueueOrRun(
 				handlerCallback,
-				self._queryRunners.get(event.ownerUri),
+				self._queryRunners.get(event.ownerUri)
 			);
 		};
 	}

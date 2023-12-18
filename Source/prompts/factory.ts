@@ -14,7 +14,7 @@ import ExpandPrompt from "./expand";
 export default class PromptFactory {
 	public static createPrompt(
 		question: any,
-		ignoreFocusOut?: boolean,
+		ignoreFocusOut?: boolean
 	): Prompt {
 		/**
 		 * TODO:
@@ -36,7 +36,7 @@ export default class PromptFactory {
 				return new ExpandPrompt(question, ignoreFocusOut);
 			default:
 				throw new Error(
-					`Could not find a prompt for question type ${question.type}`,
+					`Could not find a prompt for question type ${question.type}`
 				);
 		}
 	}

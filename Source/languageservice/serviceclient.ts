@@ -80,7 +80,7 @@ class LanguageClientErrorHandler {
 		this.vscodeWrapper
 			.showErrorMessage(
 				Constants.sqlToolsServiceCrashMessage,
-				Constants.sqlToolsServiceCrashButton,
+				Constants.sqlToolsServiceCrashButton
 			)
 			.then((action) => {
 				if (action && action === Constants.sqlToolsServiceCrashButton) {
@@ -144,7 +144,7 @@ export default class SqlToolsServiceClient {
 		private _server: ServerProvider,
 		private _logger: Logger,
 		private _statusView: StatusView,
-		private _vscodeWrapper: VscodeWrapper,
+		private _vscodeWrapper: VscodeWrapper
 	) {}
 
 	// gets or creates the singleton SQL Tools service client instance
@@ -152,7 +152,7 @@ export default class SqlToolsServiceClient {
 		if (this._instance === undefined) {
 			let config = new ExtConfig();
 			_channel = window.createOutputChannel(
-				Constants.serviceInitializingOutputChannelName,
+				Constants.serviceInitializingOutputChannelName
 			);
 			let logger = new Logger((text) => _channel.append(text));
 			let serverStatusView = new ServerStatusView();
@@ -163,12 +163,12 @@ export default class SqlToolsServiceClient {
 				logger,
 				serverStatusView,
 				httpClient,
-				decompressProvider,
+				decompressProvider
 			);
 			let serviceProvider = new ServerProvider(
 				downloadProvider,
 				config,
-				serverStatusView,
+				serverStatusView
 			);
 			let vscodeWrapper = new VscodeWrapper();
 			let statusView = new StatusView(vscodeWrapper);
@@ -177,7 +177,7 @@ export default class SqlToolsServiceClient {
 				serviceProvider,
 				logger,
 				statusView,
-				vscodeWrapper,
+				vscodeWrapper
 			);
 		}
 		return this._instance;
@@ -186,7 +186,7 @@ export default class SqlToolsServiceClient {
 	// initialize the SQL Tools Service Client instance by launching
 	// out-of-proc server through the LanguageClient
 	public initialize(
-		context: ExtensionContext,
+		context: ExtensionContext
 	): Promise<ServerInitializationResult> {
 		this._logger.appendLine(Constants.serviceInitializing);
 
@@ -197,15 +197,15 @@ export default class SqlToolsServiceClient {
 
 	public initializeForPlatform(
 		platformInfo: PlatformInformation,
-		context: ExtensionContext,
+		context: ExtensionContext
 	): Promise<ServerInitializationResult> {
 		return new Promise<ServerInitializationResult>((resolve, reject) => {
 			this._logger.appendLine(
-				Constants.commandsNotAvailableWhileInstallingTheService,
+				Constants.commandsNotAvailableWhileInstallingTheService
 			);
 			this._logger.appendLine();
 			this._logger.append(
-				`Platform-------------: ${platformInfo.toString()}`,
+				`Platform-------------: ${platformInfo.toString()}`
 			);
 			if (!platformInfo.isValidRuntime) {
 				this._logger.appendLine();
@@ -218,7 +218,7 @@ export default class SqlToolsServiceClient {
 			} else {
 				if (platformInfo.runtimeId) {
 					this._logger.appendLine(
-						` (${getRuntimeDisplayName(platformInfo.runtimeId)})`,
+						` (${getRuntimeDisplayName(platformInfo.runtimeId)})`
 					);
 				} else {
 					this._logger.appendLine();
@@ -236,19 +236,19 @@ export default class SqlToolsServiceClient {
 							}
 							let installedServerPath =
 								await this._server.downloadServerFiles(
-									platformInfo.runtimeId,
+									platformInfo.runtimeId
 								);
 							this.initializeLanguageClient(
 								installedServerPath,
-								context,
+								context
 							);
 							await this._client.onReady();
 							resolve(
 								new ServerInitializationResult(
 									true,
 									true,
-									installedServerPath,
-								),
+									installedServerPath
+								)
 							);
 						} else {
 							this.initializeLanguageClient(serverPath, context);
@@ -257,18 +257,18 @@ export default class SqlToolsServiceClient {
 								new ServerInitializationResult(
 									false,
 									true,
-									serverPath,
-								),
+									serverPath
+								)
 							);
 						}
 					})
 					.catch((err) => {
 						Utils.logDebug(
-							Constants.serviceLoadingFailed + " " + err,
+							Constants.serviceLoadingFailed + " " + err
 						);
 						Utils.showErrorMsg(Constants.serviceLoadingFailed);
 						Telemetry.sendTelemetryEvent(
-							"ServiceInitializingFailed",
+							"ServiceInitializingFailed"
 						);
 						reject(err);
 					});
@@ -319,7 +319,7 @@ export default class SqlToolsServiceClient {
 
 	private initializeLanguageClient(
 		serverPath: string,
-		context: ExtensionContext,
+		context: ExtensionContext
 	): void {
 		if (serverPath === undefined) {
 			Utils.logDebug(Constants.invalidServiceFilePath);
@@ -357,18 +357,18 @@ export default class SqlToolsServiceClient {
 		let client = new LanguageClient(
 			Constants.sqlToolsServiceName,
 			serverOptions,
-			clientOptions,
+			clientOptions
 		);
 		client.onReady().then(() => {
 			this.checkServiceCompatibility();
 
 			client.onNotification(
 				LanguageServiceContracts.TelemetryNotification.type,
-				this.handleLanguageServiceTelemetryNotification(),
+				this.handleLanguageServiceTelemetryNotification()
 			);
 			client.onNotification(
 				LanguageServiceContracts.StatusChangedNotification.type,
-				this.handleLanguageServiceStatusNotification(),
+				this.handleLanguageServiceStatusNotification()
 			);
 		});
 
@@ -380,7 +380,7 @@ export default class SqlToolsServiceClient {
 			Telemetry.sendTelemetryEvent(
 				event.params.eventName,
 				event.params.properties,
-				event.params.measures,
+				event.params.measures
 			);
 		};
 	}
@@ -392,7 +392,7 @@ export default class SqlToolsServiceClient {
 		return (event: LanguageServiceContracts.StatusChangeParams): void => {
 			this._statusView.languageServiceStatusChanged(
 				event.ownerUri,
-				event.status,
+				event.status
 			);
 		};
 	}
@@ -402,7 +402,7 @@ export default class SqlToolsServiceClient {
 		let serverCommand: string = servicePath;
 
 		let config = workspace.getConfiguration(
-			Constants.extensionConfigSectionName,
+			Constants.extensionConfigSectionName
 		);
 
 		if (config) {
@@ -413,7 +413,7 @@ export default class SqlToolsServiceClient {
 				let localSourcePath = config["debugSourcePath"];
 				let filePath = path.join(
 					localSourcePath,
-					"pgsqltoolsservice/pgtoolsservice_main.py",
+					"pgsqltoolsservice/pgtoolsservice_main.py"
 				);
 				process.env.PYTHONPATH = localSourcePath;
 				serverCommand =
@@ -430,7 +430,7 @@ export default class SqlToolsServiceClient {
 
 			let logFileLocation = path.join(
 				this.getDefaultLogLocation(),
-				"pgsql",
+				"pgsql"
 			);
 
 			serverArgs.push("--log-dir=" + logFileLocation);
@@ -465,7 +465,7 @@ export default class SqlToolsServiceClient {
 	 */
 	public sendRequest<P, R, E, R0>(
 		type: RequestType<P, R, E, R0>,
-		params?: P,
+		params?: P
 	): Thenable<R> {
 		if (this.client !== undefined) {
 			return this.client.sendRequest(type, params);
@@ -478,7 +478,7 @@ export default class SqlToolsServiceClient {
 	 */
 	public sendNotification<P, R0>(
 		type: NotificationType<P, R0>,
-		params?: P,
+		params?: P
 	): void {
 		if (this.client !== undefined) {
 			this.client.sendNotification(type, params);
@@ -492,7 +492,7 @@ export default class SqlToolsServiceClient {
 	 */
 	public onNotification<P, R0>(
 		type: NotificationType<P, R0>,
-		handler: NotificationHandler<P>,
+		handler: NotificationHandler<P>
 	): void {
 		if (this._client !== undefined) {
 			return this.client.onNotification(type, handler);
@@ -525,7 +525,7 @@ export default class SqlToolsServiceClient {
 				return path.join(
 					os.homedir(),
 					"Library",
-					"Application Support",
+					"Application Support"
 				);
 			case "linux":
 				return (

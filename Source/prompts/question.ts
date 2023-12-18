@@ -72,7 +72,7 @@ export interface IPrompter {
 	 */
 	prompt<T>(
 		questions: IQuestion[],
-		ignoreFocusOut?: boolean,
+		ignoreFocusOut?: boolean
 	): Promise<{ [questionId: string]: T }>;
 	promptCallback(questions: IQuestion[], callback: IPromptCallback): void;
 }

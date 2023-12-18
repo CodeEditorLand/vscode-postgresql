@@ -148,13 +148,13 @@ const template = `
 	providers: [DataService, ShortcutService],
 	styles: [
 		`
-    .errorMessage {
-        color: var(--color-error);
-    }
-    .batchMessage {
-        padding-left: 20px;
-    }
-    `,
+			.errorMessage {
+				color: var(--color-error);
+			}
+			.batchMessage {
+				padding-left: 20px;
+			}
+		`,
 	],
 })
 export class AppComponent implements OnInit, AfterViewChecked {
@@ -203,7 +203,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 				this.dataService.copyResults(
 					selection,
 					this.renderedDataSets[activeGrid].batchId,
-					this.renderedDataSets[activeGrid].resultId,
+					this.renderedDataSets[activeGrid].resultId
 				);
 			}
 		},
@@ -216,7 +216,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 				selection,
 				this.renderedDataSets[activeGrid].batchId,
 				this.renderedDataSets[activeGrid].resultId,
-				true,
+				true
 			);
 		},
 		"event.maximizeGrid": () => {
@@ -279,7 +279,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					});
 				} else {
 					this.dataService.showWarning(
-						Constants.msgCannotSaveMultipleSelections,
+						Constants.msgCannotSaveMultipleSelections
 					);
 				}
 			},
@@ -308,7 +308,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					});
 				} else {
 					this.dataService.showWarning(
-						Constants.msgCannotSaveMultipleSelections,
+						Constants.msgCannotSaveMultipleSelections
 					);
 				}
 			},
@@ -337,7 +337,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					});
 				} else {
 					this.dataService.showWarning(
-						Constants.msgCannotSaveMultipleSelections,
+						Constants.msgCannotSaveMultipleSelections
 					);
 				}
 			},
@@ -389,10 +389,14 @@ export class AppComponent implements OnInit, AfterViewChecked {
 		return this._messageActive;
 	}
 
-	constructor(@Inject(forwardRef(() => DataService)) public dataService: DataService,
-                @Inject(forwardRef(() => ShortcutService)) private shortcuts: ShortcutService,
-                @Inject(forwardRef(() => ElementRef)) private _el: ElementRef,
-                @Inject(forwardRef(() => ChangeDetectorRef)) private cd: ChangeDetectorRef) {}
+	constructor(
+		@Inject(forwardRef(() => DataService)) public dataService: DataService,
+		@Inject(forwardRef(() => ShortcutService))
+		private shortcuts: ShortcutService,
+		@Inject(forwardRef(() => ElementRef)) private _el: ElementRef,
+		@Inject(forwardRef(() => ChangeDetectorRef))
+		private cd: ChangeDetectorRef
+	) {}
 
 	/**
 	 * Called by Angular when the object is initialized
@@ -431,7 +435,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					// Setup a function for generating a promise to lookup result subsets
 					let loadDataFunction = (
 						offset: number,
-						count: number,
+						count: number
 					): Promise<IGridDataRow[]> => {
 						return new Promise<IGridDataRow[]>(
 							(resolve, reject) => {
@@ -440,7 +444,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 										offset,
 										count,
 										resultSet.batchId,
-										resultSet.id,
+										resultSet.id
 									)
 									.subscribe((rows) => {
 										let gridData: IGridDataRow[] = [];
@@ -456,7 +460,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 										}
 										resolve(gridData);
 									});
-							},
+							}
 						);
 					};
 
@@ -465,14 +469,14 @@ export class AppComponent implements OnInit, AfterViewChecked {
 						resultSet.rowCount < self._defaultNumShowingRows
 							? Math.max(
 									(resultSet.rowCount + 1) * self._rowHeight,
-									self.dataIcons.length * 30,
-							  ) + 10
+									self.dataIcons.length * 30
+								) + 10
 							: "inherit";
 					let minHeight =
 						resultSet.rowCount >= self._defaultNumShowingRows
 							? (self._defaultNumShowingRows + 1) *
 									self._rowHeight +
-							  10
+								10
 							: maxHeight;
 
 					// Store the result set from the event
@@ -489,7 +493,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 							loadDataFunction,
 							(index) => {
 								return { values: [] };
-							},
+							}
 						),
 						columnDefinitions: resultSet.columnInfo.map((c, i) => {
 							let isLinked = c.isXml || c.isJson;
@@ -527,7 +531,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					console.error(
 						'Unexpected web socket event type "' +
 							event.type +
-							'" sent',
+							'" sent'
 					);
 					break;
 			}
@@ -573,7 +577,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					event.batchId,
 					event.resultId,
 					"csv",
-					event.selection,
+					event.selection
 				);
 				break;
 			case "savejson":
@@ -581,7 +585,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					event.batchId,
 					event.resultId,
 					"json",
-					event.selection,
+					event.selection
 				);
 				break;
 			case "saveexcel":
@@ -589,7 +593,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					event.batchId,
 					event.resultId,
 					"excel",
-					event.selection,
+					event.selection
 				);
 				break;
 			case "selectall":
@@ -600,7 +604,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 				this.dataService.copyResults(
 					event.selection,
 					event.batchId,
-					event.resultId,
+					event.resultId
 				);
 				break;
 			case "copyWithHeaders":
@@ -608,7 +612,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					event.selection,
 					event.batchId,
 					event.resultId,
-					true,
+					true
 				);
 				break;
 			default:
@@ -620,7 +624,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 		event: { x: number; y: number },
 		batchId,
 		resultId,
-		index,
+		index
 	): void {
 		let selection = this.slickgrids.toArray()[index].getSelectedRanges();
 		this.contextMenu.show(
@@ -629,7 +633,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 			batchId,
 			resultId,
 			index,
-			selection,
+			selection
 		);
 	}
 
@@ -666,7 +670,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 		this.messagesContextMenu.show(
 			event.clientX,
 			event.clientY,
-			selectedRange,
+			selectedRange
 		);
 	}
 
@@ -711,7 +715,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 		cellRef: string,
 		row: number,
 		dataContext: JSON,
-		colDef: any,
+		colDef: any
 	) => {
 		this.handleLink(cellRef, row, dataContext, colDef, "xml");
 	};
@@ -723,7 +727,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 		cellRef: string,
 		row: number,
 		dataContext: JSON,
-		colDef: any,
+		colDef: any
 	) => {
 		this.handleLink(cellRef, row, dataContext, colDef, "json");
 	};
@@ -733,7 +737,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 		row: number,
 		dataContext: JSON,
 		colDef: any,
-		linkType: string,
+		linkType: string
 	): void {
 		const self = this;
 		let value = self.getCellValueString(dataContext, colDef);
@@ -778,7 +782,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 		cell: any,
 		value: any,
 		columnDef: any,
-		dataContext: any,
+		dataContext: any
 	): string {
 		let cellClasses = "grid-cell-value-container";
 		let valueToDisplay: string;
@@ -801,13 +805,13 @@ export class AppComponent implements OnInit, AfterViewChecked {
 		cell: any,
 		value: any,
 		columnDef: any,
-		dataContext: any,
+		dataContext: any
 	): string {
 		let cellClasses = "grid-cell-value-container";
 		let valueToDisplay: string;
 		if (Utils.isDbCellValue(value)) {
 			valueToDisplay = Utils.htmlEntities(
-				value.displayValue.replace(/(\r\n|\n|\r)/g, " "),
+				value.displayValue.replace(/(\r\n|\n|\r)/g, " ")
 			);
 			if (value.isNull) {
 				cellClasses += " missing-value";
@@ -841,11 +845,11 @@ export class AppComponent implements OnInit, AfterViewChecked {
 						.offsetHeight;
 				let tabHeight =
 					self._el.nativeElement.querySelector(
-						"#results",
+						"#results"
 					).offsetHeight;
 				let numOfVisibleGrids = Math.ceil(
 					tabHeight / gridHeight +
-						(scrollTop % gridHeight) / gridHeight,
+						(scrollTop % gridHeight) / gridHeight
 				);
 				let min = Math.floor(scrollTop / gridHeight);
 				let max = min + numOfVisibleGrids;
@@ -889,7 +893,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 	setupResizeBind(): void {
 		const self = this;
 		let $resizeHandle = $(
-			self._el.nativeElement.querySelector("#messageResizeHandle"),
+			self._el.nativeElement.querySelector("#messageResizeHandle")
 		);
 		let $messagePane = $(self._el.nativeElement.querySelector("#messages"));
 		$resizeHandle.bind("dragstart", (e) => {

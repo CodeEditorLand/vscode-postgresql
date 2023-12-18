@@ -15,7 +15,7 @@ export default class DecompressProvider implements IDecompressProvider {
 			decompress(pkg.tmpFile.name, pkg.installPath)
 				.then((files) => {
 					logger.appendLine(
-						`Done! ${files.length} files unpacked.\n`,
+						`Done! ${files.length} files unpacked.\n`
 					);
 					resolve();
 				})

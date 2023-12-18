@@ -52,7 +52,7 @@ declare module "istanbul" {
 			write(
 				collector: Collector,
 				sync: boolean,
-				callback: Function,
+				callback: Function
 			): void;
 		}
 

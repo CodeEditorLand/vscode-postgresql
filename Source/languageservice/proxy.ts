@@ -35,7 +35,7 @@ export function isBoolean(obj: any): obj is boolean {
 export function getProxyAgent(
 	requestURL: Url,
 	proxy?: string,
-	strictSSL?: boolean,
+	strictSSL?: boolean
 ): any {
 	const proxyURL = proxy || getSystemProxyURL(requestURL);
 

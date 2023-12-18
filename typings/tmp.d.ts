@@ -29,8 +29,8 @@ declare module "tmp" {
 				err: any,
 				path: string,
 				fd: number,
-				cleanupCallback: () => void,
-			) => void,
+				cleanupCallback: () => void
+			) => void
 		): void;
 		function file(
 			config: Options,
@@ -38,8 +38,8 @@ declare module "tmp" {
 				err: any,
 				path: string,
 				fd: number,
-				cleanupCallback: () => void,
-			) => void,
+				cleanupCallback: () => void
+			) => void
 		): void;
 
 		function fileSync(config?: Options): SynchronousResult;
@@ -48,16 +48,16 @@ declare module "tmp" {
 			callback: (
 				err: any,
 				path: string,
-				cleanupCallback: () => void,
-			) => void,
+				cleanupCallback: () => void
+			) => void
 		): void;
 		function dir(
 			config: Options,
 			callback?: (
 				err: any,
 				path: string,
-				cleanupCallback: () => void,
-			) => void,
+				cleanupCallback: () => void
+			) => void
 		): void;
 
 		function dirSync(config?: Options): SynchronousResult;
@@ -65,7 +65,7 @@ declare module "tmp" {
 		function tmpName(callback: (err: any, path: string) => void): void;
 		function tmpName(
 			config: SimpleOptions,
-			callback?: (err: any, path: string) => void,
+			callback?: (err: any, path: string) => void
 		): void;
 
 		function tmpNameSync(config?: SimpleOptions): string;

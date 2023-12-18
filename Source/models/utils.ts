@@ -100,7 +100,7 @@ export function generateUserId(): Promise<string> {
 						crypto
 							.createHash("sha256")
 							.update(macAddress + os.homedir(), "utf8")
-							.digest("hex"),
+							.digest("hex")
 					);
 				} else {
 					resolve(generateGuid()); // fallback
@@ -147,7 +147,7 @@ export function getActiveTextEditorUri(): string {
 // Helper to log messages to "PGSQL" output channel
 export function logToOutputChannel(msg: any): void {
 	let outputChannel = vscode.window.createOutputChannel(
-		Constants.outputChannelName,
+		Constants.outputChannelName
 	);
 	outputChannel.show();
 	if (msg instanceof Array) {
@@ -162,7 +162,7 @@ export function logToOutputChannel(msg: any): void {
 // Helper to log debug messages
 export function logDebug(msg: any): void {
 	let config = vscode.workspace.getConfiguration(
-		Constants.extensionConfigSectionName,
+		Constants.extensionConfigSectionName
 	);
 	let logDebugInfo = config[Constants.configLogDebugInfo];
 	if (logDebugInfo === true) {
@@ -175,14 +175,14 @@ export function logDebug(msg: any): void {
 // Helper to show an info message
 export function showInfoMsg(msg: string): void {
 	vscode.window.showInformationMessage(
-		Constants.extensionDisplayName + ": " + msg,
+		Constants.extensionDisplayName + ": " + msg
 	);
 }
 
 // Helper to show an warn message
 export function showWarnMsg(msg: string): void {
 	vscode.window.showWarningMessage(
-		Constants.extensionDisplayName + ": " + msg,
+		Constants.extensionDisplayName + ": " + msg
 	);
 }
 
@@ -200,7 +200,7 @@ export function isNotEmpty(str: any): boolean {
 }
 
 export function authTypeToString(
-	value: interfaces.AuthenticationTypes,
+	value: interfaces.AuthenticationTypes
 ): string {
 	return interfaces.AuthenticationTypes[value];
 }
@@ -229,7 +229,7 @@ export function formatString(str: string, ...args: any[]): string {
  */
 function isSameDatabase(
 	currentDatabase: string,
-	expectedDatabase: string,
+	expectedDatabase: string
 ): boolean {
 	if (isEmpty(currentDatabase)) {
 		currentDatabase = Constants.defaultDatabase;
@@ -246,7 +246,7 @@ function isSameDatabase(
  */
 function isSameAuthenticationType(
 	currentAuthenticationType: string,
-	expectedAuthenticationType: string,
+	expectedAuthenticationType: string
 ): boolean {
 	if (isEmpty(currentAuthenticationType)) {
 		currentAuthenticationType = Constants.sqlAuthentication;
@@ -269,7 +269,7 @@ function isSameAuthenticationType(
  */
 export function isSameProfile(
 	currentProfile: interfaces.IConnectionProfile,
-	expectedProfile: interfaces.IConnectionProfile,
+	expectedProfile: interfaces.IConnectionProfile
 ): boolean {
 	if (currentProfile === undefined) {
 		return false;
@@ -294,7 +294,7 @@ export function isSameProfile(
 		isSameDatabase(expectedProfile.dbname, currentProfile.dbname) &&
 		isSameAuthenticationType(
 			expectedProfile.authenticationType,
-			currentProfile.authenticationType,
+			currentProfile.authenticationType
 		) &&
 		((isEmpty(expectedProfile.user) && isEmpty(currentProfile.user)) ||
 			expectedProfile.user === currentProfile.user)
@@ -312,7 +312,7 @@ export function isSameProfile(
  */
 export function isSameConnection(
 	conn: interfaces.IConnectionCredentials,
-	expectedConn: interfaces.IConnectionCredentials,
+	expectedConn: interfaces.IConnectionCredentials
 ): boolean {
 	return conn.connectionString || expectedConn.connectionString
 		? conn.connectionString === expectedConn.connectionString
@@ -320,7 +320,7 @@ export function isSameConnection(
 				isSameDatabase(expectedConn.dbname, conn.dbname) &&
 				isSameAuthenticationType(
 					expectedConn.authenticationType,
-					conn.authenticationType,
+					conn.authenticationType
 				) &&
 				expectedConn.user === conn.user;
 }
@@ -431,8 +431,8 @@ export function parseNumAsTimeString(value: number): string {
 		tempVal < 10
 			? "00" + tempVal
 			: tempVal < 100
-			  ? "0" + tempVal
-			  : "" + tempVal;
+				? "0" + tempVal
+				: "" + tempVal;
 
 	let rs = hs + ":" + ms + ":" + ss;
 

@@ -16,7 +16,7 @@ export function activate(context: vscode.ExtensionContext): Promise<boolean> {
 
 	// Checking if localization should be applied
 	let config = vscodeWrapper.getConfiguration(
-		Constants.extensionConfigSectionName,
+		Constants.extensionConfigSectionName
 	);
 	let applyLocalization = config[Constants.configApplyLocalization];
 	if (applyLocalization) {

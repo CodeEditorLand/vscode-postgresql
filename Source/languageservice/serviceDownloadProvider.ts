@@ -35,7 +35,7 @@ export default class ServiceDownloadProvider {
 		private _logger: ILogger,
 		private _statusView: IStatusView,
 		private _httpClient: IHttpClient,
-		private _decompressProvider: IDecompressProvider,
+		private _decompressProvider: IDecompressProvider
 	) {
 		// Ensure our temp files get cleaned up in case of error.
 		tmp.setGracefulCleanup();
@@ -69,7 +69,7 @@ export default class ServiceDownloadProvider {
 		basePath = basePath.replace("{#version#}", versionFromConfig);
 		basePath = basePath.replace(
 			"{#platform#}",
-			getRuntimeDisplayName(platform),
+			getRuntimeDisplayName(platform)
 		);
 		if (!fse.existsSync(basePath)) {
 			fse.mkdirsSync(basePath);
@@ -99,7 +99,7 @@ export default class ServiceDownloadProvider {
 		baseDownloadUrl = baseDownloadUrl.replace("{#fileName#}", fileName);
 		baseDownloadUrl = baseDownloadUrl.replace(
 			"{#token#}",
-			ServiceDownloadProvider.TOKEN,
+			ServiceDownloadProvider.TOKEN
 		);
 		return baseDownloadUrl;
 	}
@@ -111,10 +111,10 @@ export default class ServiceDownloadProvider {
 		const proxy = <string>this._config.getWorkspaceConfig("http.proxy");
 		const strictSSL = this._config.getWorkspaceConfig(
 			"http.proxyStrictSSL",
-			true,
+			true
 		);
 		const authorization = this._config.getWorkspaceConfig(
-			"http.proxyAuthorization",
+			"http.proxyAuthorization"
 		);
 
 		return new Promise<boolean>((resolve, reject) => {
@@ -122,12 +122,12 @@ export default class ServiceDownloadProvider {
 			const installDirectory = this.getInstallDirectory(platform);
 
 			this._logger.appendLine(
-				`${Constants.serviceInstallingTo} ${installDirectory}.`,
+				`${Constants.serviceInstallingTo} ${installDirectory}.`
 			);
 			const urlString = this.getGetDownloadUrl(fileName);
 
 			this._logger.appendLine(
-				`${Constants.serviceDownloading} ${urlString}`,
+				`${Constants.serviceDownloading} ${urlString}`
 			);
 			let pkg: IPackage = {
 				installPath: installDirectory,
@@ -145,11 +145,11 @@ export default class ServiceDownloadProvider {
 						this._statusView,
 						proxy,
 						strictSSL,
-						authorization,
+						authorization
 					)
 					.then((_) => {
 						this._logger.logDebug(
-							`Downloaded to ${pkg.tmpFile.name}...`,
+							`Downloaded to ${pkg.tmpFile.name}...`
 						);
 						this._logger.appendLine(" Done!");
 						this.install(pkg)
@@ -175,7 +175,7 @@ export default class ServiceDownloadProvider {
 				(err, path, fd, cleanupCallback) => {
 					if (err) {
 						return reject(
-							new PackageError("Error from tmp.file", pkg, err),
+							new PackageError("Error from tmp.file", pkg, err)
 						);
 					}
 
@@ -184,7 +184,7 @@ export default class ServiceDownloadProvider {
 						fd: fd,
 						removeCallback: cleanupCallback,
 					});
-				},
+				}
 			);
 		});
 	}

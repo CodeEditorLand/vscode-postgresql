@@ -67,7 +67,7 @@ export default class QueryRunner {
 		private _statusView: StatusView,
 		private _client?: SqlToolsServerClient,
 		private _notificationHandler?: QueryNotificationHandler,
-		private _vscodeWrapper?: VscodeWrapper,
+		private _vscodeWrapper?: VscodeWrapper
 	) {
 		if (!_client) {
 			this._client = SqlToolsServerClient.instance;
@@ -152,10 +152,10 @@ export default class QueryRunner {
 				return this._client
 					.sendRequest(
 						QueryExecuteStatementRequest.type,
-						queryDetails,
+						queryDetails
 					)
 					.then(onSuccess, onError);
-			},
+			}
 		);
 	}
 
@@ -178,11 +178,11 @@ export default class QueryRunner {
 	// Pulls the query text from the current document/selection and initiates the query
 	private doRunQuery(
 		selection: ISelectionData,
-		queryCallback: any,
+		queryCallback: any
 	): Thenable<void> {
 		const self = this;
 		this._vscodeWrapper.logToOutputChannel(
-			Utils.formatString(LocalizedConstants.msgStartedExecute, this._uri),
+			Utils.formatString(LocalizedConstants.msgStartedExecute, this._uri)
 		);
 
 		// Update internal state to show that we're executing the query
@@ -201,7 +201,7 @@ export default class QueryRunner {
 			self._isExecuting = false;
 			// TODO: localize
 			self._vscodeWrapper.showErrorMessage(
-				"Execution failed: " + error.message,
+				"Execution failed: " + error.message
 			);
 		};
 
@@ -210,13 +210,10 @@ export default class QueryRunner {
 
 	// handle the result of the notification
 	public handleQueryComplete(
-		result: QueryExecuteCompleteNotificationResult,
+		result: QueryExecuteCompleteNotificationResult
 	): void {
 		this._vscodeWrapper.logToOutputChannel(
-			Utils.formatString(
-				LocalizedConstants.msgFinishedExecute,
-				this._uri,
-			),
+			Utils.formatString(LocalizedConstants.msgFinishedExecute, this._uri)
 		);
 
 		// Store the batch sets we got back as a source of "truth"
@@ -237,7 +234,7 @@ export default class QueryRunner {
 		this._statusView.executedQuery(this.uri);
 		this.eventEmitter.emit(
 			"complete",
-			Utils.parseNumAsTimeString(this._totalElapsedMilliseconds),
+			Utils.parseNumAsTimeString(this._totalElapsedMilliseconds)
 		);
 	}
 
@@ -259,7 +256,7 @@ export default class QueryRunner {
 	}
 
 	public handleBatchComplete(
-		result: QueryExecuteBatchNotificationParams,
+		result: QueryExecuteBatchNotificationParams
 	): void {
 		let batch: BatchSummary = result.batchSummary;
 
@@ -273,14 +270,14 @@ export default class QueryRunner {
 			// send a time message in the format used for query complete
 			this.sendBatchTimeMessage(
 				batch.id,
-				Utils.parseNumAsTimeString(executionTime),
+				Utils.parseNumAsTimeString(executionTime)
 			);
 		}
 		this.eventEmitter.emit("batchComplete", batch);
 	}
 
 	public handleResultSetComplete(
-		result: QueryExecuteResultSetCompleteNotificationParams,
+		result: QueryExecuteResultSetCompleteNotificationParams
 	): void {
 		let resultSet = result.resultSetSummary;
 		let batchSet = this._batchSets[resultSet.batchId];
@@ -303,7 +300,7 @@ export default class QueryRunner {
 		rowStart: number,
 		numberOfRows: number,
 		batchIndex: number,
-		resultSetIndex: number,
+		resultSetIndex: number
 	): Thenable<QueryExecuteSubsetResult> {
 		const self = this;
 		let queryDetails = new QueryExecuteSubsetParams();
@@ -323,10 +320,10 @@ export default class QueryRunner {
 						// TODO: Localize
 						self._vscodeWrapper.showErrorMessage(
 							"Something went wrong getting more rows: " +
-								error.message,
+								error.message
 						);
 						reject();
-					},
+					}
 				);
 		});
 	}
@@ -349,10 +346,10 @@ export default class QueryRunner {
 					(error) => {
 						// TODO: Localize
 						self._vscodeWrapper.showErrorMessage(
-							"Failed disposing query: " + error.message,
+							"Failed disposing query: " + error.message
 						);
 						reject();
-					},
+					}
 				);
 		});
 	}
@@ -360,7 +357,7 @@ export default class QueryRunner {
 	private getColumnHeaders(
 		batchId: number,
 		resultId: number,
-		range: ISlickRange,
+		range: ISlickRange
 	): string[] {
 		let headers: string[] = undefined;
 		let batchSummary: BatchSummary = this.batchSets[batchId];
@@ -386,7 +383,7 @@ export default class QueryRunner {
 		selection: ISlickRange[],
 		batchId: number,
 		resultId: number,
-		includeHeaders?: boolean,
+		includeHeaders?: boolean
 	): Promise<void> {
 		const self = this;
 		return new Promise<void>((resolve, reject) => {
@@ -400,14 +397,14 @@ export default class QueryRunner {
 							range.fromRow,
 							range.toRow - range.fromRow + 1,
 							batchId,
-							resultId,
+							resultId
 						)
 						.then((result) => {
 							if (self.shouldIncludeHeaders(includeHeaders)) {
 								let columnHeaders = self.getColumnHeaders(
 									batchId,
 									resultId,
-									range,
+									range
 								);
 								if (columnHeaders !== undefined) {
 									copyString +=
@@ -424,13 +421,13 @@ export default class QueryRunner {
 								let row = result.resultSubset.rows[rowIndex];
 								let cellObjects = row.slice(
 									range.fromCell,
-									range.toCell + 1,
+									range.toCell + 1
 								);
 								// Remove newlines if requested
 								let cells = self.shouldRemoveNewLines()
 									? cellObjects.map((x) =>
-											self.removeNewLines(x.displayValue),
-									  )
+											self.removeNewLines(x.displayValue)
+										)
 									: cellObjects.map((x) => x.displayValue);
 								copyString += cells.join("\t");
 								if (
@@ -464,7 +461,7 @@ export default class QueryRunner {
 		// else get config option from vscode config
 		let config = this._vscodeWrapper.getConfiguration(
 			Constants.extensionConfigSectionName,
-			this.uri,
+			this.uri
 		);
 		includeHeaders = config[Constants.copyIncludeHeaders];
 		return !!includeHeaders;
@@ -474,7 +471,7 @@ export default class QueryRunner {
 		// get config copyRemoveNewLine option from vscode config
 		let config = this._vscodeWrapper.getConfiguration(
 			Constants.extensionConfigSectionName,
-			this.uri,
+			this.uri
 		);
 		let removeNewLines: boolean = config[Constants.configCopyRemoveNewLine];
 		return removeNewLines;
@@ -493,7 +490,7 @@ export default class QueryRunner {
 		// get config copyRemoveNewLine option from vscode config
 		let config = this._vscodeWrapper.getConfiguration(
 			Constants.extensionConfigSectionName,
-			this.uri,
+			this.uri
 		);
 		let showBatchTime: boolean = config[Constants.configShowBatchTime];
 		if (showBatchTime) {
@@ -501,7 +498,7 @@ export default class QueryRunner {
 				batchId: batchId,
 				message: Utils.formatString(
 					LocalizedConstants.elapsedBatchTime,
-					executionTime,
+					executionTime
 				),
 				time: undefined,
 				isError: false,
@@ -525,12 +522,12 @@ export default class QueryRunner {
 						editor.selection = self._vscodeWrapper.selection(
 							self._vscodeWrapper.position(
 								selection.startLine,
-								selection.startColumn,
+								selection.startColumn
 							),
 							self._vscodeWrapper.position(
 								selection.endLine,
-								selection.endColumn,
-							),
+								selection.endColumn
+							)
 						);
 						resolve();
 					});

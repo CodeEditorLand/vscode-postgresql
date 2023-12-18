@@ -70,7 +70,7 @@ export default class ResultsSerializer {
 		// get save results config from vscode config
 		let config = this._vscodeWrapper.getConfiguration(
 			Constants.extensionConfigSectionName,
-			this._uri,
+			this._uri
 		);
 		let saveConfig = config[Constants.configSaveAsCsv];
 		let saveResultsParams = new Contracts.SaveResultsAsCsvRequestParams();
@@ -88,7 +88,7 @@ export default class ResultsSerializer {
 		// get save results config from vscode config
 		let config = this._vscodeWrapper.getConfiguration(
 			Constants.extensionConfigSectionName,
-			this._uri,
+			this._uri
 		);
 		let saveConfig = config[Constants.configSaveAsJson];
 		let saveResultsParams = new Contracts.SaveResultsAsJsonRequestParams();
@@ -105,7 +105,7 @@ export default class ResultsSerializer {
 		// and we want to have just 1 setting that lists this.
 		let config = this._vscodeWrapper.getConfiguration(
 			Constants.extensionConfigSectionName,
-			this._uri,
+			this._uri
 		);
 		let saveConfig = config[Constants.configSaveAsCsv];
 		let saveResultsParams = new Contracts.SaveResultsAsExcelRequestParams();
@@ -124,7 +124,7 @@ export default class ResultsSerializer {
 		batchIndex: number,
 		resultSetNo: number,
 		format: string,
-		selection: Interfaces.ISlickRange,
+		selection: Interfaces.ISlickRange
 	): SaveAsRequestParams {
 		const self = this;
 		let saveResultsParams: SaveAsRequestParams;
@@ -172,7 +172,7 @@ export default class ResultsSerializer {
 		batchIndex: number,
 		resultSetNo: number,
 		format: string,
-		selection: Interfaces.ISlickRange,
+		selection: Interfaces.ISlickRange
 	): Thenable<void> {
 		const self = this;
 		let saveResultsParams = self.getParameters(
@@ -180,7 +180,7 @@ export default class ResultsSerializer {
 			batchIndex,
 			resultSetNo,
 			format,
-			selection,
+			selection
 		);
 		let type: RequestType<
 			Contracts.SaveResultsRequestParams,
@@ -197,7 +197,7 @@ export default class ResultsSerializer {
 		}
 
 		self._vscodeWrapper.logToOutputChannel(
-			LocalizedConstants.msgSaveStarted + this._filePath,
+			LocalizedConstants.msgSaveStarted + this._filePath
 		);
 
 		// send message to the sqlserverclient for converting resuts to the requested format and saving to filepath
@@ -205,17 +205,17 @@ export default class ResultsSerializer {
 			(result: any) => {
 				if (result.messages) {
 					self._vscodeWrapper.showErrorMessage(
-						LocalizedConstants.msgSaveFailed + result.messages,
+						LocalizedConstants.msgSaveFailed + result.messages
 					);
 					self._vscodeWrapper.logToOutputChannel(
-						LocalizedConstants.msgSaveFailed + result.messages,
+						LocalizedConstants.msgSaveFailed + result.messages
 					);
 				} else {
 					self._vscodeWrapper.showInformationMessage(
-						LocalizedConstants.msgSaveSucceeded + this._filePath,
+						LocalizedConstants.msgSaveSucceeded + this._filePath
 					);
 					self._vscodeWrapper.logToOutputChannel(
-						LocalizedConstants.msgSaveSucceeded + filePath,
+						LocalizedConstants.msgSaveSucceeded + filePath
 					);
 					self.openSavedFile(self._filePath, format);
 				}
@@ -224,12 +224,12 @@ export default class ResultsSerializer {
 			},
 			(error) => {
 				self._vscodeWrapper.showErrorMessage(
-					LocalizedConstants.msgSaveFailed + error.message,
+					LocalizedConstants.msgSaveFailed + error.message
 				);
 				self._vscodeWrapper.logToOutputChannel(
-					LocalizedConstants.msgSaveFailed + error.message,
+					LocalizedConstants.msgSaveFailed + error.message
 				);
-			},
+			}
 		);
 	}
 
@@ -241,7 +241,7 @@ export default class ResultsSerializer {
 		batchIndex: number,
 		resultSetNo: number,
 		format: string,
-		selection: Interfaces.ISlickRange[],
+		selection: Interfaces.ISlickRange[]
 	): Thenable<void> {
 		const self = this;
 		this._uri = uri;
@@ -255,14 +255,14 @@ export default class ResultsSerializer {
 						batchIndex,
 						resultSetNo,
 						format,
-						selection ? selection[0] : undefined,
+						selection ? selection[0] : undefined
 					);
 				}
 			},
 			(error) => {
 				self._vscodeWrapper.showErrorMessage(error.message);
 				self._vscodeWrapper.logToOutputChannel(error.message);
-			},
+			}
 		);
 	}
 
@@ -292,7 +292,7 @@ export default class ResultsSerializer {
 				},
 				(error: any) => {
 					self._vscodeWrapper.showErrorMessage(error);
-				},
+				}
 			);
 		}
 	}

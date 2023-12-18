@@ -15,14 +15,14 @@ gulp.task("cover:enableconfig", () => {
 			jeditor(function (json) {
 				json.enabled = true;
 				return json; // must return JSON object.
-			}),
+			})
 		)
 		.pipe(gulp.dest("./out", { overwrite: true }));
 });
 
 gulp.task(
 	"cover:enable",
-	gulp.series("cover:clean", "html:test", "cover:enableconfig"),
+	gulp.series("cover:clean", "html:test", "cover:enableconfig")
 );
 
 gulp.task("cover:disable", () => {
@@ -32,7 +32,7 @@ gulp.task("cover:disable", () => {
 			jeditor(function (json) {
 				json.enabled = false;
 				return json; // must return JSON object.
-			}),
+			})
 		)
 		.pipe(gulp.dest("./out", { overwrite: true }));
 });
@@ -52,7 +52,7 @@ gulp.task("cover:combine", () => {
 					{ name: "lcovonly" }, // -> ./coverage/report.txt
 					{ name: "cobertura" }, // -> ./jsonCov/cov.json
 				],
-			}),
+			})
 		);
 });
 
@@ -64,6 +64,6 @@ gulp.task(
 		"cover:enableconfig",
 		"html:test",
 		"ext:test",
-		"cover:combine",
-	),
+		"cover:combine"
+	)
 );

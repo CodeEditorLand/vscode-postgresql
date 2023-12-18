@@ -110,7 +110,7 @@ gulp.task("ext:localization:xliff-to-json", function () {
 
 				// callback to notify we have completed the current file
 				callback(null, file);
-			}),
+			})
 		)
 		.pipe(gulp.dest(config.paths.project.localization + "/i18n/"));
 });
@@ -146,10 +146,10 @@ gulp.task("ext:localization:xliff-to-ts", function () {
 
 				// add headers to export localization function
 				contents.push(
-					"export let loadLocalizedConstants = (locale: string) => {",
+					"export let loadLocalizedConstants = (locale: string) => {"
 				);
 				contents.push(
-					"\tlet localize = nls.config({ locale: locale })();",
+					"\tlet localize = nls.config({ locale: locale })();"
 				);
 				// Re-export each constant
 				for (var key in dict) {
@@ -177,7 +177,7 @@ gulp.task("ext:localization:xliff-to-ts", function () {
 
 				// callback to notify we have completed the current file
 				callback(null, file);
-			}),
+			})
 		)
 		.pipe(gulp.dest(config.paths.project.root + "/src/constants/"));
 });
@@ -193,7 +193,7 @@ gulp.task("ext:localization:xliff-to-package.nls", function () {
 					config.paths.project.localization +
 					"/xliff/en/localizedPackage.json.*.xlf",
 			],
-			{ base: "" },
+			{ base: "" }
 		)
 		.pipe(
 			through.obj(function (file, enc, callback) {
@@ -231,7 +231,7 @@ gulp.task("ext:localization:xliff-to-package.nls", function () {
 				let languageIndex = file.basename.indexOf(".", indexToStart);
 				let language = file.basename.substr(
 					indexToStart - 1,
-					languageIndex - indexToStart + 1,
+					languageIndex - indexToStart + 1
 				);
 
 				// Name our file
@@ -247,7 +247,7 @@ gulp.task("ext:localization:xliff-to-package.nls", function () {
 
 				// callback to notify we have completed the current file
 				callback(null, file);
-			}),
+			})
 		)
 		.pipe(gulp.dest(config.paths.project.root));
 });

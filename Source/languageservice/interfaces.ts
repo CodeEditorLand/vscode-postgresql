@@ -36,7 +36,7 @@ export class PackageError extends Error {
 	constructor(
 		public message: string,
 		public pkg: IPackage = undefined,
-		public innerError: any = undefined,
+		public innerError: any = undefined
 	) {
 		super(message);
 	}
@@ -50,7 +50,7 @@ export interface IHttpClient {
 		statusView: IStatusView,
 		proxy: string,
 		strictSSL: boolean,
-		authorization?: string,
+		authorization?: string
 	): Promise<void>;
 }
 

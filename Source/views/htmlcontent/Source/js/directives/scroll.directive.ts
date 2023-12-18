@@ -22,11 +22,13 @@ export class ScrollDirective {
 		new EventEmitter<number>();
 
 	constructor(@Inject(forwardRef(() => ElementRef)) private _el: ElementRef) {
-        const self = this;
-        Observable.fromEvent(this._el.nativeElement, 'scroll').subscribe((event) => {
-            if (self.scrollEnabled) {
-                self.onScroll.emit(self._el.nativeElement.scrollTop);
-            }
-        });
-    }
+		const self = this;
+		Observable.fromEvent(this._el.nativeElement, "scroll").subscribe(
+			(event) => {
+				if (self.scrollEnabled) {
+					self.onScroll.emit(self._el.nativeElement.scrollTop);
+				}
+			}
+		);
+	}
 }

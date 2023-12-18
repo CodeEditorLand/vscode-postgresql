@@ -16,14 +16,14 @@ export class ServerInitializationResult {
 	public constructor(
 		public installedBeforeInitializing: Boolean = false,
 		public isRunning: Boolean = false,
-		public serverPath: string = undefined,
+		public serverPath: string = undefined
 	) {}
 
 	public Clone(): ServerInitializationResult {
 		return new ServerInitializationResult(
 			this.installedBeforeInitializing,
 			this.isRunning,
-			this.serverPath,
+			this.serverPath
 		);
 	}
 
@@ -31,7 +31,7 @@ export class ServerInitializationResult {
 		return new ServerInitializationResult(
 			this.installedBeforeInitializing,
 			isRunning,
-			this.serverPath,
+			this.serverPath
 		);
 	}
 }
@@ -46,13 +46,13 @@ export class ServerStatusView implements IStatusView, vscode.Disposable {
 
 	constructor() {
 		this._statusBarItem = vscode.window.createStatusBarItem(
-			vscode.StatusBarAlignment.Right,
+			vscode.StatusBarAlignment.Right
 		);
 		vscode.window.onDidChangeActiveTextEditor((params) =>
-			this.onDidChangeActiveTextEditor(params),
+			this.onDidChangeActiveTextEditor(params)
 		);
 		vscode.workspace.onDidCloseTextDocument((params) =>
-			this.onDidCloseTextDocument(params),
+			this.onDidCloseTextDocument(params)
 		);
 	}
 

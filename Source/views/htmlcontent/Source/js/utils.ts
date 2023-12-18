@@ -28,7 +28,7 @@ export function htmlEntities(str: string): string {
 	return typeof str === "string"
 		? str.replace(/[\u00A0-\u9999<>\&"']/gim, (i) => {
 				return `&#${i.charCodeAt(0)};`;
-		  })
+			})
 		: undefined;
 }
 

@@ -76,16 +76,19 @@ export class ContextMenu implements OnInit {
 		"event.copyWithHeaders": "",
 	};
 
-	constructor(@Inject(forwardRef(() => ShortcutService)) private shortcuts: ShortcutService) {
-        const self = this;
-        for (let key in this.keys) {
-            if (this.keys.hasOwnProperty(key)) {
-                this.shortcuts.stringCodeFor(key).then((result) => {
-                    self.keys[key] = result;
-                });
-            }
-        }
-    }
+	constructor(
+		@Inject(forwardRef(() => ShortcutService))
+		private shortcuts: ShortcutService
+	) {
+		const self = this;
+		for (let key in this.keys) {
+			if (this.keys.hasOwnProperty(key)) {
+				this.shortcuts.stringCodeFor(key).then((result) => {
+					self.keys[key] = result;
+				});
+			}
+		}
+	}
 
 	ngOnInit(): void {
 		const self = this;
@@ -100,7 +103,7 @@ export class ContextMenu implements OnInit {
 		batchId: number,
 		resultId: number,
 		index: number,
-		selection: ISlickRange[],
+		selection: ISlickRange[]
 	): void {
 		this.batchId = batchId;
 		this.resultId = resultId;

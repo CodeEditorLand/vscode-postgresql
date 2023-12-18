@@ -53,16 +53,19 @@ export class MessagesContextMenu implements OnInit {
 		"event.copySelection": "",
 	};
 
-	constructor(@Inject(forwardRef(() => ShortcutService)) private shortcuts: ShortcutService) {
-        const self = this;
-        for (let key in this.keys) {
-            if (this.keys.hasOwnProperty(key)) {
-                this.shortcuts.stringCodeFor(key).then((result) => {
-                    self.keys[key] = result;
-                });
-            }
-        }
-    }
+	constructor(
+		@Inject(forwardRef(() => ShortcutService))
+		private shortcuts: ShortcutService
+	) {
+		const self = this;
+		for (let key in this.keys) {
+			if (this.keys.hasOwnProperty(key)) {
+				this.shortcuts.stringCodeFor(key).then((result) => {
+					self.keys[key] = result;
+				});
+			}
+		}
+	}
 
 	ngOnInit(): void {
 		const self = this;

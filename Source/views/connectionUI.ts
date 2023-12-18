@@ -44,10 +44,10 @@ export class ConnectionUI {
 		private _connectionManager: ConnectionManager,
 		private _connectionStore: ConnectionStore,
 		private _prompter: IPrompter,
-		private _vscodeWrapper?: VscodeWrapper,
+		private _vscodeWrapper?: VscodeWrapper
 	) {
 		this._errorOutputChannel = vscode.window.createOutputChannel(
-			LocalizedConstants.connectionErrorChannelName,
+			LocalizedConstants.connectionErrorChannelName
 		);
 		if (!this.vscodeWrapper) {
 			this.vscodeWrapper = new VscodeWrapper();
@@ -99,7 +99,7 @@ export class ConnectionUI {
 							LocalizedConstants.recentConnectionsPlaceholder,
 						matchOnDescription: true,
 					},
-					picklist,
+					picklist
 				).then((selection) => {
 					if (selection) {
 						resolve(self.handleSelectedConnection(selection));
@@ -131,7 +131,7 @@ export class ConnectionUI {
 					placeHolder: LocalizedConstants.flavorChooseLanguage,
 					matchOnDescription: true,
 				},
-				picklist,
+				picklist
 			).then((selection) => {
 				if (selection) {
 					resolve(selection.providerId);
@@ -145,7 +145,7 @@ export class ConnectionUI {
 	// requests the user to choose an item from the list
 	private promptItemChoice<T extends vscode.QuickPickItem>(
 		options: vscode.QuickPickOptions,
-		choices: T[],
+		choices: T[]
 	): Promise<T> {
 		let question: IQuestion = {
 			type: QuestionTypes.expand,
@@ -170,9 +170,9 @@ export class ConnectionUI {
 				this.waitForLanguageModeToBeSqlHelper.bind(
 					this,
 					resolve,
-					timer,
+					timer
 				),
-				50,
+				50
 			);
 		}
 	}
@@ -229,13 +229,13 @@ export class ConnectionUI {
 					if (value) {
 						vscode.commands
 							.executeCommand(
-								"workbench.action.editor.changeLanguageMode",
+								"workbench.action.editor.changeLanguageMode"
 							)
 							.then(() => {
 								self.waitForLanguageModeToBeSql().then(
 									(result) => {
 										resolve(result);
-									},
+									}
 								);
 							});
 					} else {
@@ -251,7 +251,7 @@ export class ConnectionUI {
 	// Helper to let the user choose a database on the current server
 	public showDatabasesOnCurrentServer(
 		currentCredentials: Interfaces.IConnectionCredentials,
-		databaseNames: Array<string>,
+		databaseNames: Array<string>
 	): Promise<Interfaces.IConnectionCredentials> {
 		const self = this;
 		return new Promise<Interfaces.IConnectionCredentials>(
@@ -276,7 +276,7 @@ export class ConnectionUI {
 							connectionCreds: newCredentials,
 							quickPickItemType: CredentialsQuickPickItemType.Mru,
 						};
-					},
+					}
 				);
 
 				// Add an option to disconnect from the current server
@@ -295,25 +295,25 @@ export class ConnectionUI {
 				self.vscodeWrapper
 					.showQuickPick<vscode.QuickPickItem>(
 						pickListItems,
-						pickListOptions,
+						pickListOptions
 					)
 					.then((selection) => {
 						if (selection === disconnectItem) {
 							self.handleDisconnectChoice().then(
 								() => resolve(undefined),
-								(err) => reject(err),
+								(err) => reject(err)
 							);
 						} else if (typeof selection !== "undefined") {
 							resolve(
 								(
 									selection as Interfaces.IConnectionCredentialsQuickPickItem
-								).connectionCreds,
+								).connectionCreds
 							);
 						} else {
 							resolve(undefined);
 						}
 					});
-			},
+			}
 		);
 	}
 
@@ -330,19 +330,19 @@ export class ConnectionUI {
 					if (result === true) {
 						self.connectionManager.onDisconnect().then(
 							() => resolve(),
-							(err) => reject(err),
+							(err) => reject(err)
 						);
 					} else {
 						resolve();
 					}
 				},
-				(err) => reject(err),
+				(err) => reject(err)
 			);
 		});
 	}
 
 	public createProfileWithDifferentCredentials(
-		connection: IConnectionCredentials,
+		connection: IConnectionCredentials
 	): Promise<IConnectionCredentials> {
 		return new Promise<IConnectionCredentials>((resolve, reject) => {
 			this.promptForRetryConnectWithDifferentCredentials().then(
@@ -355,7 +355,7 @@ export class ConnectionUI {
 								user: "",
 								password: "",
 								emptyPasswordInput: false,
-							},
+							}
 						);
 						ConnectionCredentials.ensureRequiredPropertiesSet(
 							connectionWithoutCredentials, // connection profile
@@ -364,25 +364,25 @@ export class ConnectionUI {
 							true, // wasPasswordEmptyInConfigFile
 							this._prompter,
 							this._connectionStore,
-							connection,
+							connection
 						).then(
 							(connectionResult) => {
 								resolve(connectionResult);
 							},
 							(error) => {
 								reject(error);
-							},
+							}
 						);
 					} else {
 						resolve(undefined);
 					}
-				},
+				}
 			);
 		});
 	}
 
 	private handleSelectedConnection(
-		selection: IConnectionCredentialsQuickPickItem,
+		selection: IConnectionCredentialsQuickPickItem
 	): Promise<IConnectionCredentials> {
 		const self = this;
 		return new Promise<IConnectionCredentials>((resolve, reject) => {
@@ -406,7 +406,7 @@ export class ConnectionUI {
 						}
 						resolve(resolvedConnectionCreds);
 					},
-					(err) => reject(err),
+					(err) => reject(err)
 				);
 			} else {
 				resolve(undefined);
@@ -478,20 +478,20 @@ export class ConnectionUI {
 											.clearRecentConnectionsList()
 											.then(() => {
 												self.vscodeWrapper.showInformationMessage(
-													LocalizedConstants.msgClearedRecentConnections,
+													LocalizedConstants.msgClearedRecentConnections
 												);
 												resolve(true);
 											});
 									} else {
 										resolve(false);
 									}
-								},
+								}
 							);
 							break;
 						case ManageProfileTask.Edit:
 							self.vscodeWrapper
 								.executeCommand(
-									"workbench.action.openGlobalSettings",
+									"workbench.action.openGlobalSettings"
 								)
 								.then(() => {
 									resolve(true);
@@ -521,7 +521,7 @@ export class ConnectionUI {
 	 * @returns undefined if profile creation failed
 	 */
 	public createAndSaveProfile(
-		validate: boolean = true,
+		validate: boolean = true
 	): Promise<IConnectionProfile> {
 		let self = this;
 		return self
@@ -542,11 +542,11 @@ export class ConnectionUI {
 				if (savedProfile) {
 					if (validate) {
 						self.vscodeWrapper.showInformationMessage(
-							LocalizedConstants.msgProfileCreatedAndConnected,
+							LocalizedConstants.msgProfileCreatedAndConnected
 						);
 					} else {
 						self.vscodeWrapper.showInformationMessage(
-							LocalizedConstants.msgProfileCreated,
+							LocalizedConstants.msgProfileCreated
 						);
 					}
 				}
@@ -558,7 +558,7 @@ export class ConnectionUI {
 	 * Validate a connection profile by connecting to it, and save it if we are successful.
 	 */
 	private validateAndSaveProfile(
-		profile: Interfaces.IConnectionProfile,
+		profile: Interfaces.IConnectionProfile
 	): PromiseLike<Interfaces.IConnectionProfile> {
 		const self = this;
 		return self.connectionManager
@@ -574,7 +574,7 @@ export class ConnectionUI {
 						.then((updatedProfile) => {
 							if (updatedProfile) {
 								return self.validateAndSaveProfile(
-									updatedProfile,
+									updatedProfile
 								);
 							} else {
 								return undefined;
@@ -588,7 +588,7 @@ export class ConnectionUI {
 	 * Save a connection profile using the connection store.
 	 */
 	private saveProfile(
-		profile: IConnectionProfile,
+		profile: IConnectionProfile
 	): Promise<IConnectionProfile> {
 		return this._connectionStore.saveProfile(profile);
 	}
@@ -598,19 +598,19 @@ export class ConnectionUI {
 	}
 
 	private promptForRetryCreateProfile(
-		profile: IConnectionProfile,
+		profile: IConnectionProfile
 	): PromiseLike<IConnectionProfile> {
 		// Ask if the user would like to fix the profile
 		return this._vscodeWrapper
 			.showErrorMessage(
 				LocalizedConstants.msgPromptRetryCreateProfile,
-				LocalizedConstants.retryLabel,
+				LocalizedConstants.retryLabel
 			)
 			.then((result) => {
 				if (result === LocalizedConstants.retryLabel) {
 					return ConnectionProfile.createProfile(
 						this._prompter,
-						profile,
+						profile
 					);
 				} else {
 					return undefined;
@@ -623,7 +623,7 @@ export class ConnectionUI {
 		return this._vscodeWrapper
 			.showErrorMessage(
 				LocalizedConstants.msgPromptRetryConnectionDifferentCredentials,
-				LocalizedConstants.retryLabel,
+				LocalizedConstants.retryLabel
 			)
 			.then((result) => {
 				if (result === LocalizedConstants.retryLabel) {
@@ -635,7 +635,7 @@ export class ConnectionUI {
 	}
 
 	private fillOrPromptForMissingInfo(
-		selection: IConnectionCredentialsQuickPickItem,
+		selection: IConnectionCredentialsQuickPickItem
 	): Promise<IConnectionCredentials> {
 		// If a connection string is present, don't prompt for any other info
 		if (selection.connectionCreds.connectionString) {
@@ -645,7 +645,7 @@ export class ConnectionUI {
 		}
 
 		const passwordEmptyInConfigFile: boolean = Utils.isEmpty(
-			selection.connectionCreds.password,
+			selection.connectionCreds.password
 		);
 		return this._connectionStore.addSavedPassword(selection).then((sel) => {
 			return ConnectionCredentials.ensureRequiredPropertiesSet(
@@ -655,7 +655,7 @@ export class ConnectionUI {
 				false,
 				passwordEmptyInConfigFile,
 				this._prompter,
-				this._connectionStore,
+				this._connectionStore
 			);
 		});
 	}
@@ -678,7 +678,7 @@ export class ConnectionUI {
 				if (result) {
 					// TODO again consider moving information prompts to the prompt package
 					vscode.window.showInformationMessage(
-						LocalizedConstants.msgProfileRemoved,
+						LocalizedConstants.msgProfileRemoved
 					);
 				}
 				return result;
@@ -686,14 +686,14 @@ export class ConnectionUI {
 	}
 
 	private selectProfileForRemoval(
-		profiles: IConnectionCredentialsQuickPickItem[],
+		profiles: IConnectionCredentialsQuickPickItem[]
 	): Promise<IConnectionProfile> {
 		let self = this;
 		if (!profiles || profiles.length === 0) {
 			// Inform the user we have no profiles available for deletion
 			// TODO: consider moving to prompter if we separate all UI logic from workflows in the future
 			vscode.window.showErrorMessage(
-				LocalizedConstants.msgNoProfilesSaved,
+				LocalizedConstants.msgNoProfilesSaved
 			);
 			return Promise.resolve(undefined);
 		}

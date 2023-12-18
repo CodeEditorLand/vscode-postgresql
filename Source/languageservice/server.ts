@@ -18,7 +18,7 @@ export default class ServerProvider {
 	constructor(
 		private _downloadProvider: ServiceDownloadProvider,
 		private _config: IConfig,
-		private _statusView: IStatusView,
+		private _statusView: IStatusView
 	) {}
 
 	/**
@@ -67,7 +67,7 @@ export default class ServerProvider {
 						return this.downloadServerFiles(runtime).then(
 							(downloadResult) => {
 								resolve(downloadResult);
-							},
+							}
 						);
 					} else {
 						return resolve(result);
@@ -103,7 +103,7 @@ export default class ServerProvider {
 					return this.findServerPath(installDirectory).then(
 						(result) => {
 							return resolve(result);
-						},
+						}
 					);
 				})
 				.catch((err) => {

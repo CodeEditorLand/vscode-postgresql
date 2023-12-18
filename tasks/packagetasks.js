@@ -77,7 +77,7 @@ gulp.task("package:offline", () => {
 				return doOfflinePackage(
 					data.rid,
 					data.runtime,
-					packageName,
+					packageName
 				).then(() => {
 					return cleanServiceInstallFolder();
 				});

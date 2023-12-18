@@ -39,39 +39,43 @@ export class DataService {
 	}
 
 	constructor(@Inject(forwardRef(() => Http)) private http) {
-        const self = this;
-        // grab the uri from the document for requests
-        this.uri = encodeURI(document.getElementById('uri') ? document.getElementById('uri').innerText.trim() : '');
-        this.ws = new WebSocket(WS_URL + '?uri=' + this.uri);
-        let observable = Observable.create(
-            (obs: Observer<MessageEvent>) => {
-                self.ws.onmessage = obs.next.bind(obs);
-                self.ws.onerror = obs.error.bind(obs);
-                self.ws.onclose = obs.complete.bind(obs);
+		const self = this;
+		// grab the uri from the document for requests
+		this.uri = encodeURI(
+			document.getElementById("uri")
+				? document.getElementById("uri").innerText.trim()
+				: ""
+		);
+		this.ws = new WebSocket(WS_URL + "?uri=" + this.uri);
+		let observable = Observable.create((obs: Observer<MessageEvent>) => {
+			self.ws.onmessage = obs.next.bind(obs);
+			self.ws.onerror = obs.error.bind(obs);
+			self.ws.onclose = obs.complete.bind(obs);
 
-                return self.ws.close.bind(self.ws);
-            }
-        );
+			return self.ws.close.bind(self.ws);
+		});
 
-        let observer = {
-            next: (data: Object) => {
-                if (self.ws.readyState === WebSocket.OPEN) {
-                    self.ws.send(JSON.stringify(data));
-                }
-            }
-        };
+		let observer = {
+			next: (data: Object) => {
+				if (self.ws.readyState === WebSocket.OPEN) {
+					self.ws.send(JSON.stringify(data));
+				}
+			},
+		};
 
-        this.dataEventObs = Subject.create(observer, observable).map((response: MessageEvent): WebSocketEvent => {
-            let data = JSON.parse(response.data);
-            return data;
-        });
+		this.dataEventObs = Subject.create(observer, observable).map(
+			(response: MessageEvent): WebSocketEvent => {
+				let data = JSON.parse(response.data);
+				return data;
+			}
+		);
 
-        this.getLocalizedTextsRequest().then(result => {
-            Object.keys(result).forEach(key => {
-                Constants.loadLocalizedConstant(key, result[key]);
-            });
-        });
-    }
+		this.getLocalizedTextsRequest().then((result) => {
+			Object.keys(result).forEach((key) => {
+				Constants.loadLocalizedConstant(key, result[key]);
+			});
+		});
+	}
 
 	/**
 	 * Get a specified number of rows starting at a specified row for
@@ -85,7 +89,7 @@ export class DataService {
 		start: number,
 		numberOfRows: number,
 		batchId: number,
-		resultId: number,
+		resultId: number
 	): Observable<ResultSetSubset> {
 		let uriFormat = "/{0}?batchId={1}&resultId={2}&uri={3}";
 		let uri = Utils.formatString(
@@ -93,7 +97,7 @@ export class DataService {
 			"rows",
 			batchId,
 			resultId,
-			this.uri,
+			this.uri
 		);
 		return this.http
 			.get(uri + "&rowStart=" + start + "&numberOfRows=" + numberOfRows)
@@ -113,7 +117,7 @@ export class DataService {
 		batchIndex: number,
 		resultSetNumber: number,
 		format: string,
-		selection: ISlickRange[],
+		selection: ISlickRange[]
 	): void {
 		const self = this;
 		let headers = new Headers();
@@ -166,7 +170,7 @@ export class DataService {
 					columnName: columnName,
 					type: linkType,
 				}),
-				{ headers: headers },
+				{ headers: headers }
 			)
 			.subscribe(undefined, (err) => {
 				self.showError(err.statusText);
@@ -184,7 +188,7 @@ export class DataService {
 		selection: ISlickRange[],
 		batchId: number,
 		resultId: number,
-		includeHeaders?: boolean,
+		includeHeaders?: boolean
 	): void {
 		const self = this;
 		let headers = new Headers();

@@ -69,7 +69,7 @@ export class QueryExecuteResultSetCompleteNotificationParams {
 // ------------------------------- < Query Message Notification > ------------------------------------
 export namespace QueryExecuteMessageNotification {
 	export const type = new NotificationType<QueryExecuteMessageParams, void>(
-		"query/message",
+		"query/message"
 	);
 }
 

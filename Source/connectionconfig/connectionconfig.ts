@@ -40,7 +40,7 @@ export class ConnectionConfig implements IConnectionConfig {
 
 		// Remove the profile if already set
 		profiles = profiles.filter(
-			(value) => !Utils.isSameProfile(value, profile),
+			(value) => !Utils.isSameProfile(value, profile)
 		);
 		profiles.push(profile);
 
@@ -53,7 +53,7 @@ export class ConnectionConfig implements IConnectionConfig {
 	 * and next alphabetically by profile/server name.
 	 */
 	public getConnections(
-		getWorkspaceConnections: boolean,
+		getWorkspaceConnections: boolean
 	): IConnectionProfile[] {
 		let profiles: IConnectionProfile[] = [];
 		let compareProfileFunc = (a, b) => {
@@ -61,13 +61,13 @@ export class ConnectionConfig implements IConnectionConfig {
 			let nameA = a.profileName
 				? a.profileName
 				: a.server
-				  ? a.server
-				  : a.connectionString;
+					? a.server
+					: a.connectionString;
 			let nameB = b.profileName
 				? b.profileName
 				: b.server
-				  ? b.server
-				  : b.connectionString;
+					? b.server
+					: b.connectionString;
 			return nameA.localeCompare(nameB);
 		};
 
@@ -133,16 +133,16 @@ export class ConnectionConfig implements IConnectionConfig {
 	 * @returns the set of connection profiles found in the settings.
 	 */
 	public getProfilesFromSettings(
-		global: boolean = true,
+		global: boolean = true
 	): IConnectionProfile[] {
 		let configuration = this._vscodeWrapper.getConfiguration(
 			Constants.extensionName,
-			this._vscodeWrapper.activeTextEditorUri,
+			this._vscodeWrapper.activeTextEditorUri
 		);
 		let profiles: IConnectionProfile[] = [];
 
 		let configValue = configuration.inspect<IConnectionProfile[]>(
-			Constants.connectionsArrayName,
+			Constants.connectionsArrayName
 		);
 		if (global) {
 			profiles = configValue.globalValue;
@@ -150,7 +150,7 @@ export class ConnectionConfig implements IConnectionConfig {
 			profiles = configValue.workspaceValue;
 			if (profiles !== undefined) {
 				profiles = profiles.concat(
-					configValue.workspaceFolderValue || [],
+					configValue.workspaceFolderValue || []
 				);
 			} else {
 				profiles = configValue.workspaceFolderValue;
@@ -169,7 +169,7 @@ export class ConnectionConfig implements IConnectionConfig {
 	 * @param profiles the set of profiles to insert into the settings file.
 	 */
 	private writeProfilesToSettings(
-		profiles: IConnectionProfile[],
+		profiles: IConnectionProfile[]
 	): Promise<void> {
 		// Save the file
 		const self = this;
@@ -183,7 +183,7 @@ export class ConnectionConfig implements IConnectionConfig {
 					},
 					(err) => {
 						reject(err);
-					},
+					}
 				);
 		});
 	}

@@ -210,7 +210,7 @@ declare module Mocha {
 					complete?: string;
 					incomplete?: string;
 					close?: string;
-				},
+				}
 			);
 		}
 		export class Spec extends Base {}

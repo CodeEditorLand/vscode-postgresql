@@ -31,25 +31,25 @@ export default class Config implements IConfig {
 
 	public getSqlToolsServiceDownloadUrl(): string {
 		return this.getSqlToolsConfigValue(
-			Constants.sqlToolsServiceDownloadUrlConfigKey,
+			Constants.sqlToolsServiceDownloadUrlConfigKey
 		);
 	}
 
 	public getSqlToolsInstallDirectory(): string {
 		return this.getSqlToolsConfigValue(
-			Constants.sqlToolsServiceInstallDirConfigKey,
+			Constants.sqlToolsServiceInstallDirConfigKey
 		);
 	}
 
 	public getSqlToolsExecutableFiles(): string[] {
 		return this.getSqlToolsConfigValue(
-			Constants.sqlToolsServiceExecutableFilesConfigKey,
+			Constants.sqlToolsServiceExecutableFilesConfigKey
 		);
 	}
 
 	public getSqlToolsPackageVersion(): string {
 		return this.getSqlToolsConfigValue(
-			Constants.sqlToolsServiceVersionConfigKey,
+			Constants.sqlToolsServiceVersionConfigKey
 		);
 	}
 
@@ -101,7 +101,7 @@ export default class Config implements IConfig {
 
 	static loadConfig(): any {
 		let configContent = fs.readFileSync(
-			path.join(__dirname, "../config.json"),
+			path.join(__dirname, "../config.json")
 		);
 		return JSON.parse(configContent);
 	}

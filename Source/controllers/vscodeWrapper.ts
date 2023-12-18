@@ -16,7 +16,7 @@ export default class VscodeWrapper {
 	public constructor() {
 		if (typeof VscodeWrapper._outputChannel === "undefined") {
 			VscodeWrapper._outputChannel = this.createOutputChannel(
-				Constants.outputChannelName,
+				Constants.outputChannelName
 			);
 		}
 	}
@@ -97,7 +97,7 @@ export default class VscodeWrapper {
 	 */
 	public getConfiguration(
 		extensionName: string,
-		resource?: vscode.Uri | string,
+		resource?: vscode.Uri | string
 	): vscode.WorkspaceConfiguration {
 		if (typeof resource === "string") {
 			try {
@@ -108,7 +108,7 @@ export default class VscodeWrapper {
 		}
 		return vscode.workspace.getConfiguration(
 			extensionName,
-			resource as vscode.Uri,
+			resource as vscode.Uri
 		);
 	}
 
@@ -189,12 +189,12 @@ export default class VscodeWrapper {
 		if (msg instanceof Array) {
 			msg.forEach((element) => {
 				VscodeWrapper._outputChannel.appendLine(
-					"[" + date.toLocaleTimeString() + "] " + element.toString(),
+					"[" + date.toLocaleTimeString() + "] " + element.toString()
 				);
 			});
 		} else {
 			VscodeWrapper._outputChannel.appendLine(
-				"[" + date.toLocaleTimeString() + "] " + msg.toString(),
+				"[" + date.toLocaleTimeString() + "] " + msg.toString()
 			);
 		}
 	}
@@ -224,7 +224,7 @@ export default class VscodeWrapper {
 	 */
 	public selection(
 		start: vscode.Position,
-		end: vscode.Position,
+		end: vscode.Position
 	): vscode.Selection {
 		return new vscode.Selection(start, end);
 	}
@@ -235,7 +235,7 @@ export default class VscodeWrapper {
 	public showErrorMessage(msg: string, ...items: string[]): Thenable<string> {
 		return vscode.window.showErrorMessage(
 			Constants.extensionDisplayName + ": " + msg,
-			...items,
+			...items
 		);
 	}
 
@@ -248,7 +248,7 @@ export default class VscodeWrapper {
 	): Thenable<string> {
 		return vscode.window.showInformationMessage(
 			Constants.extensionDisplayName + ": " + msg,
-			...items,
+			...items
 		);
 	}
 
@@ -261,7 +261,7 @@ export default class VscodeWrapper {
 	 */
 	public showQuickPick<T extends vscode.QuickPickItem>(
 		items: T[] | Thenable<T[]>,
-		options?: vscode.QuickPickOptions,
+		options?: vscode.QuickPickOptions
 	): Thenable<T> {
 		return vscode.window.showQuickPick<T>(items, options);
 	}
@@ -273,7 +273,7 @@ export default class VscodeWrapper {
 	 * @return A promise that resolves to the selected resource or `undefined`.
 	 */
 	public showSaveDialog(
-		options: vscode.SaveDialogOptions,
+		options: vscode.SaveDialogOptions
 	): Thenable<vscode.Uri> {
 		return vscode.window.showSaveDialog(options);
 	}
@@ -291,7 +291,7 @@ export default class VscodeWrapper {
 	public showTextDocument(
 		document: vscode.TextDocument,
 		column?: vscode.ViewColumn,
-		preserveFocus?: boolean,
+		preserveFocus?: boolean
 	): Thenable<vscode.TextEditor> {
 		return vscode.window.showTextDocument(document, column, preserveFocus);
 	}
@@ -301,7 +301,7 @@ export default class VscodeWrapper {
 	 */
 	public showWarningMessage(msg: string): Thenable<string> {
 		return vscode.window.showWarningMessage(
-			Constants.extensionDisplayName + ": " + msg,
+			Constants.extensionDisplayName + ": " + msg
 		);
 	}
 

@@ -18,7 +18,7 @@ export default class CodeAdapter implements IPrompter {
 	constructor() {
 		// TODO Decide whether output channel logging should be saved here?
 		this.outChannel = window.createOutputChannel(
-			Constants.outputChannelName,
+			Constants.outputChannelName
 		);
 		// this.outChannel.clear();
 	}
@@ -114,7 +114,7 @@ export default class CodeAdapter implements IPrompter {
 
 	public promptSingle<T>(
 		question: IQuestion,
-		ignoreFocusOut?: boolean,
+		ignoreFocusOut?: boolean
 	): Promise<T> {
 		let questions: IQuestion[] = [question];
 		return this.prompt(questions, ignoreFocusOut).then((answers) => {
@@ -126,7 +126,7 @@ export default class CodeAdapter implements IPrompter {
 
 	public prompt<T>(
 		questions: IQuestion[],
-		ignoreFocusOut?: boolean,
+		ignoreFocusOut?: boolean
 	): Promise<{ [key: string]: T }> {
 		let answers: { [key: string]: T } = {};
 
@@ -139,7 +139,7 @@ export default class CodeAdapter implements IPrompter {
 					.then(() => {
 						return PromptFactory.createPrompt(
 							question,
-							ignoreFocusOut,
+							ignoreFocusOut
 						);
 					})
 					.then((prompt) => {
@@ -166,7 +166,7 @@ export default class CodeAdapter implements IPrompter {
 						return answers;
 					});
 			},
-			Promise.resolve(),
+			Promise.resolve()
 		);
 
 		return promptResult.catch((err) => {
@@ -181,7 +181,7 @@ export default class CodeAdapter implements IPrompter {
 	// Helper to make it possible to prompt using callback pattern. Generally Promise is a preferred flow
 	public promptCallback(
 		questions: IQuestion[],
-		callback: IPromptCallback,
+		callback: IPromptCallback
 	): void {
 		// Collapse multiple questions into a set of prompt steps
 		this.prompt(questions).then((answers) => {

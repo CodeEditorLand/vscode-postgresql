@@ -48,7 +48,7 @@ export class SqlOutputContentProvider {
 	// CONSTRUCTOR /////////////////////////////////////////////////////////
 	constructor(
 		context: vscode.ExtensionContext,
-		private _statusView: StatusView,
+		private _statusView: StatusView
 	) {
 		this._vscodeWrapper = new VscodeWrapper();
 
@@ -57,44 +57,44 @@ export class SqlOutputContentProvider {
 
 		// add http handler for '/root'
 		this._service.addHandler(Interfaces.ContentType.Root, (req, res) =>
-			this.rootRequestHandler(req, res),
+			this.rootRequestHandler(req, res)
 		);
 		// add http handler for '/rows' - return rows end-point for a specific resultset
 		this._service.addHandler(Interfaces.ContentType.Rows, (req, res) =>
-			this.rowRequestHandler(req, res),
+			this.rowRequestHandler(req, res)
 		);
 		// add http handler for '/config'
 		this._service.addHandler(Interfaces.ContentType.Config, (req, res) =>
-			this.configRequestHandler(req, res),
+			this.configRequestHandler(req, res)
 		);
 		// add http handler for '/saveResults' - return success message as JSON
 		this._service.addPostHandler(
 			Interfaces.ContentType.SaveResults,
-			(req, res) => this.saveResultsRequestHandler(req, res),
+			(req, res) => this.saveResultsRequestHandler(req, res)
 		);
 		// add http handler for '/openLink' - open content in a new vscode editor pane
 		this._service.addPostHandler(
 			Interfaces.ContentType.OpenLink,
-			(req, res) => this.openLinkRequestHandler(req, res),
+			(req, res) => this.openLinkRequestHandler(req, res)
 		);
 		// add http post handler for copying results
 		this._service.addPostHandler(Interfaces.ContentType.Copy, (req, res) =>
-			this.copyRequestHandler(req, res),
+			this.copyRequestHandler(req, res)
 		);
 		// add http get handler for setting the selection in the editor
 		this._service.addHandler(
 			Interfaces.ContentType.EditorSelection,
-			(req, res) => this.editorSelectionRequestHandler(req, res),
+			(req, res) => this.editorSelectionRequestHandler(req, res)
 		);
 		// add http post handler for showing errors to user
 		this._service.addPostHandler(
 			Interfaces.ContentType.ShowError,
-			(req, res) => this.showErrorRequestHandler(req, res),
+			(req, res) => this.showErrorRequestHandler(req, res)
 		);
 		// add http post handler for showing warning to user
 		this._service.addPostHandler(
 			Interfaces.ContentType.ShowWarning,
-			(req, res) => this.showWarningRequestHandler(req, res),
+			(req, res) => this.showWarningRequestHandler(req, res)
 		);
 		// add http get handler for getting all localized texts
 		this._service.addHandler(
@@ -102,7 +102,7 @@ export class SqlOutputContentProvider {
 			(req, res) => {
 				let localizedText = LocalizedConstants;
 				res.send(localizedText);
-			},
+			}
 		);
 
 		// start express server on localhost and listen on a random port
@@ -127,9 +127,9 @@ export class SqlOutputContentProvider {
 			fs.accessSync(
 				path.join(
 					LocalWebService.staticContentPath,
-					Constants.contentProviderMinFile,
+					Constants.contentProviderMinFile
 				),
-				fs.F_OK,
+				fs.F_OK
 			);
 			prod = true;
 		} catch (e) {
@@ -141,11 +141,11 @@ export class SqlOutputContentProvider {
 		}
 		let pgsqlConfig = this._vscodeWrapper.getConfiguration(
 			Constants.extensionName,
-			queryUri,
+			queryUri
 		);
 		let editorConfig = this._vscodeWrapper.getConfiguration(
 			"editor",
-			queryUri,
+			queryUri
 		);
 		let extensionFontFamily = pgsqlConfig
 			.get<string>(Constants.extConfigResultFontFamily)
@@ -154,7 +154,7 @@ export class SqlOutputContentProvider {
 			.split('"')
 			.join("");
 		let extensionFontSize = pgsqlConfig.get<number>(
-			Constants.extConfigResultFontSize,
+			Constants.extConfigResultFontSize
 		);
 		let fontfamily = extensionFontFamily
 			? extensionFontFamily
@@ -171,7 +171,7 @@ export class SqlOutputContentProvider {
 		res.render(
 			path.join(
 				LocalWebService.staticContentPath,
-				Constants.msgContentProviderSqlOutputHtml,
+				Constants.msgContentProviderSqlOutputHtml
 			),
 			{
 				uri: uri,
@@ -182,7 +182,7 @@ export class SqlOutputContentProvider {
 				fontsize: fontsize,
 				fontweight: fontweight,
 				prod: prod,
-			},
+			}
 		);
 	}
 
@@ -205,7 +205,7 @@ export class SqlOutputContentProvider {
 		let queryUri = this._queryResultsMap.get(req.query.uri).queryRunner.uri;
 		let extConfig = this._vscodeWrapper.getConfiguration(
 			Constants.extensionConfigSectionName,
-			queryUri,
+			queryUri
 		);
 		let config = new ResultsConfig();
 		for (let key of Constants.extConfigResultKeys) {
@@ -228,7 +228,7 @@ export class SqlOutputContentProvider {
 			batchIndex,
 			selectedResultSetNo,
 			format,
-			selection,
+			selection
 		);
 		res.status = 200;
 		res.send();
@@ -255,7 +255,7 @@ export class SqlOutputContentProvider {
 				selection,
 				batchId,
 				resultId,
-				includeHeaders,
+				includeHeaders
 			)
 			.then(() => {
 				res.status = 200;
@@ -318,7 +318,7 @@ export class SqlOutputContentProvider {
 		statusView: any,
 		uri: string,
 		selection: ISelectionData,
-		title: string,
+		title: string
 	): void {
 		// execute the query with a query runner
 		this.runQueryCallback(
@@ -330,7 +330,7 @@ export class SqlOutputContentProvider {
 				if (queryRunner) {
 					queryRunner.runQuery(selection);
 				}
-			},
+			}
 		);
 	}
 
@@ -338,7 +338,7 @@ export class SqlOutputContentProvider {
 		statusView: any,
 		uri: string,
 		selection: ISelectionData,
-		title: string,
+		title: string
 	): void {
 		// execute the statement with a query runner
 		this.runQueryCallback(
@@ -350,10 +350,10 @@ export class SqlOutputContentProvider {
 				if (queryRunner) {
 					queryRunner.runStatement(
 						selection.startLine,
-						selection.startColumn,
+						selection.startColumn
 					);
 				}
-			},
+			}
 		);
 	}
 
@@ -362,7 +362,7 @@ export class SqlOutputContentProvider {
 		uri: string,
 		selection: ISelectionData,
 		title: string,
-		queryCallback: any,
+		queryCallback: any
 	): void {
 		let resultsUri = this.getResultsUri(uri);
 		let queryRunner = this.createQueryRunner(
@@ -370,14 +370,14 @@ export class SqlOutputContentProvider {
 			uri,
 			resultsUri,
 			selection,
-			title,
+			title
 		);
 		if (queryRunner) {
 			queryCallback(queryRunner);
 
 			let paneTitle = Utils.formatString(
 				LocalizedConstants.titleResultsPane,
-				queryRunner.title,
+				queryRunner.title
 			);
 			// Always run this command even if just updating to avoid a bug - tfs 8686842
 			this.displayResultPane(resultsUri, paneTitle, uri);
@@ -389,7 +389,7 @@ export class SqlOutputContentProvider {
 		uri: string,
 		resultsUri: string,
 		selection: ISelectionData,
-		title: string,
+		title: string
 	): QueryRunner {
 		// Reuse existing query runner if it exists
 		let queryRunner: QueryRunner;
@@ -401,7 +401,7 @@ export class SqlOutputContentProvider {
 			// If the query is already in progress, don't attempt to send it
 			if (existingRunner.isExecutingQuery) {
 				this._vscodeWrapper.showInformationMessage(
-					LocalizedConstants.msgRunQueryInProgress,
+					LocalizedConstants.msgRunQueryInProgress
 				);
 				return;
 			}
@@ -424,7 +424,7 @@ export class SqlOutputContentProvider {
 				let encodedUri = encodeURIComponent(resultsUri);
 				let link =
 					LocalWebService.getEndpointUri(
-						Interfaces.ContentType.EditorSelection,
+						Interfaces.ContentType.EditorSelection
 					) + `?uri=${encodedUri}`;
 				if (batch.selection) {
 					link +=
@@ -442,7 +442,7 @@ export class SqlOutputContentProvider {
 					link: {
 						text: Utils.formatString(
 							LocalizedConstants.runQueryBatchStartLine,
-							batch.selection.startLine + 1,
+							batch.selection.startLine + 1
 						),
 						uri: link,
 					},
@@ -456,7 +456,7 @@ export class SqlOutputContentProvider {
 				this._service.broadcast(
 					resultsUri,
 					"complete",
-					totalMilliseconds,
+					totalMilliseconds
 				);
 			});
 			queryRunner.eventEmitter.on("start", () => {
@@ -464,7 +464,7 @@ export class SqlOutputContentProvider {
 			});
 			this._queryResultsMap.set(
 				resultsUri,
-				new QueryRunnerState(queryRunner),
+				new QueryRunnerState(queryRunner)
 			);
 		}
 
@@ -475,7 +475,7 @@ export class SqlOutputContentProvider {
 	public displayResultPane(
 		resultsUri: string,
 		paneTitle: string,
-		queryUri: string,
+		queryUri: string
 	): void {
 		// Get the active text editor
 		let activeTextEditor = this._vscodeWrapper.activeTextEditor;
@@ -485,7 +485,7 @@ export class SqlOutputContentProvider {
 
 		let config = this._vscodeWrapper.getConfiguration(
 			Constants.extensionConfigSectionName,
-			queryUri,
+			queryUri
 		);
 		let retainContextWhenHidden =
 			config[Constants.configPersistQueryResultTabs];
@@ -500,7 +500,7 @@ export class SqlOutputContentProvider {
 				{
 					retainContextWhenHidden: retainContextWhenHidden,
 					enableScripts: true,
-				},
+				}
 			);
 			this._resultsPanes.set(resultsUri, panel);
 		}
@@ -513,7 +513,7 @@ export class SqlOutputContentProvider {
 		if (resultPaneColumn !== activeTextEditor.viewColumn) {
 			this._vscodeWrapper.showTextDocument(
 				activeTextEditor.document,
-				activeTextEditor.viewColumn,
+				activeTextEditor.viewColumn
 			);
 		}
 	}
@@ -540,7 +540,7 @@ export class SqlOutputContentProvider {
 
 		if (queryRunner === undefined || !queryRunner.isExecutingQuery) {
 			self._vscodeWrapper.showInformationMessage(
-				LocalizedConstants.msgCancelQueryNotRunning,
+				LocalizedConstants.msgCancelQueryNotRunning
 			);
 			return;
 		}
@@ -556,10 +556,10 @@ export class SqlOutputContentProvider {
 				self._vscodeWrapper.showErrorMessage(
 					Utils.formatString(
 						LocalizedConstants.msgCancelQueryFailed,
-						error.message,
-					),
+						error.message
+					)
 				);
-			},
+			}
 		);
 	}
 
@@ -573,7 +573,7 @@ export class SqlOutputContentProvider {
 	public onUntitledFileSaved(untitledUri: string, savedUri: string): void {
 		// If we don't have any query runners mapped to this uri, don't do anything
 		let untitledResultsUri = decodeURIComponent(
-			this.getResultsUri(untitledUri),
+			this.getResultsUri(untitledUri)
 		);
 		if (!this._queryResultsMap.has(untitledResultsUri)) {
 			return;
@@ -586,7 +586,7 @@ export class SqlOutputContentProvider {
 		let savedResultUri = decodeURIComponent(this.getResultsUri(savedUri));
 		this._queryResultsMap.set(
 			savedResultUri,
-			this._queryResultsMap.get(untitledResultsUri),
+			this._queryResultsMap.get(untitledResultsUri)
 		);
 		this._queryResultsMap.delete(untitledResultsUri);
 	}
@@ -637,8 +637,8 @@ export class SqlOutputContentProvider {
 		let encodedUri = encodeURIComponent(uri);
 		console.log(
 			`${LocalWebService.getEndpointUri(
-				Interfaces.ContentType.Root,
-			)}?uri=${encodedUri}`,
+				Interfaces.ContentType.Root
+			)}?uri=${encodedUri}`
 		);
 
 		// Fix for issue #669 "Results Panel not Refreshing Automatically" - always include a unique time
@@ -657,7 +657,7 @@ export class SqlOutputContentProvider {
                     var color = styles.getPropertyValue('--color');
                     var theme = document.body.className;
                     var url = "${LocalWebService.getEndpointUri(
-						Interfaces.ContentType.Root,
+						Interfaces.ContentType.Root
 					)}?" +
                             "uri=${encodedUri}" +
                             "&theme=" + theme +
@@ -679,7 +679,7 @@ export class SqlOutputContentProvider {
 	public openLink(
 		content: string,
 		columnName: string,
-		linkType: string,
+		linkType: string
 	): void {
 		const self = this;
 		if (linkType === "xml") {
@@ -712,19 +712,19 @@ export class SqlOutputContentProvider {
 							.then((result) => {
 								if (!result) {
 									self._vscodeWrapper.showErrorMessage(
-										LocalizedConstants.msgCannotOpenContent,
+										LocalizedConstants.msgCannotOpenContent
 									);
 								}
 							});
 					},
 					(error: any) => {
 						self._vscodeWrapper.showErrorMessage(error);
-					},
+					}
 				);
 			},
 			(error: any) => {
 				self._vscodeWrapper.showErrorMessage(error);
-			},
+			}
 		);
 	}
 
@@ -751,7 +751,7 @@ export class SqlOutputContentProvider {
 	private getResultsUri(srcUri: string): string {
 		// NOTE: The results uri will be encoded when we parse it to a uri
 		return vscode.Uri.parse(
-			SqlOutputContentProvider.providerUri + srcUri,
+			SqlOutputContentProvider.providerUri + srcUri
 		).toString();
 	}
 
@@ -761,7 +761,7 @@ export class SqlOutputContentProvider {
 	 */
 	private isResultsUri(srcUri: string): boolean {
 		return srcUri.startsWith(
-			SqlOutputContentProvider.providerUri.toString(),
+			SqlOutputContentProvider.providerUri.toString()
 		);
 	}
 
@@ -774,7 +774,7 @@ export class SqlOutputContentProvider {
 		// Find configuration options
 		let config = this._vscodeWrapper.getConfiguration(
 			Constants.extensionConfigSectionName,
-			queryUri,
+			queryUri
 		);
 		let splitPaneSelection = config[Constants.configSplitPaneSelection];
 		let viewColumn: vscode.ViewColumn;
@@ -802,10 +802,9 @@ export class SqlOutputContentProvider {
 	}
 
 	// Exposing some variables for testing purposes only
-	set setDisplayResultPane(implementation: (
-		var1: string,
-		var2: string,
-	) => void) {
+	set setDisplayResultPane(
+		implementation: (var1: string, var2: string) => void
+	) {
 		this.displayResultPane = implementation;
 	}
 

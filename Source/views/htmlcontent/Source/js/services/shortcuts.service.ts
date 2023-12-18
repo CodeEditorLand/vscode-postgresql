@@ -18,12 +18,14 @@ export class ShortcutService {
 	shortcuts: { [key: string]: string };
 	private waitPromise: Promise<void>;
 
-	constructor(@Inject(forwardRef(() => DataService)) private dataService: DataService,
-                @Inject(forwardRef(() => Window)) private window: Window) {
-        this.waitPromise = this.dataService.shortcuts.then((result) => {
-            this.shortcuts = result;
-        });
-    }
+	constructor(
+		@Inject(forwardRef(() => DataService)) private dataService: DataService,
+		@Inject(forwardRef(() => Window)) private window: Window
+	) {
+		this.waitPromise = this.dataService.shortcuts.then((result) => {
+			this.shortcuts = result;
+		});
+	}
 
 	/**
 	 * determines the platform aware shortcut string for an event for display purposes
@@ -54,7 +56,7 @@ export class ShortcutService {
 					if (displayCodes["windows"].hasOwnProperty(key)) {
 						keyString = keyString.replace(
 							key,
-							displayCodes["windows"][key],
+							displayCodes["windows"][key]
 						);
 					}
 				}
@@ -63,7 +65,7 @@ export class ShortcutService {
 					if (displayCodes["linux"].hasOwnProperty(key)) {
 						keyString = keyString.replace(
 							key,
-							displayCodes["linux"][key],
+							displayCodes["linux"][key]
 						);
 					}
 				}
@@ -72,7 +74,7 @@ export class ShortcutService {
 					if (displayCodes["mac"].hasOwnProperty(key)) {
 						keyString = keyString.replace(
 							key,
-							displayCodes["mac"][key],
+							displayCodes["mac"][key]
 						);
 					}
 				}

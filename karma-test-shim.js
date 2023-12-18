@@ -56,9 +56,7 @@ function initTestBed() {
 	return Promise.all([
 		System.import("@angular/core/testing"),
 		System.import("@angular/platform-browser-dynamic/testing"),
-	])
-
-	.then(function (providers) {
+	]).then(function (providers) {
 		var coreTesting = providers[0];
 		var browserTesting = providers[1];
 
@@ -66,7 +64,7 @@ function initTestBed() {
 
 		coreTesting.TestBed.initTestEnvironment(
 			browserTesting.BrowserDynamicTestingModule,
-			browserTesting.platformBrowserDynamicTesting(),
+			browserTesting.platformBrowserDynamicTesting()
 		);
 	});
 }
@@ -76,6 +74,6 @@ function initTesting() {
 	return Promise.all(
 		allSpecFiles.map(function (moduleName) {
 			return System.import(moduleName);
-		}),
+		})
 	).then(__karma__.start, __karma__.error);
 }

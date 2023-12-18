@@ -31,7 +31,7 @@ export class ConnectionProfile
 	 */
 	public static createProfile(
 		prompter: IPrompter,
-		defaultProfileValues?: IConnectionProfile,
+		defaultProfileValues?: IConnectionProfile
 	): Promise<IConnectionProfile> {
 		let profile: ConnectionProfile = new ConnectionProfile();
 		// Ensure all core properties are entered
@@ -47,7 +47,7 @@ export class ConnectionProfile
 				profile,
 				true,
 				false,
-				defaultProfileValues,
+				defaultProfileValues
 			);
 		// Check if password needs to be saved
 		questions.push({

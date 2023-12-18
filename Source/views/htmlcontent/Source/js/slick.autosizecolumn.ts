@@ -20,7 +20,7 @@
 			$container.on(
 				"dblclick.autosize",
 				".slick-resizable-handle",
-				reSizeColumn,
+				reSizeColumn
 			);
 			context = document.createElement("canvas").getContext("2d");
 		}
@@ -53,7 +53,7 @@
 			let autoSizeWidth =
 				Math.max(
 					headerWidth,
-					getMaxColumnTextWidth(columnDef, colIndex),
+					getMaxColumnTextWidth(columnDef, colIndex)
 				) + 1;
 
 			if (autoSizeWidth !== column.width) {
@@ -78,7 +78,7 @@
 				columnDef,
 				colIndex,
 				data,
-				rowEl,
+				rowEl
 			);
 			let width = getTemplateWidth(rowEl, template);
 			deleteRow(rowEl);
@@ -97,7 +97,7 @@
 			columnDef,
 			colIndex,
 			data,
-			rowEl,
+			rowEl
 		): any {
 			let max = 0,
 				maxTemplate = undefined;
@@ -112,9 +112,9 @@
 								colIndex,
 								text,
 								columnDef,
-								data[index],
+								data[index]
 							) +
-							"</span>",
+							"</span>"
 					);
 					text = template.text() || text;
 				}
@@ -129,7 +129,7 @@
 
 		function createRow(columnDef): JQuery {
 			let rowEl = $(
-				'<div class="slick-row"><div class="slick-cell"></div></div>',
+				'<div class="slick-row"><div class="slick-cell"></div></div>'
 			);
 			rowEl.find(".slick-cell").css({
 				visibility: "hidden",

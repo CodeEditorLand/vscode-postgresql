@@ -64,13 +64,13 @@ export class PlatformInformation {
 	public constructor(
 		public platform: string,
 		public architecture: string,
-		public distribution: LinuxDistribution = undefined,
+		public distribution: LinuxDistribution = undefined
 	) {
 		try {
 			this.runtimeId = PlatformInformation.getRuntimeId(
 				platform,
 				architecture,
-				distribution,
+				distribution
 			);
 		} catch (err) {
 			this.runtimeId = undefined;
@@ -107,8 +107,8 @@ export class PlatformInformation {
 				let versionInfo = plist.parse(
 					fs.readFileSync(
 						"/System/Library/CoreServices/SystemVersion.plist",
-						"utf-8",
-					),
+						"utf-8"
+					)
 				);
 				if (
 					versionInfo &&
@@ -219,7 +219,7 @@ export class PlatformInformation {
 					}
 
 					resolve(stdout);
-				},
+				}
 			);
 		});
 	}
@@ -231,7 +231,7 @@ export class PlatformInformation {
 	private static getRuntimeId(
 		platform: string,
 		architecture: string,
-		distribution: LinuxDistribution,
+		distribution: LinuxDistribution
 	): Runtime {
 		// Note: We could do much better here. Currently, we only return a limited number of RIDs that
 		// are officially supported.
@@ -247,7 +247,7 @@ export class PlatformInformation {
 				}
 
 				throw new Error(
-					`Unsupported Windows architecture: ${architecture}`,
+					`Unsupported Windows architecture: ${architecture}`
 				);
 
 			case "darwin":
@@ -257,7 +257,7 @@ export class PlatformInformation {
 				}
 
 				throw new Error(
-					`Unsupported macOS architecture: ${architecture}`,
+					`Unsupported macOS architecture: ${architecture}`
 				);
 
 			case "linux":
@@ -265,7 +265,7 @@ export class PlatformInformation {
 					// First try the distribution name
 					let runtimeId = PlatformInformation.getRuntimeIdHelper(
 						distribution.name,
-						distribution.version,
+						distribution.version
 					);
 
 					// If the distribution isn't one that we understand, but the 'ID_LIKE' field has something that we understand, use that
@@ -280,7 +280,7 @@ export class PlatformInformation {
 						for (let id of distribution.idLike) {
 							runtimeId = PlatformInformation.getRuntimeIdHelper(
 								id,
-								distribution.version,
+								distribution.version
 							);
 							if (runtimeId !== Runtime.UnknownRuntime) {
 								break;
@@ -298,7 +298,7 @@ export class PlatformInformation {
 
 				// If we got here, this is not a Linux distro or architecture that we currently support.
 				throw new Error(
-					`Unsupported Linux distro: ${distribution.name}, ${distribution.version}, ${architecture}`,
+					`Unsupported Linux distro: ${distribution.name}, ${distribution.version}, ${architecture}`
 				);
 			default:
 				// If we got here, we've ended up with a platform we don't support  like 'freebsd' or 'sunos'.
@@ -309,7 +309,7 @@ export class PlatformInformation {
 
 	private static getRuntimeIdHelper(
 		distributionName: string,
-		distributionVersion: string,
+		distributionVersion: string
 	): Runtime {
 		switch (distributionName) {
 			case "arch":
@@ -385,7 +385,7 @@ export class LinuxDistribution {
 	public constructor(
 		public name: string,
 		public version: string,
-		public idLike?: string[],
+		public idLike?: string[]
 	) {}
 
 	public static GetCurrent(): Promise<LinuxDistribution> {
@@ -394,7 +394,7 @@ export class LinuxDistribution {
 		return LinuxDistribution.FromFilePath("/etc/os-release")
 			.catch(() => LinuxDistribution.FromFilePath("/usr/lib/os-release"))
 			.catch(() =>
-				Promise.resolve(new LinuxDistribution(unknown, unknown)),
+				Promise.resolve(new LinuxDistribution(unknown, unknown))
 			);
 	}
 
@@ -416,7 +416,7 @@ export class LinuxDistribution {
 
 	public static FromReleaseInfo(
 		releaseInfo: string,
-		eol: string = os.EOL,
+		eol: string = os.EOL
 	): LinuxDistribution {
 		let name = unknown;
 		let version = unknown;

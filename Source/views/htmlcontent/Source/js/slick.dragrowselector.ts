@@ -122,7 +122,7 @@ declare let Slick;
 							activeCell.row,
 							newRangeColumn,
 							activeCell.row,
-							newRangeColumn,
+							newRangeColumn
 						),
 					];
 				}
@@ -164,7 +164,7 @@ declare let Slick;
 							activeCell.row,
 							newRangeColumn,
 							activeCell.row,
-							newRangeColumn,
+							newRangeColumn
 						),
 					];
 				}
@@ -206,7 +206,7 @@ declare let Slick;
 						// column resize
 						if ((e.ctrlKey || e.metaKey) && e.shiftKey) {
 							let allColumns = JSON.parse(
-								JSON.stringify(_grid.getColumns()),
+								JSON.stringify(_grid.getColumns())
 							);
 							allColumns[activeCell.cell - 1].width =
 								allColumns[activeCell.cell - 1].width -
@@ -232,23 +232,23 @@ declare let Slick;
 
 							let fromRow = Math.min(
 								activeCell.row - 1,
-								last.fromRow,
+								last.fromRow
 							);
 							let fromCell = Math.min(
 								activeCell.cell - 1,
-								last.fromCell,
+								last.fromCell
 							);
 							let toRow = Math.max(newRangeRow, last.toRow);
 							let toCell = Math.max(
 								activeCell.cell - 1,
-								last.toCell,
+								last.toCell
 							);
 							_ranges = [
 								new Slick.Range(
 									fromRow,
 									fromCell,
 									toRow,
-									toCell,
+									toCell
 								),
 							];
 						} else {
@@ -257,13 +257,13 @@ declare let Slick;
 									activeCell.row - 1,
 									activeCell.cell - 1,
 									activeCell.row - 1,
-									activeCell.cell - 1,
+									activeCell.cell - 1
 								),
 							];
 						}
 						_grid.setActiveCell(
 							activeCell.row - 1,
-							activeCell.cell,
+							activeCell.cell
 						);
 						setSelectedRanges(_ranges);
 						// right arrow
@@ -271,7 +271,7 @@ declare let Slick;
 						// column resize
 						if ((e.ctrlKey || e.metaKey) && e.shiftKey) {
 							let allColumns = JSON.parse(
-								JSON.stringify(_grid.getColumns()),
+								JSON.stringify(_grid.getColumns())
 							);
 							allColumns[activeCell.cell - 1].width =
 								allColumns[activeCell.cell - 1].width +
@@ -297,26 +297,26 @@ declare let Slick;
 
 							let fromRow = Math.min(
 								activeCell.row + 1,
-								last.fromRow,
+								last.fromRow
 							);
 							let fromCell = Math.min(
 								activeCell.cell - 1,
-								last.fromCell,
+								last.fromCell
 							);
 							let toRow = Math.max(
 								activeCell.row + 1,
-								last.toRow,
+								last.toRow
 							);
 							let toCell = Math.max(
 								activeCell.cell - 1,
-								last.toCell,
+								last.toCell
 							);
 							_ranges = [
 								new Slick.Range(
 									fromRow,
 									fromCell,
 									toRow,
-									toCell,
+									toCell
 								),
 							];
 						} else {
@@ -325,13 +325,13 @@ declare let Slick;
 									activeCell.row + 1,
 									activeCell.cell - 1,
 									activeCell.row + 1,
-									activeCell.cell - 1,
+									activeCell.cell - 1
 								),
 							];
 						}
 						_grid.setActiveCell(
 							activeCell.row + 1,
-							activeCell.cell,
+							activeCell.cell
 						);
 						setSelectedRanges(_ranges);
 					}
@@ -359,8 +359,8 @@ declare let Slick;
 						0,
 						columnIndex,
 						_grid.getDataLength() - 1,
-						columnIndex,
-					),
+						columnIndex
+					)
 				);
 			} else if (e.shiftKey && _ranges.length) {
 				let last = _ranges.pop().fromCell;
@@ -370,12 +370,12 @@ declare let Slick;
 				for (let i = from; i <= to; i++) {
 					if (i !== last) {
 						_ranges.push(
-							new Slick.Range(0, i, _grid.getDataLength() - 1, i),
+							new Slick.Range(0, i, _grid.getDataLength() - 1, i)
 						);
 					}
 				}
 				_ranges.push(
-					new Slick.Range(0, last, _grid.getDataLength() - 1, last),
+					new Slick.Range(0, last, _grid.getDataLength() - 1, last)
 				);
 			} else {
 				_ranges = [
@@ -383,7 +383,7 @@ declare let Slick;
 						0,
 						columnIndex,
 						_grid.getDataLength() - 1,
-						columnIndex,
+						columnIndex
 					),
 				];
 			}
@@ -407,7 +407,7 @@ declare let Slick;
 							cell.row,
 							cell.cell - 1,
 							cell.row,
-							cell.cell - 1,
+							cell.cell - 1
 						),
 					];
 					setSelectedRanges(_ranges);
@@ -419,7 +419,7 @@ declare let Slick;
 							cell.row,
 							0,
 							cell.row,
-							_grid.getColumns().length - 1,
+							_grid.getColumns().length - 1
 						),
 					];
 					setSelectedRanges(_ranges);
@@ -434,8 +434,8 @@ declare let Slick;
 								cell.row,
 								0,
 								cell.row,
-								_grid.getColumns().length - 1,
-							),
+								_grid.getColumns().length - 1
+							)
 						);
 						_grid.setActiveCell(cell.row, 1);
 					} else {
@@ -444,8 +444,8 @@ declare let Slick;
 								cell.row,
 								cell.cell - 1,
 								cell.row,
-								cell.cell - 1,
-							),
+								cell.cell - 1
+							)
 						);
 						_grid.setActiveCell(cell.row, cell.cell);
 					}
@@ -459,7 +459,7 @@ declare let Slick;
 								fromRow,
 								0,
 								toRow,
-								_grid.getColumns().length - 1,
+								_grid.getColumns().length - 1
 							),
 						];
 					} else {
@@ -519,26 +519,26 @@ declare let Slick;
 					let firstRow = Math.min(cell.row, activeCell.row);
 					let lastRow = Math.max(cell.row, activeCell.row);
 					_ranges.push(
-						new Slick.Range(firstRow, 0, lastRow, lastCell),
+						new Slick.Range(firstRow, 0, lastRow, lastCell)
 					);
 				} else {
 					let firstRow = Math.min(cell.row, activeCell.row);
 					let lastRow = Math.max(cell.row, activeCell.row);
 					let firstColumn = Math.min(
 						cell.cell - 1,
-						activeCell.cell - 1,
+						activeCell.cell - 1
 					);
 					let lastColumn = Math.max(
 						cell.cell - 1,
-						activeCell.cell - 1,
+						activeCell.cell - 1
 					);
 					_ranges.push(
 						new Slick.Range(
 							firstRow,
 							firstColumn,
 							lastRow,
-							lastColumn,
-						),
+							lastColumn
+						)
 					);
 				}
 				setSelectedRanges(_ranges);

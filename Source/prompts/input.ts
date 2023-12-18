@@ -53,7 +53,7 @@ export default class InputPrompt extends Prompt {
 
 			if (validationError) {
 				this._question.default = new Error(
-					`${figures.warning} ${validationError}`,
+					`${figures.warning} ${validationError}`
 				);
 
 				return this.render();

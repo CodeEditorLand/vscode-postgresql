@@ -27,14 +27,14 @@ export default class HttpClient implements IHttpClient {
 		statusView: IStatusView,
 		proxy?: string,
 		strictSSL?: boolean,
-		authorization?: string,
+		authorization?: string
 	): Promise<void> {
 		const url = parseUrl(urlString);
 		let options = this.getHttpClientOptions(
 			url,
 			proxy,
 			strictSSL,
-			authorization,
+			authorization
 		);
 		let clientRequest =
 			url.protocol === "http:" ? http.request : https.request;
@@ -42,7 +42,7 @@ export default class HttpClient implements IHttpClient {
 		return new Promise<void>((resolve, reject) => {
 			if (!pkg.tmpFile || pkg.tmpFile.fd === 0) {
 				return reject(
-					new PackageError("Temporary package file unavailable", pkg),
+					new PackageError("Temporary package file unavailable", pkg)
 				);
 			}
 
@@ -60,18 +60,18 @@ export default class HttpClient implements IHttpClient {
 							statusView,
 							proxy,
 							strictSSL,
-							authorization,
-						),
+							authorization
+						)
 					);
 				}
 
 				if (response.statusCode !== 200) {
 					// Download failed - print error message
 					logger.appendLine(
-						`failed (error code '${response.statusCode}')`,
+						`failed (error code '${response.statusCode}')`
 					);
 					return reject(
-						new PackageError(response.statusCode.toString(), pkg),
+						new PackageError(response.statusCode.toString(), pkg)
 					);
 				}
 
@@ -90,8 +90,8 @@ export default class HttpClient implements IHttpClient {
 					new PackageError(
 						`Request error: ${error.code || "NONE"}`,
 						pkg,
-						error,
-					),
+						error
+					)
 				);
 			});
 
@@ -104,7 +104,7 @@ export default class HttpClient implements IHttpClient {
 		url: Url,
 		proxy?: string,
 		strictSSL?: boolean,
-		authorization?: string,
+		authorization?: string
 	): any {
 		const agent = getProxyAgent(url, proxy, strictSSL);
 
@@ -139,18 +139,18 @@ export default class HttpClient implements IHttpClient {
 		progress: IDownloadProgress,
 		data: any,
 		logger: ILogger,
-		statusView: IStatusView,
+		statusView: IStatusView
 	): void {
 		progress.downloadedBytes += data.length;
 
 		// Update status bar item with percentage
 		if (progress.packageSize > 0) {
 			let newPercentage = Math.ceil(
-				100 * (progress.downloadedBytes / progress.packageSize),
+				100 * (progress.downloadedBytes / progress.packageSize)
 			);
 			if (newPercentage !== progress.downloadPercentage) {
 				statusView.updateServiceDownloadingProgress(
-					progress.downloadPercentage,
+					progress.downloadPercentage
 				);
 				progress.downloadPercentage = newPercentage;
 			}
@@ -169,7 +169,7 @@ export default class HttpClient implements IHttpClient {
 		pkg: IPackage,
 		response: http.IncomingMessage,
 		logger: ILogger,
-		statusView: IStatusView,
+		statusView: IStatusView
 	): Promise<void> {
 		return new Promise<void>((resolve, reject) => {
 			let progress: IDownloadProgress = {
@@ -184,7 +184,7 @@ export default class HttpClient implements IHttpClient {
 					progress,
 					data,
 					logger,
-					statusView,
+					statusView
 				);
 			});
 			let tmpFile = fs.createWriteStream(undefined, {
@@ -199,8 +199,8 @@ export default class HttpClient implements IHttpClient {
 					new PackageError(
 						`Response error: ${err.code || "NONE"}`,
 						pkg,
-						err,
-					),
+						err
+					)
 				);
 			});
 
