@@ -245,7 +245,7 @@ export class ConnectionUI {
 	// Helper to let the user choose a database on the current server
 	public showDatabasesOnCurrentServer(
 		currentCredentials: Interfaces.IConnectionCredentials,
-		databaseNames: Array<string>,
+		databaseNames: string[],
 	): Promise<Interfaces.IConnectionCredentials> {
 		return new Promise<Interfaces.IConnectionCredentials>(
 			(resolve, reject) => {
@@ -258,7 +258,7 @@ export class ConnectionUI {
 							Interfaces.IConnectionCredentials
 						>(newCredentials, currentCredentials);
 						if (newCredentials["profileName"]) {
-							delete newCredentials["profileName"];
+							newCredentials["profileName"] = undefined;
 						}
 						newCredentials.dbname = name;
 
@@ -452,14 +452,15 @@ export class ConnectionUI {
 				choices: choices,
 				onAnswered: (value) => {
 					switch (value) {
-						case ManageProfileTask.Create:
+						case ManageProfileTask.Create: {
 							this.connectionManager
 								.onCreateProfile()
 								.then((result) => {
 									resolve(result);
 								});
 							break;
-						case ManageProfileTask.ClearRecentlyUsed:
+						}
+						case ManageProfileTask.ClearRecentlyUsed: {
 							this.promptToClearRecentConnectionsList().then(
 								(result) => {
 									if (result) {
@@ -477,7 +478,8 @@ export class ConnectionUI {
 								},
 							);
 							break;
-						case ManageProfileTask.Edit:
+						}
+						case ManageProfileTask.Edit: {
 							this.vscodeWrapper
 								.executeCommand(
 									"workbench.action.openGlobalSettings",
@@ -486,16 +488,19 @@ export class ConnectionUI {
 									resolve(true);
 								});
 							break;
-						case ManageProfileTask.Remove:
+						}
+						case ManageProfileTask.Remove: {
 							this.connectionManager
 								.onRemoveProfile()
 								.then((result) => {
 									resolve(result);
 								});
 							break;
-						default:
+						}
+						default: {
 							resolve(false);
 							break;
+						}
 					}
 				},
 			};
@@ -699,7 +704,7 @@ export class ConnectionUI {
 
 		// Prompt and return the value if the user confirmed
 		return this._prompter.prompt(questions).then((answers) => {
-			if (answers && answers[confirm]) {
+			if (answers?.[confirm]) {
 				const profilePickItem = <IConnectionCredentialsQuickPickItem>(
 					answers[chooseProfile]
 				);

@@ -117,7 +117,7 @@ export default class CodeAdapter implements IPrompter {
 		const questions: IQuestion[] = [question];
 		return this.prompt(questions, ignoreFocusOut).then((answers) => {
 			if (answers) {
-				return answers[question.name] || false;
+				return answers[question.name];
 			}
 		});
 	}

@@ -5,12 +5,12 @@ Error.stackTraceLimit = 0; // "No stacktrace"" is usually best for app testing.
 // Uncomment to get full stacktrace output.
 // Error.stackTraceLimit = Infinity; //
 
-var builtPath = "/base/out/src/views/htmlcontent/dist/js/";
+const builtPath = "/base/out/src/views/htmlcontent/dist/js/";
 
 __karma__.loaded = () => {};
 
 function isJsFile(path) {
-	return path.slice(-3) == ".js";
+	return path.slice(-3) === ".js";
 }
 
 function isSpecFile(path) {
@@ -18,10 +18,10 @@ function isSpecFile(path) {
 }
 
 function isBuiltFile(path) {
-	return isJsFile(path) && path.substr(0, builtPath.length) == builtPath;
+	return isJsFile(path) && path.substr(0, builtPath.length) === builtPath;
 }
 
-var allSpecFiles = Object.keys(window.__karma__.files).filter(isSpecFile);
+const allSpecFiles = Object.keys(window.__karma__.files).filter(isSpecFile);
 
 System.config({
 	baseURL: "base/out/src/views/htmlcontent",
@@ -57,8 +57,8 @@ function initTestBed() {
 		System.import("@angular/core/testing"),
 		System.import("@angular/platform-browser-dynamic/testing"),
 	]).then((providers) => {
-		var coreTesting = providers[0];
-		var browserTesting = providers[1];
+		const coreTesting = providers[0];
+		const browserTesting = providers[1];
 
 		jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 

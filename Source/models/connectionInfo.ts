@@ -233,7 +233,7 @@ export function getUserNameOrDomainLogin(
 		]
 	) {
 		return process.platform === "win32"
-			? process.env.USERDOMAIN + "\\" + process.env.USERNAME
+			? `${process.env.USERDOMAIN}\\${process.env.USERNAME}`
 			: "";
 	} else {
 		return creds.user ? creds.user : defaultValue;
@@ -252,21 +252,14 @@ export function getTooltip(
 	serverInfo?: ConnectionContracts.ServerInfo,
 ): string {
 	let tooltip: string = connCreds.connectionString
-		? "Connection string: " + connCreds.connectionString + "\r\n"
-		: "Server name: " +
-		  connCreds.host +
-		  "\r\n" +
-		  "Database name: " +
-		  (connCreds.dbname ? connCreds.dbname : "<connection default>") +
-		  "\r\n" +
-		  "Login name: " +
-		  connCreds.user +
-		  "\r\n" +
-		  "Connection encryption: " +
-		  (connCreds.encrypt ? "Encrypted" : "Not encrypted") +
-		  "\r\n";
-	if (serverInfo && serverInfo.serverVersion) {
-		tooltip += "Server version: " + serverInfo.serverVersion + "\r\n";
+		? `Connection string: ${connCreds.connectionString}\r\n`
+		: `Server name: ${connCreds.host}\r\nDatabase name: ${
+				connCreds.dbname ? connCreds.dbname : "<connection default>"
+		  }\r\nLogin name: ${connCreds.user}\r\nConnection encryption: ${
+				connCreds.encrypt ? "Encrypted" : "Not encrypted"
+		  }\r\n`;
+	if (serverInfo?.serverVersion) {
+		tooltip += `Server version: ${serverInfo.serverVersion}\r\n`;
 	}
 
 	return tooltip;

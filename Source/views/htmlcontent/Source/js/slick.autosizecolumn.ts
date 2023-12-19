@@ -33,7 +33,7 @@
 			const headerEl = $(e.currentTarget).closest(".slick-header-column");
 			const columnDef = headerEl.data("column");
 
-			if (!columnDef || !columnDef.resizable) {
+			if (!columnDef?.resizable) {
 				return;
 			}
 
@@ -99,22 +99,20 @@
 			data,
 			rowEl,
 		): any {
-			let max = 0,
-				maxTemplate = undefined;
+			let max = 0;
+			let maxTemplate = undefined;
 			const formatFun = columnDef.formatter;
 			$.each<string>(texts, (index, text): void => {
 				let template: JQuery;
 				if (formatFun) {
 					template = $(
-						"<span>" +
-							formatFun(
-								index,
-								colIndex,
-								text,
-								columnDef,
-								data[index],
-							) +
-							"</span>",
+						`<span>${formatFun(
+							index,
+							colIndex,
+							text,
+							columnDef,
+							data[index],
+						)}</span>`,
 					);
 					text = template.text() || text;
 				}
@@ -148,8 +146,8 @@
 		}
 
 		function getElementWidth(element): number {
-			let width,
-				clone = element.cloneNode(true);
+			let width;
+			const clone = element.cloneNode(true);
 			clone.style.cssText =
 				"position: absolute; visibility: hidden;right: auto;text-overflow: initial;white-space: nowrap;";
 			element.parentNode.insertBefore(clone, element);
@@ -159,8 +157,9 @@
 		}
 
 		function getElementWidthUsingCanvas(element, text): number {
-			context.font =
-				element.css("font-size") + " " + element.css("font-family");
+			context.font = `${element.css("font-size")} ${element.css(
+				"font-family",
+			)}`;
 			const metrics = context.measureText(text);
 			return metrics.width;
 		}

@@ -186,15 +186,15 @@ export default class VscodeWrapper {
 	 */
 	public logToOutputChannel(msg: any): void {
 		const date: Date = new Date();
-		if (msg instanceof Array) {
+		if (Array.isArray(msg)) {
 			msg.forEach((element) => {
 				VscodeWrapper._outputChannel.appendLine(
-					"[" + date.toLocaleTimeString() + "] " + element.toString(),
+					`[${date.toLocaleTimeString()}] ${element.toString()}`,
 				);
 			});
 		} else {
 			VscodeWrapper._outputChannel.appendLine(
-				"[" + date.toLocaleTimeString() + "] " + msg.toString(),
+				`[${date.toLocaleTimeString()}] ${msg.toString()}`,
 			);
 		}
 	}
@@ -234,7 +234,7 @@ export default class VscodeWrapper {
 	 */
 	public showErrorMessage(msg: string, ...items: string[]): Thenable<string> {
 		return vscode.window.showErrorMessage(
-			Constants.extensionDisplayName + ": " + msg,
+			`${Constants.extensionDisplayName}: ${msg}`,
 			...items,
 		);
 	}
@@ -247,7 +247,7 @@ export default class VscodeWrapper {
 		...items: string[]
 	): Thenable<string> {
 		return vscode.window.showInformationMessage(
-			Constants.extensionDisplayName + ": " + msg,
+			`${Constants.extensionDisplayName}: ${msg}`,
 			...items,
 		);
 	}
@@ -301,7 +301,7 @@ export default class VscodeWrapper {
 	 */
 	public showWarningMessage(msg: string): Thenable<string> {
 		return vscode.window.showWarningMessage(
-			Constants.extensionDisplayName + ": " + msg,
+			`${Constants.extensionDisplayName}: ${msg}`,
 		);
 	}
 

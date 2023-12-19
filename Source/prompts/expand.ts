@@ -9,10 +9,6 @@ import { INameValueChoice } from "./question";
 const figures = require("figures");
 
 export default class ExpandPrompt extends Prompt {
-	constructor(question: any, ignoreFocusOut?: boolean) {
-		super(question, ignoreFocusOut);
-	}
-
 	public render(): any {
 		// label indicates this is a quickpick item. Otherwise it's a name-value pair
 		if (this._question.choices[0].label) {
@@ -31,7 +27,7 @@ export default class ExpandPrompt extends Prompt {
 				throw new EscapeException();
 			}
 
-			return this.validateAndReturn(result || false);
+			return this.validateAndReturn(result);
 		});
 	}
 	private renderNameValueChoice(choices: INameValueChoice[]): any {
@@ -51,7 +47,7 @@ export default class ExpandPrompt extends Prompt {
 				}
 
 				// Note: cannot be used with 0 or false responses
-				const returnVal = choiceMap[result] || false;
+				const returnVal = choiceMap[result];
 				return this.validateAndReturn(returnVal);
 			});
 	}

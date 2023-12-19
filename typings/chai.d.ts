@@ -534,11 +534,11 @@ declare module "~chai/lib/Chai" {
 	namespace chai {
 		export type AssertionStatic = A.AssertionStatic;
 		export class AssertionError extends AE.AssertionError {}
-		export var Assertion: A.AssertionStatic;
-		export var expect: Expect.ExpectStatic;
-		export var assert: Assert.AssertStatic;
-		export var config: Config.Config;
-		export var util: Utils.Utils;
+		export let Assertion: A.AssertionStatic;
+		export let expect: Expect.ExpectStatic;
+		export let assert: Assert.AssertStatic;
+		export let config: Config.Config;
+		export let util: Utils.Utils;
 		export function should(): Should.Should;
 		export function Should(): Should.Should;
 		/**

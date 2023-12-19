@@ -7,10 +7,6 @@ import LocalizedConstants = require("../constants/localizedConstants");
 import EscapeException from "../utils/EscapeException";
 
 export default class ConfirmPrompt extends Prompt {
-	constructor(question: any, ignoreFocusOut?: boolean) {
-		super(question, ignoreFocusOut);
-	}
-
 	public render(): any {
 		const choices: { [id: string]: boolean } = {};
 		choices[LocalizedConstants.msgYes] = true;
@@ -26,7 +22,7 @@ export default class ConfirmPrompt extends Prompt {
 					throw new EscapeException();
 				}
 
-				return choices[result] || false;
+				return choices[result];
 			});
 	}
 }

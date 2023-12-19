@@ -74,10 +74,9 @@ export class MessagesContextMenu implements OnInit {
 
 	show(x: number, y: number, selectedRange: IRange): void {
 		this.selectedRange = selectedRange;
-		const selectedText =
-			selectedRange && selectedRange.toString
-				? selectedRange.toString()
-				: "";
+		const selectedText = selectedRange?.toString
+			? selectedRange.toString()
+			: "";
 		this.isDisabled = selectedText.length === 0;
 		this.position = { x: x, y: y };
 		this.visible = true;

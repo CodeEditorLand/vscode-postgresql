@@ -255,11 +255,7 @@ export default class ConnectionManager {
 				Telemetry.sendTelemetryEvent(
 					"IntelliSenseActivated",
 					{
-						isAzure:
-							connection.serverInfo &&
-							connection.serverInfo.isCloud
-								? "1"
-								: "0",
+						isAzure: connection.serverInfo?.isCloud ? "1" : "0",
 					},
 					{
 						duration: duration,
@@ -322,10 +318,7 @@ export default class ConnectionManager {
 					Interfaces.IConnectionCredentials,
 					Interfaces.IConnectionCredentials
 				>(newCredentials, connection.credentials);
-				if (
-					result.connectionSummary &&
-					result.connectionSummary.databaseName
-				) {
+				if (result.connectionSummary?.databaseName) {
 					newCredentials.dbname =
 						result.connectionSummary.databaseName;
 				}

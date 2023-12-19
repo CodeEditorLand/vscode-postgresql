@@ -33,17 +33,17 @@ interface MochaDone {
 	(error?: Error): void;
 }
 
-declare var mocha: Mocha;
-declare var describe: Mocha.IContextDefinition;
-declare var xdescribe: Mocha.IContextDefinition;
+declare let mocha: Mocha;
+declare let describe: Mocha.IContextDefinition;
+declare let xdescribe: Mocha.IContextDefinition;
 // alias for `describe`
-declare var context: Mocha.IContextDefinition;
+declare let context: Mocha.IContextDefinition;
 // alias for `describe`
-declare var suite: Mocha.IContextDefinition;
-declare var it: Mocha.ITestDefinition;
-declare var xit: Mocha.ITestDefinition;
+declare let suite: Mocha.IContextDefinition;
+declare let it: Mocha.ITestDefinition;
+declare let xit: Mocha.ITestDefinition;
 // alias for `it`
-declare var test: Mocha.ITestDefinition;
+declare let test: Mocha.ITestDefinition;
 
 declare function before(action: () => void): void;
 

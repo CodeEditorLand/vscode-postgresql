@@ -58,13 +58,11 @@ export class ServerStatusView implements IStatusView, vscode.Disposable {
 		this._statusBarItem.command = undefined;
 		this._statusBarItem.show();
 
-		this.showProgress("$(desktop-download) " + Constants.serviceInstalling);
+		this.showProgress(`$(desktop-download) ${Constants.serviceInstalling}`);
 	}
 
 	public updateServiceDownloadingProgress(downloadPercentage: number): void {
-		this._statusBarItem.text =
-			"$(cloud-download) " +
-			`${Constants.serviceDownloading} ... ${downloadPercentage}%`;
+		this._statusBarItem.text = `$(cloud-download) ${Constants.serviceDownloading} ... ${downloadPercentage}%`;
 		this._statusBarItem.show();
 	}
 
@@ -96,7 +94,7 @@ export class ServerStatusView implements IStatusView, vscode.Disposable {
 
 			const progressTick = progressTicks[index];
 			if (this._statusBarItem.text !== Constants.serviceInstalled) {
-				this._statusBarItem.text = statusText + " " + progressTick;
+				this._statusBarItem.text = `${statusText} ${progressTick}`;
 				this._statusBarItem.show();
 			}
 		}, 200);

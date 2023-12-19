@@ -6,10 +6,6 @@ import EscapeException from "../utils/EscapeException";
 import Prompt from "./prompt";
 
 export default class ListPrompt extends Prompt {
-	constructor(question: any, ignoreFocusOut?: boolean) {
-		super(question, ignoreFocusOut);
-	}
-
 	public render(): any {
 		const choices = this._question.choices.reduce((result, choice) => {
 			result[choice.name || choice] = choice.value || choice;

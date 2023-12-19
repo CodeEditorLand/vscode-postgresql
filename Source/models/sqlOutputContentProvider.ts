@@ -164,8 +164,8 @@ export class SqlOutputContentProvider {
 					.split('"')
 					.join("");
 		const fontsize = extensionFontSize
-			? extensionFontSize + "px"
-			: editorConfig.get<number>("fontSize") + "px";
+			? `${extensionFontSize}px`
+			: `${editorConfig.get<number>("fontSize")}px`;
 		const fontweight = editorConfig.get<string>("fontWeight");
 		res.render(
 			path.join(
@@ -777,12 +777,14 @@ export class SqlOutputContentProvider {
 		let viewColumn: vscode.ViewColumn;
 
 		switch (splitPaneSelection) {
-			case "current":
+			case "current": {
 				viewColumn = this._vscodeWrapper.activeTextEditor.viewColumn;
 				break;
-			case "end":
+			}
+			case "end": {
 				viewColumn = vscode.ViewColumn.Three;
 				break;
+			}
 			// default case where splitPaneSelection is next or anything else
 			default:
 				if (

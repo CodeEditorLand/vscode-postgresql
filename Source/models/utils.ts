@@ -74,18 +74,10 @@ export function generateGuid(): string {
 
 	// 'Set the two most significant bits (bits 6 and 7) of the clock_seq_hi_and_reserved to zero and one, respectively'
 	const clockSequenceHi: string = hexValues[(8 + Math.random() * 4) | 0];
-	return (
-		oct.substr(0, 8) +
-		"-" +
-		oct.substr(9, 4) +
-		"-4" +
-		oct.substr(13, 3) +
-		"-" +
-		clockSequenceHi +
-		oct.substr(16, 3) +
-		"-" +
-		oct.substr(19, 12)
-	);
+	return `${oct.substr(0, 8)}-${oct.substr(9, 4)}-4${oct.substr(
+		13,
+		3,
+	)}-${clockSequenceHi}${oct.substr(16, 3)}-${oct.substr(19, 12)}`;
 	/* tslint:enable:no-bitwise */
 }
 
@@ -126,7 +118,7 @@ export function isEditingSqlFile(): boolean {
 // Return the active text editor if there's one
 export function getActiveTextEditor(): vscode.TextEditor {
 	let editor = undefined;
-	if (vscode.window && vscode.window.activeTextEditor) {
+	if (vscode.window?.activeTextEditor) {
 		editor = vscode.window.activeTextEditor;
 	}
 	return editor;
@@ -149,7 +141,7 @@ export function logToOutputChannel(msg: any): void {
 		Constants.outputChannelName,
 	);
 	outputChannel.show();
-	if (msg instanceof Array) {
+	if (Array.isArray(msg)) {
 		msg.forEach((element) => {
 			outputChannel.appendLine(element.toString());
 		});
@@ -166,7 +158,7 @@ export function logDebug(msg: any): void {
 	const logDebugInfo = config[Constants.configLogDebugInfo];
 	if (logDebugInfo === true) {
 		const currentTime = new Date().toLocaleTimeString();
-		const outputMsg = "[" + currentTime + "]: " + msg ? msg.toString() : "";
+		const outputMsg = `[${currentTime}]: ${msg}` ? msg.toString() : "";
 		console.log(outputMsg);
 	}
 }
@@ -174,20 +166,20 @@ export function logDebug(msg: any): void {
 // Helper to show an info message
 export function showInfoMsg(msg: string): void {
 	vscode.window.showInformationMessage(
-		Constants.extensionDisplayName + ": " + msg,
+		`${Constants.extensionDisplayName}: ${msg}`,
 	);
 }
 
 // Helper to show an warn message
 export function showWarnMsg(msg: string): void {
 	vscode.window.showWarningMessage(
-		Constants.extensionDisplayName + ": " + msg,
+		`${Constants.extensionDisplayName}: ${msg}`,
 	);
 }
 
 // Helper to show an error message
 export function showErrorMsg(msg: string): void {
-	vscode.window.showErrorMessage(Constants.extensionDisplayName + ": " + msg);
+	vscode.window.showErrorMessage(`${Constants.extensionDisplayName}: ${msg}`);
 }
 
 export function isEmpty(str: any): boolean {
@@ -423,17 +415,17 @@ export function parseNumAsTimeString(value: number): string {
 	const s = Math.floor(tempVal / msInS);
 	tempVal %= msInS;
 
-	const hs = h < 10 ? "0" + h : "" + h;
-	const ms = m < 10 ? "0" + m : "" + m;
-	const ss = s < 10 ? "0" + s : "" + s;
+	const hs = h < 10 ? `0${h}` : `${h}`;
+	const ms = m < 10 ? `0${m}` : `${m}`;
+	const ss = s < 10 ? `0${s}` : `${s}`;
 	const mss =
 		tempVal < 10
-			? "00" + tempVal
+			? `00${tempVal}`
 			: tempVal < 100
-			  ? "0" + tempVal
-			  : "" + tempVal;
+			  ? `0${tempVal}`
+			  : `${tempVal}`;
 
-	const rs = hs + ":" + ms + ":" + ss;
+	const rs = `${hs}:${ms}:${ss}`;
 
-	return tempVal > 0 ? rs + "." + mss : rs;
+	return tempVal > 0 ? `${rs}.${mss}` : rs;
 }

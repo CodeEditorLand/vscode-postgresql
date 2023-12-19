@@ -179,22 +179,15 @@ export default class StatusView implements vscode.Disposable {
 			error.errorMessage &&
 			!Utils.isEmpty(error.errorMessage)
 		) {
-			bar.statusConnection.tooltip =
-				LocalizedConstants.connectErrorTooltip +
-				credentials.host +
-				"\n" +
-				LocalizedConstants.connectErrorCode +
-				error.errorNumber +
-				"\n" +
-				LocalizedConstants.connectErrorMessage +
-				error.errorMessage;
+			bar.statusConnection.tooltip = `${
+				LocalizedConstants.connectErrorTooltip + credentials.host
+			}\n${LocalizedConstants.connectErrorCode}${error.errorNumber}\n${
+				LocalizedConstants.connectErrorMessage
+			}${error.errorMessage}`;
 		} else {
-			bar.statusConnection.tooltip =
-				LocalizedConstants.connectErrorTooltip +
-				credentials.host +
-				"\n" +
-				LocalizedConstants.connectErrorMessage +
-				error.messages;
+			bar.statusConnection.tooltip = `${
+				LocalizedConstants.connectErrorTooltip + credentials.host
+			}\n${LocalizedConstants.connectErrorMessage}${error.messages}`;
 		}
 		this.showStatusBarItem(fileUri, bar.statusConnection);
 	}
@@ -258,7 +251,7 @@ export default class StatusView implements vscode.Disposable {
 		updateMessage: (message: string) => void,
 	): void {
 		switch (newStatus) {
-			case LocalizedConstants.definitionRequestedStatus:
+			case LocalizedConstants.definitionRequestedStatus: {
 				setTimeout(() => {
 					if (
 						getCurrentStatus() !==
@@ -270,18 +263,23 @@ export default class StatusView implements vscode.Disposable {
 					}
 				}, 500);
 				break;
-			case LocalizedConstants.definitionRequestCompletedStatus:
+			}
+			case LocalizedConstants.definitionRequestCompletedStatus: {
 				updateMessage("");
 				break;
-			case LocalizedConstants.updatingIntelliSenseStatus:
+			}
+			case LocalizedConstants.updatingIntelliSenseStatus: {
 				updateMessage(LocalizedConstants.updatingIntelliSenseLabel);
 				break;
-			case LocalizedConstants.intelliSenseUpdatedStatus:
+			}
+			case LocalizedConstants.intelliSenseUpdatedStatus: {
 				updateMessage("");
 				break;
-			default:
+			}
+			default: {
 				Utils.logDebug(`Language service status changed. ${newStatus}`);
 				break;
+			}
 		}
 	}
 
@@ -367,7 +365,7 @@ export default class StatusView implements vscode.Disposable {
 			}
 
 			const progressTick = progressTicks[index];
-			statusBarItem.text = statusText + " " + progressTick;
+			statusBarItem.text = `${statusText} ${progressTick}`;
 			this.showStatusBarItem(fileUri, statusBarItem);
 		}, 200);
 	}

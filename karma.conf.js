@@ -1,7 +1,7 @@
 // #docregion
 const path = require("path");
 const fs = require("fs");
-var coverconfig;
+let coverconfig;
 if (fs.existsSync("./out/coverconfig.json")) {
 	coverconfig = require("./out/coverconfig.json");
 } else {
@@ -9,14 +9,14 @@ if (fs.existsSync("./out/coverconfig.json")) {
 }
 
 module.exports = (config) => {
-	var appBase = "out/src/views/htmlcontent/dist/"; // transpiled app JS and map files
-	var appSrcBase = "src/views/htmlcontent/src/js/"; // app source TS files
-	var appAssets = "base/out/src/views/htmlcontent/"; // component assets fetched by Angular's compiler
+	const appBase = "out/src/views/htmlcontent/dist/"; // transpiled app JS and map files
+	const appSrcBase = "src/views/htmlcontent/src/js/"; // app source TS files
+	const appAssets = "base/out/src/views/htmlcontent/"; // component assets fetched by Angular's compiler
 
-	var testBase = "out/src/views/htmlcontent/test/"; // transpiled test JS and map files
-	var testSrcBase = "src/views/htmlcontent/test/"; // test source TS files
+	const testBase = "out/src/views/htmlcontent/test/"; // transpiled test JS and map files
+	const testSrcBase = "src/views/htmlcontent/test/"; // test source TS files
 
-	var configuration = {
+	const configuration = {
 		basePath: path.join(__dirname),
 		frameworks: ["jasmine"],
 		plugins: [
@@ -111,33 +111,33 @@ module.exports = (config) => {
 			"karma-test-shim.js",
 
 			// transpiled application & spec code paths loaded via module imports
-			{ pattern: appBase + "**/*.js", included: false, watched: true },
-			{ pattern: appBase + "**/*.json", included: false, watched: true },
-			{ pattern: testBase + "**/*.js", included: false, watched: true },
+			{ pattern: `${appBase}**/*.js`, included: false, watched: true },
+			{ pattern: `${appBase}**/*.json`, included: false, watched: true },
+			{ pattern: `${testBase}**/*.js`, included: false, watched: true },
 
 			// Asset (HTML & CSS) paths loaded via Angular's component compiler
 			// (these paths need to be rewritten, see proxies section)
-			{ pattern: appBase + "**/*.html", included: false, watched: false },
-			{ pattern: appBase + "**/*.css", included: false, watched: false },
+			{ pattern: `${appBase}**/*.html`, included: false, watched: false },
+			{ pattern: `${appBase}**/*.css`, included: false, watched: false },
 
 			// Paths for debugging with source maps in dev tools
 			{
-				pattern: appSrcBase + "**/*.ts",
+				pattern: `${appSrcBase}**/*.ts`,
 				included: false,
 				watched: false,
 			},
 			{
-				pattern: appBase + "**/*.js.map",
+				pattern: `${appBase}**/*.js.map`,
 				included: false,
 				watched: false,
 			},
 			{
-				pattern: testSrcBase + "**/*.ts",
+				pattern: `${testSrcBase}**/*.ts`,
 				included: false,
 				watched: false,
 			},
 			{
-				pattern: testBase + "**/*.js.map",
+				pattern: `${testBase}**/*.js.map`,
 				included: false,
 				watched: false,
 			},
@@ -159,7 +159,7 @@ module.exports = (config) => {
 			},
 		},
 		junitReporter: {
-			outputDir: __dirname + "/test-reports",
+			outputDir: `${__dirname}/test-reports`,
 		},
 
 		port: 9876,
@@ -170,7 +170,7 @@ module.exports = (config) => {
 		singleRun: true,
 	};
 
-	if (coverconfig && coverconfig.enabled) {
+	if (coverconfig?.enabled) {
 		configuration.preprocessors = {
 			"out/src/views/htmlcontent/dist/**/!(*spec)*.js": "coverage",
 		};

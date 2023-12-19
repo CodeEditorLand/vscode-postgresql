@@ -116,15 +116,12 @@ export namespace Telemetry {
 				errorLine: firstLine,
 			});
 			Utils.logDebug(
-				"Unhandled Exception occurred. error: " +
-					err +
-					" method: " +
-					methodName,
+				`Unhandled Exception occurred. error: ${err} method: ${methodName}`,
 			);
 		} catch (telemetryErr) {
 			// If sending telemetry event fails ignore it so it won't break the extension
 			Utils.logDebug(
-				"Failed to send telemetry event. error: " + telemetryErr,
+				`Failed to send telemetry event. error: ${telemetryErr}`,
 			);
 		}
 	}
@@ -155,10 +152,9 @@ export namespace Telemetry {
 			getPlatformInformation(),
 		]).then(() => {
 			properties["userId"] = userId;
-			properties["distribution"] =
-				platformInformation && platformInformation.distribution
-					? `${platformInformation.distribution.name}, ${platformInformation.distribution.version}`
-					: "";
+			properties["distribution"] = platformInformation?.distribution
+				? `${platformInformation.distribution.name}, ${platformInformation.distribution.version}`
+				: "";
 
 			reporter.sendTelemetryEvent(eventName, properties, measures);
 		});

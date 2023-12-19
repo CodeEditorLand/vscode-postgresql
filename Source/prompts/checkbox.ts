@@ -8,10 +8,6 @@ import Prompt from "./prompt";
 const figures = require("figures");
 
 export default class CheckboxPrompt extends Prompt {
-	constructor(question: any, ignoreFocusOut?: boolean) {
-		super(question, ignoreFocusOut);
-	}
-
 	public render(): any {
 		const choices = this._question.choices.reduce((result, choice) => {
 			const choiceName = choice.name || choice;

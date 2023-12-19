@@ -1,14 +1,14 @@
-var path = require("path");
+const path = require("path");
 
-var projectRoot = path.resolve(path.dirname(__dirname));
-var srcRoot = path.resolve(projectRoot, "src");
-var viewsRoot = path.resolve(srcRoot, "views");
-var htmlcontentRoot = path.resolve(viewsRoot, "htmlcontent");
-var outRoot = path.resolve(projectRoot, "out");
-var htmloutroot = path.resolve(outRoot, "src/views/htmlcontent");
-var localization = path.resolve(projectRoot, "localization");
+const projectRoot = path.resolve(path.dirname(__dirname));
+const srcRoot = path.resolve(projectRoot, "src");
+const viewsRoot = path.resolve(srcRoot, "views");
+const htmlcontentRoot = path.resolve(viewsRoot, "htmlcontent");
+const outRoot = path.resolve(projectRoot, "out");
+const htmloutroot = path.resolve(outRoot, "src/views/htmlcontent");
+const localization = path.resolve(projectRoot, "localization");
 
-var config = {
+const config = {
 	paths: {
 		project: {
 			root: projectRoot,

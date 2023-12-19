@@ -12,7 +12,7 @@ const WebSocketServer = ws.Server;
 
 class WebSocketMapping {
 	public webSocketServer: ws;
-	public pendingMessages: Array<WebSocketMessage> = [];
+	public pendingMessages: WebSocketMessage[] = [];
 }
 
 class WebSocketMessage {
@@ -84,7 +84,7 @@ export default class LocalWebService {
 	}
 
 	static getEndpointUri(type: Interfaces.ContentType): string {
-		return this.serviceUrl + "/" + Interfaces.ContentTypes[type];
+		return `${LocalWebService.serviceUrl}/${Interfaces.ContentTypes[type]}`;
 	}
 
 	broadcast(uri: string, event: string, data?: any): void {
@@ -130,7 +130,7 @@ export default class LocalWebService {
 		type: Interfaces.ContentType,
 		handler: (req, res) => void,
 	): void {
-		const segment = "/" + Interfaces.ContentTypes[type];
+		const segment = `/${Interfaces.ContentTypes[type]}`;
 		this.app.get(segment, handler);
 	}
 
@@ -138,7 +138,7 @@ export default class LocalWebService {
 		type: Interfaces.ContentType,
 		handler: (req, res) => void,
 	): void {
-		const segment = "/" + Interfaces.ContentTypes[type];
+		const segment = `/${Interfaces.ContentTypes[type]}`;
 		this.app.post(segment, handler);
 	}
 

@@ -109,8 +109,7 @@ export class PlatformInformation {
 					),
 				);
 				if (
-					versionInfo &&
-					versionInfo["ProductVersion"] &&
+					versionInfo?.["ProductVersion"] &&
 					semver.lt(versionInfo["ProductVersion"], version)
 				) {
 					return true;
@@ -150,21 +149,24 @@ export class PlatformInformation {
 		let distributionPromise: Promise<LinuxDistribution>;
 
 		switch (platform) {
-			case "win32":
+			case "win32": {
 				architecturePromise =
 					PlatformInformation.GetWindowsArchitecture();
 				distributionPromise = Promise.resolve(undefined);
 				break;
+			}
 
-			case "darwin":
+			case "darwin": {
 				architecturePromise = PlatformInformation.GetUnixArchitecture();
 				distributionPromise = Promise.resolve(undefined);
 				break;
+			}
 
-			case "linux":
+			case "linux": {
 				architecturePromise = PlatformInformation.GetUnixArchitecture();
 				distributionPromise = LinuxDistribution.GetCurrent();
 				break;
+			}
 
 			default:
 				throw new Error(`Unsupported platform: ${platform}`);
@@ -191,13 +193,15 @@ export class PlatformInformation {
 	}
 
 	private static GetUnixArchitecture(): Promise<string> {
-		return this.execChildProcess("uname -m").then((architecture) => {
-			if (architecture) {
-				return architecture.trim();
-			}
+		return PlatformInformation.execChildProcess("uname -m").then(
+			(architecture) => {
+				if (architecture) {
+					return architecture.trim();
+				}
 
-			return undefined;
-		});
+				return undefined;
+			},
+		);
 	}
 
 	private static execChildProcess(process: string): Promise<string> {
@@ -235,7 +239,7 @@ export class PlatformInformation {
 		// are officially supported.
 
 		switch (platform) {
-			case "win32":
+			case "win32": {
 				switch (architecture) {
 					case "x86":
 						return Runtime.Windows_7_86;
@@ -247,8 +251,9 @@ export class PlatformInformation {
 				throw new Error(
 					`Unsupported Windows architecture: ${architecture}`,
 				);
+			}
 
-			case "darwin":
+			case "darwin": {
 				if (architecture === "x86_64") {
 					// Note: We return the El Capitan RID for Sierra
 					return Runtime.OSX_10_11_64;
@@ -257,8 +262,9 @@ export class PlatformInformation {
 				throw new Error(
 					`Unsupported macOS architecture: ${architecture}`,
 				);
+			}
 
-			case "linux":
+			case "linux": {
 				if (architecture === "x86_64") {
 					// First try the distribution name
 					let runtimeId = PlatformInformation.getRuntimeIdHelper(
@@ -298,10 +304,11 @@ export class PlatformInformation {
 				throw new Error(
 					`Unsupported Linux distro: ${distribution.name}, ${distribution.version}, ${architecture}`,
 				);
+			}
 			default:
 				// If we got here, we've ended up with a platform we don't support  like 'freebsd' or 'sunos'.
 				// Chances are, VS Code doesn't support these platforms either.
-				throw Error("Unsupported platform " + platform);
+				throw Error(`Unsupported platform ${platform}`);
 		}
 	}
 
@@ -315,7 +322,7 @@ export class PlatformInformation {
 				// NOTE: currently Arch Linux seems to be compatible enough with Ubuntu 16 that this works,
 				// though in the future this may need to change as Arch follows a rolling release model.
 				return Runtime.Ubuntu_16;
-			case "ubuntu":
+			case "ubuntu": {
 				if (distributionVersion.startsWith("14")) {
 					// This also works for Linux Mint
 					return Runtime.Ubuntu_14;
@@ -324,8 +331,9 @@ export class PlatformInformation {
 				}
 
 				break;
+			}
 			case "elementary":
-			case "elementary OS":
+			case "elementary OS": {
 				if (distributionVersion.startsWith("0.3")) {
 					// Elementary OS 0.3 Freya is binary compatible with Ubuntu 14.04
 					return Runtime.Ubuntu_14;
@@ -335,7 +343,8 @@ export class PlatformInformation {
 				}
 
 				break;
-			case "linuxmint":
+			}
+			case "linuxmint": {
 				if (
 					distributionVersion.startsWith("18") ||
 					distributionVersion.startsWith("19")
@@ -345,6 +354,7 @@ export class PlatformInformation {
 				}
 
 				break;
+			}
 			case "centos":
 			case "ol":
 				// Oracle Linux is binary compatible with CentOS
@@ -360,11 +370,12 @@ export class PlatformInformation {
 			case "debian":
 			case "deepin":
 				return Runtime.Debian_8;
-			case "galliumos":
+			case "galliumos": {
 				if (distributionVersion.startsWith("2.0")) {
 					return Runtime.Ubuntu_16;
 				}
 				break;
+			}
 			default:
 				return Runtime.Ubuntu_16;
 		}

@@ -621,8 +621,7 @@ export class ConnectionStore {
 			for (let index = 0; index < configValues.length; index++) {
 				const element = configValues[index];
 				if (
-					element.host &&
-					element.host.trim() &&
+					element.host?.trim() &&
 					!element.host.trim().startsWith("{{")
 				) {
 					const connection =

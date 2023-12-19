@@ -420,15 +420,17 @@ export class AppComponent implements OnInit, AfterViewChecked {
 		});
 		this.dataService.dataEventObs.subscribe((event) => {
 			switch (event.type) {
-				case "complete":
+				case "complete": {
 					this.totalElapsedTimeSpan = event.data;
 					this.complete = true;
 					this.messagesAdded = true;
 					break;
-				case "message":
+				}
+				case "message": {
 					this.messages.push(event.data);
 					break;
-				case "resultSet":
+				}
+				case "resultSet": {
 					const resultSet = event.data;
 
 					// Setup a function for generating a promise to lookup result subsets
@@ -528,13 +530,13 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					this.messagesAdded = true;
 					this.onScroll(0);
 					break;
-				default:
+				}
+				default: {
 					console.error(
-						'Unexpected web socket event type "' +
-							event.type +
-							'" sent',
+						`Unexpected web socket event type "${event.type}" sent`,
 					);
 					break;
+				}
 			}
 		});
 	}
@@ -552,12 +554,14 @@ export class AppComponent implements OnInit, AfterViewChecked {
 	private stringToFieldType(input: string): FieldType {
 		let fieldtype: FieldType;
 		switch (input) {
-			case "string":
+			case "string": {
 				fieldtype = FieldType.String;
 				break;
-			default:
+			}
+			default: {
 				fieldtype = FieldType.String;
 				break;
+			}
 		}
 		return fieldtype;
 	}
@@ -573,7 +577,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 		selection: ISlickRange[];
 	}): void {
 		switch (event.type) {
-			case "savecsv":
+			case "savecsv": {
 				this.dataService.sendSaveRequest(
 					event.batchId,
 					event.resultId,
@@ -581,7 +585,8 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					event.selection,
 				);
 				break;
-			case "savejson":
+			}
+			case "savejson": {
 				this.dataService.sendSaveRequest(
 					event.batchId,
 					event.resultId,
@@ -589,7 +594,8 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					event.selection,
 				);
 				break;
-			case "saveexcel":
+			}
+			case "saveexcel": {
 				this.dataService.sendSaveRequest(
 					event.batchId,
 					event.resultId,
@@ -597,18 +603,21 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					event.selection,
 				);
 				break;
-			case "selectall":
+			}
+			case "selectall": {
 				this.activeGrid = event.index;
 				this.shortcutfunc["event.selectAll"]();
 				break;
-			case "copySelection":
+			}
+			case "copySelection": {
 				this.dataService.copyResults(
 					event.selection,
 					event.batchId,
 					event.resultId,
 				);
 				break;
-			case "copyWithHeaders":
+			}
+			case "copyWithHeaders": {
 				this.dataService.copyResults(
 					event.selection,
 					event.batchId,
@@ -616,6 +625,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 					true,
 				);
 				break;
+			}
 			default:
 				break;
 		}
@@ -656,10 +666,11 @@ export class AppComponent implements OnInit, AfterViewChecked {
 		selectedRange: IRange;
 	}): void {
 		switch (event.type) {
-			case "copySelection":
+			case "copySelection": {
 				const selectedText = event.selectedRange.text();
 				this.executeCopy(selectedText);
 				break;
+			}
 			default:
 				break;
 		}

@@ -19,7 +19,7 @@ import {
 
 import * as Constants from "./../constants";
 
-const WS_URL = "ws://localhost:" + window.location.port + "/";
+const WS_URL = `ws://localhost:${window.location.port}/`;
 
 /**
  * Service which performs the http requests to get the data resultsets from the server.
@@ -45,7 +45,7 @@ export class DataService {
 				? document.getElementById("uri").innerText.trim()
 				: ""
 		);
-		this.ws = new WebSocket(WS_URL + "?uri=" + this.uri);
+		this.ws = new WebSocket(`${WS_URL}?uri=${this.uri}`);
 		const observable = Observable.create((obs: Observer<MessageEvent>) => {
 			this.ws.onmessage = obs.next.bind(obs);
 			this.ws.onerror = obs.error.bind(obs);
@@ -99,7 +99,7 @@ export class DataService {
 			this.uri,
 		);
 		return this.http
-			.get(uri + "&rowStart=" + start + "&numberOfRows=" + numberOfRows)
+			.get(`${uri}&rowStart=${start}&numberOfRows=${numberOfRows}`)
 			.map((res) => {
 				return res.json();
 			});
@@ -119,16 +119,7 @@ export class DataService {
 		selection: ISlickRange[],
 	): void {
 		const headers = new Headers();
-		const url =
-			"/saveResults?" +
-			"&uri=" +
-			this.uri +
-			"&format=" +
-			format +
-			"&batchIndex=" +
-			batchIndex +
-			"&resultSetNo=" +
-			resultSetNumber;
+		const url = `/saveResults?&uri=${this.uri}&format=${format}&batchIndex=${batchIndex}&resultSetNo=${resultSetNumber}`;
 		this.http
 			.post(url, selection, { headers: headers })
 			.subscribe(undefined, (err) => {
@@ -187,16 +178,9 @@ export class DataService {
 		includeHeaders?: boolean,
 	): void {
 		const headers = new Headers();
-		let url =
-			"/copyResults?" +
-			"&uri=" +
-			this.uri +
-			"&batchId=" +
-			batchId +
-			"&resultId=" +
-			resultId;
+		let url = `/copyResults?&uri=${this.uri}&batchId=${batchId}&resultId=${resultId}`;
 		if (includeHeaders !== undefined) {
-			url += "&includeHeaders=" + includeHeaders;
+			url += `&includeHeaders=${includeHeaders}`;
 		}
 		this.http.post(url, selection, { headers: headers }).subscribe();
 	}
@@ -207,7 +191,7 @@ export class DataService {
 	 */
 	set editorSelection(selection: ISelectionData) {
 		const headers = new Headers();
-		const url = "/setEditorSelection?" + "&uri=" + this.uri;
+		const url = `/setEditorSelection?&uri=${this.uri}`;
 		this.http.post(url, selection, { headers: headers }).subscribe();
 	}
 
@@ -221,7 +205,7 @@ export class DataService {
 	}
 
 	showWarning(message: string): void {
-		const url = "/showWarning?" + "&uri=" + this.uri;
+		const url = `/showWarning?&uri=${this.uri}`;
 		const headers = new Headers();
 		headers.append("Content-Type", "application/json");
 		this.http
@@ -232,7 +216,7 @@ export class DataService {
 	}
 
 	showError(message: string): void {
-		const url = "/showError?" + "&uri=" + this.uri;
+		const url = `/showError?&uri=${this.uri}`;
 		const headers = new Headers();
 		headers.append("Content-Type", "application/json");
 		this.http
@@ -247,7 +231,7 @@ export class DataService {
 			return Promise.resolve(this._config);
 		} else {
 			return new Promise<{ [key: string]: string }>((resolve, reject) => {
-				const url = "/config?" + "&uri=" + this.uri;
+				const url = `/config?&uri=${this.uri}`;
 				this.http
 					.get(url)
 					.map((res): IResultsConfig => {
@@ -255,7 +239,7 @@ export class DataService {
 					})
 					.subscribe((result: IResultsConfig) => {
 						this._shortcuts = result.shortcuts;
-						delete result.shortcuts;
+						result.shortcuts = undefined;
 						this._config = result;
 						resolve(this._config);
 					});
@@ -268,7 +252,7 @@ export class DataService {
 			return Promise.resolve(this._shortcuts);
 		} else {
 			return new Promise<any>((resolve, reject) => {
-				const url = "/config?" + "&uri=" + this.uri;
+				const url = `/config?&uri=${this.uri}`;
 				this.http
 					.get(url)
 					.map((res): IResultsConfig => {
@@ -276,7 +260,7 @@ export class DataService {
 					})
 					.subscribe((result) => {
 						this._shortcuts = result.shortcuts;
-						delete result.resultShortcuts;
+						result.resultShortcuts = undefined;
 						this._config = result;
 						resolve(this._shortcuts);
 					});

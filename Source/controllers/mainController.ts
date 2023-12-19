@@ -240,7 +240,7 @@ export default class MainController implements vscode.Disposable {
 	 * Handles the command to cancel queries
 	 */
 	private onCancelQuery(): void {
-		if (!this.canRunCommand() || !this.validateTextDocumentHasFocus()) {
+		if (!(this.canRunCommand() && this.validateTextDocumentHasFocus())) {
 			return;
 		}
 		try {
@@ -288,7 +288,7 @@ export default class MainController implements vscode.Disposable {
 			const fileUri = this._vscodeWrapper.activeTextEditorUri;
 			const queryRunner =
 				this._outputContentProvider.getQueryRunner(fileUri);
-			if (queryRunner && queryRunner.isExecutingQuery) {
+			if (queryRunner?.isExecutingQuery) {
 				this._outputContentProvider.cancelQuery(fileUri);
 			}
 			return this._connectionMgr.onDisconnect();
@@ -408,7 +408,9 @@ export default class MainController implements vscode.Disposable {
 		// the 'this' context is lost in retry callback, so capture it here
 		const self: MainController = callbackThis ? callbackThis : this;
 		try {
-			if (!self.canRunCommand() || !self.validateTextDocumentHasFocus()) {
+			if (
+				!(self.canRunCommand() && self.validateTextDocumentHasFocus())
+			) {
 				return;
 			}
 

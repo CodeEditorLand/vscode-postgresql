@@ -48,7 +48,7 @@ declare module "istanbul" {
 		interface Reporter {
 			new (cfg?: Configuration, dir?: string): Reporter;
 			add(fmt: string): void;
-			addAll(fmts: Array<string>): void;
+			addAll(fmts: string[]): void;
 			write(
 				collector: Collector,
 				sync: boolean,
@@ -63,7 +63,7 @@ declare module "istanbul" {
 		type Writer = {};
 	}
 
-	var istanbul: istanbul.Istanbul;
+	let istanbul: istanbul.Istanbul;
 
 	export = istanbul;
 }

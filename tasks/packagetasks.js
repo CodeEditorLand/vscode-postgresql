@@ -1,13 +1,13 @@
-var gulp = require("gulp");
-var fs = require("fs");
-var gutil = require("gulp-util");
-var cproc = require("child_process");
-var os = require("os");
-var del = require("del");
-var path = require("path");
+const gulp = require("gulp");
+const fs = require("fs");
+const gutil = require("gulp-util");
+const cproc = require("child_process");
+const os = require("os");
+const del = require("del");
+const path = require("path");
 
 function installSqlToolsService(platform) {
-	var install = require("../out/src/languageservice/serviceInstallerUtil");
+	const install = require("../out/src/languageservice/serviceInstallerUtil");
 	return install.installService(platform);
 }
 
@@ -16,7 +16,7 @@ gulp.task("ext:install-service", () => {
 });
 
 function doPackageSync(packageName) {
-	var vsceArgs = [];
+	const vsceArgs = [];
 	vsceArgs.push("vsce");
 	vsceArgs.push("package"); // package command
 
@@ -24,21 +24,21 @@ function doPackageSync(packageName) {
 		vsceArgs.push("-o");
 		vsceArgs.push(packageName);
 	}
-	var command = vsceArgs.join(" ");
+	const command = vsceArgs.join(" ");
 	console.log(command);
 	return cproc.execSync(command);
 }
 
 function cleanServiceInstallFolder() {
-	var install = require("../out/src/languageservice/serviceInstallerUtil");
-	var serviceInstallFolder = install.getServiceInstallDirectoryRoot();
-	console.log("Deleting Service Install folder: " + serviceInstallFolder);
-	return del(serviceInstallFolder + "/*");
+	const install = require("../out/src/languageservice/serviceInstallerUtil");
+	const serviceInstallFolder = install.getServiceInstallDirectoryRoot();
+	console.log(`Deleting Service Install folder: ${serviceInstallFolder}`);
+	return del(`${serviceInstallFolder}/*`);
 }
 
 function doOfflinePackage(runtimeId, platform, packageName) {
 	return installSqlToolsService(platform).then(() => {
-		return doPackageSync(packageName + "-" + runtimeId + ".vsix");
+		return doPackageSync(`${packageName}-${runtimeId}.vsix`);
 	});
 }
 
@@ -54,12 +54,12 @@ gulp.task("package:online", () => {
 gulp.task("package:offline", () => {
 	const platform = require("../out/src/models/platform");
 	const Runtime = platform.Runtime;
-	var json = JSON.parse(fs.readFileSync("package.json"));
-	var name = json.name;
-	var version = json.version;
-	var packageName = name + "-" + version;
+	const json = JSON.parse(fs.readFileSync("package.json"));
+	const name = json.name;
+	const version = json.version;
+	const packageName = `${name}-${version}`;
 
-	var packages = [];
+	const packages = [];
 	packages.push({ rid: "win7-x64", runtime: Runtime.Windows_7_64 });
 	packages.push({ rid: "osx.10.11-x64", runtime: Runtime.OSX_10_11_64 });
 	packages.push({ rid: "centos.7-x64", runtime: Runtime.CentOS_7 });
@@ -70,7 +70,7 @@ gulp.task("package:offline", () => {
 	packages.push({ rid: "ubuntu.14.04-x64", runtime: Runtime.Ubuntu_14 });
 	packages.push({ rid: "ubuntu.16.04-x64", runtime: Runtime.Ubuntu_16 });
 
-	var promise = Promise.resolve();
+	let promise = Promise.resolve();
 	cleanServiceInstallFolder().then(() => {
 		packages.forEach((data) => {
 			promise = promise.then(() => {

@@ -148,7 +148,7 @@ export default class SqlToolsServiceClient {
 
 	// gets or creates the singleton SQL Tools service client instance
 	public static get instance(): SqlToolsServiceClient {
-		if (this._instance === undefined) {
+		if (SqlToolsServiceClient._instance === undefined) {
 			const config = new ExtConfig();
 			_channel = window.createOutputChannel(
 				Constants.serviceInitializingOutputChannelName,
@@ -171,7 +171,7 @@ export default class SqlToolsServiceClient {
 			);
 			const vscodeWrapper = new VscodeWrapper();
 			const statusView = new StatusView(vscodeWrapper);
-			this._instance = new SqlToolsServiceClient(
+			SqlToolsServiceClient._instance = new SqlToolsServiceClient(
 				config,
 				serviceProvider,
 				logger,
@@ -179,7 +179,7 @@ export default class SqlToolsServiceClient {
 				vscodeWrapper,
 			);
 		}
-		return this._instance;
+		return SqlToolsServiceClient._instance;
 	}
 
 	// initialize the SQL Tools Service Client instance by launching
@@ -255,7 +255,7 @@ export default class SqlToolsServiceClient {
 					})
 					.catch((err) => {
 						Utils.logDebug(
-							Constants.serviceLoadingFailed + " " + err,
+							`${Constants.serviceLoadingFailed} ${err}`,
 						);
 						Utils.showErrorMsg(Constants.serviceLoadingFailed);
 						Telemetry.sendTelemetryEvent(
@@ -422,7 +422,7 @@ export default class SqlToolsServiceClient {
 					? "--enable-remote-debugging-wait"
 					: "--enable-remote-debugging";
 				const debugPort = config["debugServerPort"];
-				debuggingArg += "=" + debugPort;
+				debuggingArg += `=${debugPort}`;
 				serverArgs = [filePath, debuggingArg];
 			}
 
@@ -431,7 +431,7 @@ export default class SqlToolsServiceClient {
 				"pgsql",
 			);
 
-			serverArgs.push("--log-dir=" + logFileLocation);
+			serverArgs.push(`--log-dir=${logFileLocation}`);
 			serverArgs.push(logFileLocation);
 
 			// Enable diagnostic logging in the service if it is configured
@@ -502,7 +502,7 @@ export default class SqlToolsServiceClient {
 			this._client
 				.sendRequest(VersionRequest.type, undefined)
 				.then((result) => {
-					Utils.logDebug("sqlserverclient version: " + result);
+					Utils.logDebug(`sqlserverclient version: ${result}`);
 					// TODO: Add code to validate the version
 					resolve(true);
 				});

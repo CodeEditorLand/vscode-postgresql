@@ -3,11 +3,11 @@
  * Adjust as necessary for your application needs.
  */
 ((global) => {
-	var paths = {
+	const paths = {
 		"npm:": "lib/js/",
 	};
 	// map tells the System loader where to look for things
-	var map = {
+	const map = {
 		app: "dist/js", // 'dist',
 		"@angular": "npm:@angular",
 		rxjs: "npm:rxjs",
@@ -28,17 +28,17 @@
 			"npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js",
 	};
 	// packages tells the System loader how to load when no filename and/or no extension
-	var packages = {
+	const packages = {
 		app: { main: "main.js", defaultExtension: "js" },
 		"": { main: "constants.js", defaultExtension: "js" },
 		"angular2-slickgrid": { main: "index.js", defaultExtension: "js" },
 	};
-	var meta = {
+	const meta = {
 		"**/*.json": {
 			loader: "json",
 		},
 	};
-	var config = {
+	const config = {
 		paths: paths,
 		map: map,
 		packages: packages,

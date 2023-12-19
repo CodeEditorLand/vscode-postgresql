@@ -17,10 +17,10 @@ export default class Config implements IConfig {
 	private version: number;
 
 	public static get configJsonContent(): any {
-		if (this._configJsonContent === undefined) {
-			this._configJsonContent = this.loadConfig();
+		if (Config._configJsonContent === undefined) {
+			Config._configJsonContent = Config.loadConfig();
 		}
-		return this._configJsonContent;
+		return Config._configJsonContent;
 	}
 
 	constructor() {
@@ -54,10 +54,11 @@ export default class Config implements IConfig {
 
 	public useServiceVersion(version: number): void {
 		switch (version) {
-			case 1:
+			case 1: {
 				this._sqlToolsServiceConfigKey =
 					Constants.v1SqlToolsServiceConfigKey;
 				break;
+			}
 			default:
 				this._sqlToolsServiceConfigKey =
 					Constants.sqlToolsServiceConfigKey;

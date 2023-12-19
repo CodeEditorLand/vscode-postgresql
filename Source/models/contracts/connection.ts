@@ -263,7 +263,7 @@ export class ListDatabasesParams {
 
 // List databases response format
 export class ListDatabasesResult {
-	public databaseNames: Array<string>;
+	public databaseNames: string[];
 }
 
 // ------------------------------- </ List Databases Request > --------------------------------------

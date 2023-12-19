@@ -208,8 +208,7 @@ declare let Slick;
 							const allColumns = JSON.parse(
 								JSON.stringify(_grid.getColumns()),
 							);
-							allColumns[activeCell.cell - 1].width =
-								allColumns[activeCell.cell - 1].width -
+							allColumns[activeCell.cell - 1].width -=
 								keyColResizeIncr;
 							_grid.setColumns(allColumns);
 						} else {
@@ -273,8 +272,7 @@ declare let Slick;
 							const allColumns = JSON.parse(
 								JSON.stringify(_grid.getColumns()),
 							);
-							allColumns[activeCell.cell - 1].width =
-								allColumns[activeCell.cell - 1].width +
+							allColumns[activeCell.cell - 1].width +=
 								keyColResizeIncr;
 							_grid.setColumns(allColumns);
 						} else {
@@ -396,11 +394,11 @@ declare let Slick;
 
 		function handleClick(e): boolean {
 			const cell = _grid.getCellFromEvent(e);
-			if (!cell || !_grid.canCellBeActive(cell.row, cell.cell)) {
+			if (!(cell && _grid.canCellBeActive(cell.row, cell.cell))) {
 				return false;
 			}
 
-			if (!e.ctrlKey && !e.shiftKey && !e.metaKey) {
+			if (!(e.ctrlKey || e.shiftKey || e.metaKey)) {
 				if (cell.cell !== 0) {
 					_ranges = [
 						new Slick.Range(
@@ -508,7 +506,7 @@ declare let Slick;
 			if (_dragging) {
 				const cell = _grid.getCellFromEvent(e);
 				const activeCell = _grid.getActiveCell();
-				if (!cell || !_grid.canCellBeActive(cell.row, cell.cell)) {
+				if (!(cell && _grid.canCellBeActive(cell.row, cell.cell))) {
 					return false;
 				}
 

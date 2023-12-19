@@ -62,8 +62,9 @@ export default class ProgressIndicator {
 		}
 
 		const txt = this.ProgressText[this.ProgressCounter];
-		this._statusBarItem.text =
-			this._tasks[this._tasks.length - 1] + " " + txt;
+		this._statusBarItem.text = `${
+			this._tasks[this._tasks.length - 1]
+		} ${txt}`;
 		this.ProgressCounter++;
 
 		if (this.ProgressCounter >= this.ProgressText.length - 1) {

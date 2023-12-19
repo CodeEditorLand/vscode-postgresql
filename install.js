@@ -1,5 +1,5 @@
-var gulp = require("gulp");
-var install = require("gulp-install");
+const gulp = require("gulp");
+const install = require("gulp-install");
 
 gulp.task("install", () =>
 	gulp

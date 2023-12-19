@@ -1,23 +1,23 @@
-﻿var gulp = require("gulp");
-var rename = require("gulp-rename");
-var install = require("gulp-install");
-var tslint = require("gulp-tslint");
-var filter = require("gulp-filter");
-var ts = require("gulp-typescript");
-var tsProject = ts.createProject("tsconfig.json");
-var del = require("del");
-var srcmap = require("gulp-sourcemaps");
-var config = require("./tasks/config");
-var request = require("request");
-var fs = require("fs");
-var gutil = require("gulp-util");
-var through = require("through2");
-var cproc = require("child_process");
-var os = require("os");
-var jeditor = require("gulp-json-editor");
-var path = require("path");
-var nls = require("vscode-nls-dev");
-var localization = require("./tasks/localizationtasks");
+﻿const gulp = require("gulp");
+const rename = require("gulp-rename");
+const install = require("gulp-install");
+const tslint = require("gulp-tslint");
+const filter = require("gulp-filter");
+const ts = require("gulp-typescript");
+const tsProject = ts.createProject("tsconfig.json");
+const del = require("del");
+const srcmap = require("gulp-sourcemaps");
+const config = require("./tasks/config");
+const request = require("request");
+const fs = require("fs");
+const gutil = require("gulp-util");
+const through = require("through2");
+const cproc = require("child_process");
+const os = require("os");
+const jeditor = require("gulp-json-editor");
+const path = require("path");
+const nls = require("vscode-nls-dev");
+const localization = require("./tasks/localizationtasks");
 
 require("./tasks/htmltasks");
 require("./tasks/packagetasks");
@@ -25,9 +25,9 @@ require("./tasks/packagetasks");
 gulp.task("ext:lint", () => {
 	return gulp
 		.src([
-			config.paths.project.root + "/src/**/*.ts",
-			"!" + config.paths.project.root + "/src/views/htmlcontent/**/*",
-			config.paths.project.root + "/test/**/*.ts",
+			`${config.paths.project.root}/src/**/*.ts`,
+			`!${config.paths.project.root}/src/views/htmlcontent/**/*`,
+			`${config.paths.project.root}/test/**/*.ts`,
 		])
 		.pipe(
 			tslint({
@@ -40,10 +40,10 @@ gulp.task("ext:lint", () => {
 gulp.task("ext:compile-src", (done) => {
 	return gulp
 		.src([
-			config.paths.project.root + "/src/**/*.ts",
-			config.paths.project.root + "/src/**/*.js",
-			config.paths.project.root + "/typings/**/*.ts",
-			"!" + config.paths.project.root + "/src/views/htmlcontent/**/*",
+			`${config.paths.project.root}/src/**/*.ts`,
+			`${config.paths.project.root}/src/**/*.js`,
+			`${config.paths.project.root}/typings/**/*.ts`,
+			`!${config.paths.project.root}/src/views/htmlcontent/**/*`,
 		])
 		.pipe(srcmap.init())
 		.pipe(tsProject())
@@ -57,14 +57,14 @@ gulp.task("ext:compile-src", (done) => {
 		.pipe(
 			nls.createAdditionalLanguageFiles(
 				nls.coreLanguages,
-				config.paths.project.root + "/localization/i18n",
+				`${config.paths.project.root}/localization/i18n`,
 				undefined,
 				false,
 			),
 		)
 		.pipe(
 			srcmap.write(".", {
-				sourceRoot: (file) => file.cwd + "/src",
+				sourceRoot: (file) => `${file.cwd}/src`,
 			}),
 		)
 		.pipe(gulp.dest("out/src/"));
@@ -73,8 +73,8 @@ gulp.task("ext:compile-src", (done) => {
 gulp.task("ext:compile-tests", (done) => {
 	return gulp
 		.src([
-			config.paths.project.root + "/test/**/*.ts",
-			config.paths.project.root + "/typings/**/*.ts",
+			`${config.paths.project.root}/test/**/*.ts`,
+			`${config.paths.project.root}/typings/**/*.ts`,
 		])
 		.pipe(srcmap.init())
 		.pipe(tsProject())
@@ -86,7 +86,7 @@ gulp.task("ext:compile-tests", (done) => {
 		})
 		.pipe(
 			srcmap.write(".", {
-				sourceRoot: (file) => file.cwd + "/test",
+				sourceRoot: (file) => `${file.cwd}/test`,
 			}),
 		)
 		.pipe(gulp.dest("out/test/"));
@@ -96,31 +96,28 @@ gulp.task("ext:compile", gulp.series("ext:compile-src", "ext:compile-tests"));
 
 gulp.task("ext:copy-tests", () => {
 	return gulp
-		.src(config.paths.project.root + "/test/resources/**/*")
-		.pipe(gulp.dest(config.paths.project.root + "/out/test/resources/"));
+		.src(`${config.paths.project.root}/test/resources/**/*`)
+		.pipe(gulp.dest(`${config.paths.project.root}/out/test/resources/`));
 });
 
 gulp.task("ext:copy-config", () => {
-	var env = process.env.VsPgSqlEnv;
-	env = env == undefined ? "dev" : env;
+	let env = process.env.VsPgSqlEnv;
+	env = env === undefined ? "dev" : env;
 	return gulp
 		.src(
-			config.paths.project.root +
-				"/src/configurations/" +
-				env +
-				".config.json",
+			`${config.paths.project.root}/src/configurations/${env}.config.json`,
 		)
 		.pipe(rename("config.json"))
-		.pipe(gulp.dest(config.paths.project.root + "/out/src"));
+		.pipe(gulp.dest(`${config.paths.project.root}/out/src`));
 });
 
 gulp.task("ext:copy-js", () => {
 	return gulp
 		.src([
-			config.paths.project.root + "/src/**/*.js",
-			"!" + config.paths.project.root + "/src/views/htmlcontent/**/*",
+			`${config.paths.project.root}/src/**/*.js`,
+			`!${config.paths.project.root}/src/views/htmlcontent/**/*`,
 		])
-		.pipe(gulp.dest(config.paths.project.root + "/out/src"));
+		.pipe(gulp.dest(`${config.paths.project.root}/out/src`));
 });
 
 // The version of applicationinsights the extension needs is 0.15.19 but the version vscode-telemetry dependns on is 0.15.6
@@ -142,7 +139,7 @@ gulp.task("ext:appinsights-version", () => {
 });
 
 gulp.task("ext:copy-appinsights", () => {
-	var filesToMove = [
+	const filesToMove = [
 		"./node_modules/applicationinsights/**/*.*",
 		"./node_modules/applicationinsights/*.*",
 	];
@@ -177,7 +174,7 @@ gulp.task("ext:test", (done) => {
 	if (!workspace) {
 		workspace = process.cwd();
 	}
-	process.env.JUNIT_REPORT_PATH = workspace + "/test-reports/ext_xunit.xml";
+	process.env.JUNIT_REPORT_PATH = `${workspace}/test-reports/ext_xunit.xml`;
 	cproc.exec(
 		`code --extensionDevelopmentPath="${workspace}" --extensionTestsPath="${workspace}/out/test" --verbose`,
 		(error, stdout, stderr) => {
@@ -216,5 +213,5 @@ gulp.task("install", () =>
 );
 
 gulp.task("watch", () =>
-	gulp.watch(config.paths.project.root + "/src/**/*", gulp.series("build")),
+	gulp.watch(`${config.paths.project.root}/src/**/*`, gulp.series("build")),
 );

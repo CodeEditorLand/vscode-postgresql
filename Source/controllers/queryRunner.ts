@@ -199,7 +199,7 @@ export default class QueryRunner {
 			this._isExecuting = false;
 			// TODO: localize
 			this._vscodeWrapper.showErrorMessage(
-				"Execution failed: " + error.message,
+				`Execution failed: ${error.message}`,
 			);
 		};
 
@@ -224,10 +224,8 @@ export default class QueryRunner {
 
 		this._batchSets.map((batch) => {
 			if (batch.selection) {
-				batch.selection.startLine =
-					batch.selection.startLine + this._resultLineOffset;
-				batch.selection.endLine =
-					batch.selection.endLine + this._resultLineOffset;
+				batch.selection.startLine += this._resultLineOffset;
+				batch.selection.endLine += this._resultLineOffset;
 			}
 		});
 
@@ -319,8 +317,7 @@ export default class QueryRunner {
 					(error) => {
 						// TODO: Localize
 						this._vscodeWrapper.showErrorMessage(
-							"Something went wrong getting more rows: " +
-								error.message,
+							`Something went wrong getting more rows: ${error.message}`,
 						);
 						reject();
 					},
@@ -345,7 +342,7 @@ export default class QueryRunner {
 					(error) => {
 						// TODO: Localize
 						this._vscodeWrapper.showErrorMessage(
-							"Failed disposing query: " + error.message,
+							`Failed disposing query: ${error.message}`,
 						);
 						reject();
 					},

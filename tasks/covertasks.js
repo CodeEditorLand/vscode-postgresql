@@ -1,8 +1,8 @@
-var gulp = require("gulp");
-var del = require("del");
-var jeditor = require("gulp-json-editor");
-var istanbulReport = require("gulp-istanbul-report");
-var cproc = require("child_process");
+const gulp = require("gulp");
+const del = require("del");
+const jeditor = require("gulp-json-editor");
+const istanbulReport = require("gulp-istanbul-report");
+const cproc = require("child_process");
 
 gulp.task("cover:clean", (done) => del("coverage", done));
 
