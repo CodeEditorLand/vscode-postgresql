@@ -56,7 +56,7 @@ export class MessagesContextMenu implements OnInit {
 	constructor(
 		@Inject(forwardRef(() => ShortcutService))
 		private shortcuts: ShortcutService
-	) {;
+	) {
 		for (const key in this.keys) {
 			if (this.keys.hasOwnProperty(key)) {
 				this.shortcuts.stringCodeFor(key).then((result) => {

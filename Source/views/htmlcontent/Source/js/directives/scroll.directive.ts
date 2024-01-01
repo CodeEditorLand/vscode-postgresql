@@ -21,7 +21,7 @@ export class ScrollDirective {
 	@Output("onScroll") onScroll: EventEmitter<number> =
 		new EventEmitter<number>();
 
-	constructor(@Inject(forwardRef(() => ElementRef)) private _el: ElementRef) {;
+	constructor(@Inject(forwardRef(() => ElementRef)) private _el: ElementRef) {
 		Observable.fromEvent(this._el.nativeElement, "scroll").subscribe(
 			(event) => {
 				if (this.scrollEnabled) {

@@ -2,9 +2,7 @@ import vscode = require("vscode");
 
 import * as Constants from "./../constants/constants";
 
-export
-
-export default class VscodeWrapper {
+export class VscodeWrapper {
 	/**
 	 * Output channel for logging. Shared among all instances.
 	 */

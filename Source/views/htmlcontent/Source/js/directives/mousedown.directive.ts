@@ -19,7 +19,7 @@ export class MouseDownDirective {
 	@Output("mousedown") onMouseDown: EventEmitter<void> =
 		new EventEmitter<void>();
 
-	constructor(@Inject(forwardRef(() => ElementRef)) private _el: ElementRef) {;
+	constructor(@Inject(forwardRef(() => ElementRef)) private _el: ElementRef) {
 		setTimeout(() => {
 			const $gridCanvas = $(this._el.nativeElement).find(".grid-canvas");
 			$gridCanvas.on("mousedown", () => {

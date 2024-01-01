@@ -38,7 +38,7 @@ export class DataService {
 		return this.ws;
 	}
 
-	constructor(@Inject(forwardRef(() => Http)) private http) {;
+	constructor(@Inject(forwardRef(() => Http)) private http) {
 		// grab the uri from the document for requests
 		this.uri = encodeURI(
 			document.getElementById("uri")
