@@ -22,7 +22,7 @@
 		"reflect-metadata": "0.2.1",
 		"rxjs": "7.8.1",
 		"slickgrid": "github:anthonydresser/SlickGrid#2.3.33",
-		"systemjs": "6.14.2",
+		"systemjs": "6.14.3",
 		"systemjs-plugin-json": "0.3.0",
 		"underscore": "1.13.6",
 		"zone.js": "0.14.2"
