@@ -1,3 +1,1 @@
-'use strict';
-
-export const star = '✰';
+export const star = "✰";

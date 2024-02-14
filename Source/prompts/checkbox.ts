@@ -1,52 +1,50 @@
-'use strict';
-
 // This code is originally from https://github.com/DonJayamanne/bowerVSCode
 // License: https://github.com/DonJayamanne/bowerVSCode/blob/master/LICENSE
 
-import { window } from 'vscode';
-import Prompt from './prompt';
-import EscapeException from '../utils/EscapeException';
+import { window } from "vscode";
+import EscapeException from "../utils/EscapeException";
+import Prompt from "./prompt";
 
-const figures = require('figures');
+const figures = require("figures");
 
 export default class CheckboxPrompt extends Prompt {
+	public render(): any {
+		const choices = this._question.choices.reduce((result, choice) => {
+			const choiceName = choice.name || choice;
+			result[
+				`${
+					choice.checked === true ? figures.radioOn : figures.radioOff
+				} ${choiceName}`
+			] = choice;
+			return result;
+		}, {});
 
-    constructor(question: any, ignoreFocusOut?: boolean) {
-        super(question, ignoreFocusOut);
-    }
+		const options = this.defaultQuickPickOptions;
+		options.placeHolder = this._question.message;
 
-    public render(): any {
-        let choices = this._question.choices.reduce((result, choice) => {
-            let choiceName = choice.name || choice;
-            result[`${choice.checked === true ? figures.radioOn : figures.radioOff} ${choiceName}`] = choice;
-            return result;
-        }, {});
+		const quickPickOptions = Object.keys(choices);
+		quickPickOptions.push(figures.tick);
 
-        let options = this.defaultQuickPickOptions;
-        options.placeHolder = this._question.message;
+		return window
+			.showQuickPick(quickPickOptions, options)
+			.then((result) => {
+				if (result === undefined) {
+					throw new EscapeException();
+				}
 
-        let quickPickOptions = Object.keys(choices);
-        quickPickOptions.push(figures.tick);
+				if (result !== figures.tick) {
+					choices[result].checked = !choices[result].checked;
 
-        return window.showQuickPick(quickPickOptions, options)
-            .then(result => {
-                if (result === undefined) {
-                    throw new EscapeException();
-                }
+					return this.render();
+				}
 
-                if (result !== figures.tick) {
-                    choices[result].checked = !choices[result].checked;
+				return this._question.choices.reduce((result2, choice) => {
+					if (choice.checked === true) {
+						result2.push(choice.value);
+					}
 
-                    return this.render();
-                }
-
-                return this._question.choices.reduce((result2, choice) => {
-                    if (choice.checked === true) {
-                        result2.push(choice.value);
-                    }
-
-                    return result2;
-                }, []);
-            });
-    }
+					return result2;
+				}, []);
+			});
+	}
 }
