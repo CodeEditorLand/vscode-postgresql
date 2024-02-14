@@ -473,7 +473,7 @@
     "https-proxy-agent": "7.0.3",
     "jsonc-parser": "3.2.1",
     "opener": "1.5.2",
-    "plist": "3.1.0",
+    "plist": "3.0.5",
     "pretty-data": "0.40.0",
     "request": "2.73.0",
     "semver": "https://registry.npmjs.org/semver/-/semver-5.0.3.tgz",
