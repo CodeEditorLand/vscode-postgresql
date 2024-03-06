@@ -470,7 +470,7 @@
     "fs-extra-promise": "0.3.1",
     "getmac": "1.2.1",
     "http-proxy-agent": "2.1.0",
-    "https-proxy-agent": "2.2.1",
+    "https-proxy-agent": "2.2.3",
     "jsonc-parser": "1.0.0",
     "opener": "1.4.2",
     "plist": "2.1.0",
