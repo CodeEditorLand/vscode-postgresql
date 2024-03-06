@@ -10138,9 +10138,9 @@
       "integrity": "sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ=="
     },
     "ws": {
-      "version": "1.1.1",
-      "resolved": "https://registry.npmjs.org/ws/-/ws-1.1.1.tgz",
-      "integrity": "sha512-TRtCup+Fxoy1sW9funE4kPxA0KfaMc7g68DoKN+Uu9Ej+zr9We3DWVJ2XgiGtXlibqA7IWOV+Xe6xlUxPputfg==",
+      "version": "1.1.5",
+      "resolved": "https://registry.npmjs.org/ws/-/ws-1.1.5.tgz",
+      "integrity": "sha512-o3KqipXNUdS7wpQzBHSe180lBGO60SoK0yVo3CYJgb2MkobuWuBX6dhkYP5ORCLd55y+SaflMOV5fqAB53ux4w==",
       "requires": {
         "options": ">=0.0.5",
         "ultron": "1.0.x"
