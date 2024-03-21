@@ -517,7 +517,7 @@
 		"systemjs-builder": "^0.15.32",
 		"typemoq": "^1.7.0",
 		"typescript": "2.3.4",
-		"typescript-esbuild": "latest",
+		"typescript-esbuild": "0.4.5",
 		"uglify-js": "mishoo/UglifyJS2#harmony-v2.8.22",
 		"vscode": "^1.0.5",
 		"vscode-nls-dev": "https://github.com/Raymondd/vscode-nls-dev/releases/download/2.0.2/build.tar.gz",
