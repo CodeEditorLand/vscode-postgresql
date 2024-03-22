@@ -1,4 +1,26 @@
 {
+	"name": "htmlcontent",
+	"version": "0.0.1",
+	"private": false,
+	"description": "",
+	"homepage": "https://github.com/CodeEditorLand/Foundation#readme",
+	"bugs": {
+		"url": "https://github.com/CodeEditorLand/Foundation/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/CodeEditorLand/Foundation.git"
+	},
+	"license": "SEE LICENSE IN LICENSE",
+	"author": {
+		"name": "Playform",
+		"email": "Hello@Playform.Cloud",
+		"url": "https://playform.cloud"
+	},
+	"type": "module",
+	"scripts": {
+		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'"
+	},
 	"dependencies": {
 		"@angular/common": "~2.1.2",
 		"@angular/compiler": "~2.1.2",
@@ -24,14 +46,11 @@
 		"underscore": "^1.8.3",
 		"zone.js": "^0.6.26"
 	},
-	"description": "",
 	"devDependencies": {
 		"assert": "^1.4.1",
 		"typescript-esbuild": "0.4.5"
 	},
-	"name": "htmlcontent",
-	"scripts": {
-		"prepublishOnly": "TypeScriptESBuild 'Source/**/*.ts'"
-	},
-	"type": "module"
+	"publishConfig": {
+		"access": "public"
+	}
 }
