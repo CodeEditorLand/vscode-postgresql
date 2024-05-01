@@ -1,32 +1,24 @@
 {
-	"name": "vscode-postgresql",
-	"displayName": "PostgreSQL",
-	"version": "0.0.1",
-	"private": false,
-	"description": "Develop Postgres everywhere",
-	"keywords": [
-		"land"
+	"activationEvents": [
+		"onLanguage:sql",
+		"onCommand:extension.pgsql.connect",
+		"onCommand:extension.pgsql.runQuery",
+		"onCommand:extension.pgsql.runCurrentStatement",
+		"onCommand:extension.pgsql.disconnect",
+		"onCommand:extension.pgsql.manageProfiles",
+		"onCommand:extension.pgsql.chooseDatabase",
+		"onCommand:extension.pgsql.cancelQuery",
+		"onCommand:extension.pgsql.showGettingStarted",
+		"onCommand:extension.pgsql.newQuery"
 	],
-	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandPostgresql#readme",
-	"bugs": {
-		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandPostgresql/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+HTTPS://github.com/CodeEditorLand/LandPostgresql.git"
-	},
-	"license": "SEE LICENSE IN LICENSE",
+	"aiKey": "AIF-5574968e-856d-40d2-af67-c89a14e76412",
 	"author": {
-		"name": "🌆 — Land —",
 		"email": "Land@PlayForm.Cloud",
+		"name": "🌆 — Land —",
 		"url": "HTTPS://Land.PlayForm.Cloud"
 	},
-	"type": "module",
-	"main": "./out/src/extension",
-	"scripts": {
-		"Document": "Document 'Source/**/*.ts'",
-		"install-packages": "npm install github:gulpjs/gulp#4.0 && npm install gulp-install && gulp --gulpfile install.js install",
-		"prepublishOnly": "Build 'Source/**/*.ts'"
+	"bugs": {
+		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandPostgresql/issues"
 	},
 	"contributes": {
 		"commands": [
@@ -446,18 +438,6 @@
 			}
 		]
 	},
-	"activationEvents": [
-		"onLanguage:sql",
-		"onCommand:extension.pgsql.connect",
-		"onCommand:extension.pgsql.runQuery",
-		"onCommand:extension.pgsql.runCurrentStatement",
-		"onCommand:extension.pgsql.disconnect",
-		"onCommand:extension.pgsql.manageProfiles",
-		"onCommand:extension.pgsql.chooseDatabase",
-		"onCommand:extension.pgsql.cancelQuery",
-		"onCommand:extension.pgsql.showGettingStarted",
-		"onCommand:extension.pgsql.newQuery"
-	],
 	"dependencies": {
 		"applicationinsights": "3.0.1",
 		"body-parser": "1.20.2",
@@ -481,6 +461,7 @@
 		"underscore": "1.13.6",
 		"ws": "8.17.0"
 	},
+	"description": "Develop Postgres everywhere",
 	"devDependencies": {
 		"@playform/build": "0.0.7",
 		"@playform/document": "0.0.6",
@@ -501,17 +482,36 @@
 		"xmldom": "0.6.0",
 		"yargs": "https://registry.npmjs.org/yargs/-/yargs-3.32.0.tgz"
 	},
+	"displayName": "PostgreSQL",
 	"extensionDependencies": [
 		"vscode.sql"
 	],
-	"publishConfig": {
-		"access": "public"
-	},
-	"icon": "images/extension-icon.png",
 	"galleryBanner": {
 		"color": "#2F2F2F",
 		"theme": "dark"
 	},
+	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandPostgresql#readme",
+	"icon": "images/extension-icon.png",
+	"keywords": [
+		"land"
+	],
+	"license": "SEE LICENSE IN LICENSE",
+	"main": "./out/src/extension",
+	"name": "vscode-postgresql",
 	"preview": true,
-	"aiKey": "AIF-5574968e-856d-40d2-af67-c89a14e76412"
+	"private": false,
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+HTTPS://github.com/CodeEditorLand/LandPostgresql.git"
+	},
+	"scripts": {
+		"Document": "Document 'Source/**/*.ts'",
+		"install-packages": "npm install github:gulpjs/gulp#4.0 && npm install gulp-install && gulp --gulpfile install.js install",
+		"prepublishOnly": "Build 'Source/**/*.ts'"
+	},
+	"type": "module",
+	"version": "0.0.1"
 }
