@@ -1,4 +1,54 @@
 {
+	"name": "@types/jasmine",
+	"version": "0.0.1",
+	"private": false,
+	"description": "TypeScript definitions for Jasmine 2.5",
+	"keywords": [
+		"land"
+	],
+	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandPostgresql#readme",
+	"bugs": {
+		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandPostgresql/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+HTTPS://github.com/CodeEditorLand/LandPostgresql.git"
+	},
+	"license": "SEE LICENSE IN LICENSE",
+	"author": {
+		"name": "🌆 — Land —",
+		"email": "Land@PlayForm.Cloud",
+		"url": "HTTPS://Land.PlayForm.Cloud"
+	},
+	"maintainers": [
+		{
+			"name": "types",
+			"email": "ryan.cavanaugh@microsoft.com"
+		}
+	],
+	"type": "module",
+	"main": "",
+	"typings": "index.d.ts",
+	"directories": {},
+	"scripts": {
+		"Document": "Document 'Source/**/*.ts'",
+		"prepublishOnly": "Build 'Source/**/*.ts'"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"@playform/build": "0.0.7",
+		"@playform/document": "0.0.6"
+	},
+	"optionalDependencies": {},
+	"publishConfig": {
+		"access": "public"
+	},
+	"dist": {
+		"shasum": "15f16040b1106941ec4aeefa3cd9c55342a0dcbb",
+		"tarball": "https://registry.npmjs.org/@types/jasmine/-/jasmine-2.5.37.tgz"
+	},
+	"readme": "ERROR: No README data found!",
+	"typesPublisherContentHash": "342ad787ae1d9085f9cb2f352460449c601a7fbda833a19bb87aa2787dbc9ec3",
 	"_args": [
 		[
 			{
@@ -43,55 +93,5 @@
 	"_shasum": "15f16040b1106941ec4aeefa3cd9c55342a0dcbb",
 	"_shrinkwrap": null,
 	"_spec": "@types/jasmine@^2.5.36",
-	"_where": "/Users/anthonydresser/Documents/vscode-pgsql/src/views/htmlcontent",
-	"author": {
-		"email": "Land@PlayForm.Cloud",
-		"name": "🌆 — Land —",
-		"url": "HTTPS://Land.PlayForm.Cloud"
-	},
-	"bugs": {
-		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandPostgresql/issues"
-	},
-	"dependencies": {},
-	"description": "TypeScript definitions for Jasmine 2.5",
-	"devDependencies": {
-		"@playform/build": "0.0.7",
-		"@playform/document": "0.0.6"
-	},
-	"directories": {},
-	"dist": {
-		"shasum": "15f16040b1106941ec4aeefa3cd9c55342a0dcbb",
-		"tarball": "https://registry.npmjs.org/@types/jasmine/-/jasmine-2.5.37.tgz"
-	},
-	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandPostgresql#readme",
-	"keywords": [
-		"land"
-	],
-	"license": "SEE LICENSE IN LICENSE",
-	"main": "",
-	"maintainers": [
-		{
-			"email": "ryan.cavanaugh@microsoft.com",
-			"name": "types"
-		}
-	],
-	"name": "@types/jasmine",
-	"optionalDependencies": {},
-	"private": false,
-	"publishConfig": {
-		"access": "public"
-	},
-	"readme": "ERROR: No README data found!",
-	"repository": {
-		"type": "git",
-		"url": "git+HTTPS://github.com/CodeEditorLand/LandPostgresql.git"
-	},
-	"scripts": {
-		"Document": "Document 'Source/**/*.ts'",
-		"prepublishOnly": "Build 'Source/**/*.ts'"
-	},
-	"type": "module",
-	"typesPublisherContentHash": "342ad787ae1d9085f9cb2f352460449c601a7fbda833a19bb87aa2787dbc9ec3",
-	"typings": "index.d.ts",
-	"version": "0.0.1"
+	"_where": "/Users/anthonydresser/Documents/vscode-pgsql/src/views/htmlcontent"
 }
