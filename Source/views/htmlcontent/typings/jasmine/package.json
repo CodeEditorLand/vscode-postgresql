@@ -10,14 +10,9 @@
 	"main": "",
 	"typings": "index.d.ts",
 	"directories": {},
-	"scripts": {
-		"Document": "Document 'Source/**/*.ts'",
-		"prepublishOnly": "Build 'Source/**/*.ts'"
-	},
+	"scripts": {},
 	"dependencies": {},
-	"devDependencies": {
-		"@playform/build": "0.0.7"
-	},
+	"devDependencies": {},
 	"optionalDependencies": {},
 	"dist": {
 		"shasum": "15f16040b1106941ec4aeefa3cd9c55342a0dcbb",
@@ -31,7 +26,7 @@
 				"escapedName": "@types%2fjasmine",
 				"name": "@types/jasmine",
 				"raw": "@types/jasmine@^2.5.36",
-				"rawSpec": "2.5.36",
+				"rawSpec": "^2.5.36",
 				"scope": "@types",
 				"spec": ">=2.5.36 <3.0.0",
 				"type": "range"
@@ -57,7 +52,7 @@
 		"escapedName": "@types%2fjasmine",
 		"name": "@types/jasmine",
 		"raw": "@types/jasmine@^2.5.36",
-		"rawSpec": "2.5.36",
+		"rawSpec": "^2.5.36",
 		"scope": "@types",
 		"spec": ">=2.5.36 <3.0.0",
 		"type": "range"
