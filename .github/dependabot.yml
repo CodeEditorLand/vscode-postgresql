@@ -24,3 +24,15 @@ updates:
       schedule:
           interval: "daily"
       versioning-strategy: increase
+
+    - package-ecosystem: "npm"
+      directory: "/src/views/htmlcontent"
+      schedule:
+          interval: "daily"
+      versioning-strategy: increase
+
+    - package-ecosystem: "npm"
+      directory: "/src/views/htmlcontent/typings/jasmine"
+      schedule:
+          interval: "daily"
+      versioning-strategy: increase
