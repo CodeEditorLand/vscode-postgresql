@@ -1,4 +1,6 @@
 {
+	"name": "htmlcontent",
+	"description": "",
 	"dependencies": {
 		"@angular/common": "18.0.5",
 		"@angular/compiler": "18.0.5",
@@ -23,9 +25,7 @@
 		"underscore": "1.13.6",
 		"zone.js": "0.14.7"
 	},
-	"description": "",
 	"devDependencies": {
 		"assert": "2.1.0"
-	},
-	"name": "htmlcontent"
+	}
 }
