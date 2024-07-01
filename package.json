@@ -437,7 +437,7 @@
 		"onCommand:extension.pgsql.newQuery"
 	],
 	"dependencies": {
-		"applicationinsights": "3.1.0",
+		"applicationinsights": "3.2.0",
 		"body-parser": "1.20.2",
 		"comment-json": "4.2.3",
 		"copy-paste": "1.5.3",
@@ -448,7 +448,7 @@
 		"fs-extra-promise": "1.0.1",
 		"getmac": "6.6.0",
 		"http-proxy-agent": "7.0.2",
-		"https-proxy-agent": "7.0.4",
+		"https-proxy-agent": "7.0.5",
 		"jsonc-parser": "3.3.1",
 		"opener": "1.5.2",
 		"plist": "3.1.0",
