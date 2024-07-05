@@ -439,7 +439,7 @@
 	"dependencies": {
 		"applicationinsights": "3.2.0",
 		"body-parser": "1.20.2",
-		"comment-json": "4.2.3",
+		"comment-json": "4.2.4",
 		"copy-paste": "1.5.3",
 		"decompress": "4.2.1",
 		"ejs": "3.1.10",
@@ -457,7 +457,7 @@
 		"semver": "https://registry.npmjs.org/semver/-/semver-5.0.3.tgz",
 		"tmp": "0.2.3",
 		"underscore": "1.13.6",
-		"ws": "8.17.1"
+		"ws": "8.18.0"
 	},
 	"devDependencies": {
 		"chai": "5.1.1",
