@@ -1,6 +1,6 @@
-- PGSQL Extension Version:
-- VSCode Version:
-- OS Version:
+-   PGSQL Extension Version:
+-   VSCode Version:
+-   OS Version:
 
 Steps to Reproduce:
 
