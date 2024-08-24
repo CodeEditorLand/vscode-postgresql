@@ -1,11 +1,17 @@
 {
-	"name": "vscode-postgresql",
-	"displayName": "PostgreSQL",
-	"description": "Develop Postgres everywhere",
-	"main": "./out/src/extension",
-	"scripts": {
-		"install-packages": "npm install github:gulpjs/gulp#4.0 && npm install gulp-install && gulp --gulpfile install.js install"
-	},
+	"activationEvents": [
+		"onLanguage:sql",
+		"onCommand:extension.pgsql.connect",
+		"onCommand:extension.pgsql.runQuery",
+		"onCommand:extension.pgsql.runCurrentStatement",
+		"onCommand:extension.pgsql.disconnect",
+		"onCommand:extension.pgsql.manageProfiles",
+		"onCommand:extension.pgsql.chooseDatabase",
+		"onCommand:extension.pgsql.cancelQuery",
+		"onCommand:extension.pgsql.showGettingStarted",
+		"onCommand:extension.pgsql.newQuery"
+	],
+	"aiKey": "AIF-5574968e-856d-40d2-af67-c89a14e76412",
 	"contributes": {
 		"commands": [
 			{
@@ -424,18 +430,6 @@
 			}
 		]
 	},
-	"activationEvents": [
-		"onLanguage:sql",
-		"onCommand:extension.pgsql.connect",
-		"onCommand:extension.pgsql.runQuery",
-		"onCommand:extension.pgsql.runCurrentStatement",
-		"onCommand:extension.pgsql.disconnect",
-		"onCommand:extension.pgsql.manageProfiles",
-		"onCommand:extension.pgsql.chooseDatabase",
-		"onCommand:extension.pgsql.cancelQuery",
-		"onCommand:extension.pgsql.showGettingStarted",
-		"onCommand:extension.pgsql.newQuery"
-	],
 	"dependencies": {
 		"applicationinsights": "3.2.1",
 		"body-parser": "2.0.0-beta.2",
@@ -459,6 +453,7 @@
 		"underscore": "1.13.7",
 		"ws": "8.18.0"
 	},
+	"description": "Develop Postgres everywhere",
 	"devDependencies": {
 		"chai": "5.1.1",
 		"coveralls": "3.1.1",
@@ -477,14 +472,19 @@
 		"xmldom": "0.6.0",
 		"yargs": "https://registry.npmjs.org/yargs/-/yargs-3.32.0.tgz"
 	},
+	"displayName": "PostgreSQL",
 	"extensionDependencies": [
 		"vscode.sql"
 	],
-	"icon": "images/extension-icon.png",
 	"galleryBanner": {
 		"color": "#2F2F2F",
 		"theme": "dark"
 	},
+	"icon": "images/extension-icon.png",
+	"main": "./out/src/extension",
+	"name": "vscode-postgresql",
 	"preview": true,
-	"aiKey": "AIF-5574968e-856d-40d2-af67-c89a14e76412"
+	"scripts": {
+		"install-packages": "npm install github:gulpjs/gulp#4.0 && npm install gulp-install && gulp --gulpfile install.js install"
+	}
 }
