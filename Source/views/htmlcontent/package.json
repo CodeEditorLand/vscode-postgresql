@@ -23,7 +23,6 @@
 		"underscore": "1.13.7",
 		"zone.js": "0.15.0"
 	},
-	"description": "",
 	"devDependencies": {
 		"assert": "2.1.0"
 	},
