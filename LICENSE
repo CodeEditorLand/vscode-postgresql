@@ -112,9 +112,8 @@ use of the Work.
 
 Note: The above license applies only to the modifications made by PlayForm to
 the original work. The original work is licensed under the following licenses
-and is subject to their terms and conditions: ------------------ START OF LICENSE
-
----
+and is subject to their terms and conditions: ------------------ START OF
+LICENSE
 
 PostgreSQL extension for VSCODE
 
@@ -138,7 +137,5 @@ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
----
 
 ------------- END OF LICENSE -
