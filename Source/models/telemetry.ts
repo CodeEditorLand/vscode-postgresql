@@ -10,8 +10,11 @@ import Utils = require("./utils");
 
 export namespace Telemetry {
 	let reporter: TelemetryReporter;
+
 	let userId: string;
+
 	let platformInformation: PlatformInformation;
+
 	let disabled: boolean = true; // Disable telemetry for public preview
 
 	// Get the unique ID for the current user of the extension
@@ -70,6 +73,7 @@ export namespace Telemetry {
 					.get<boolean>("enableTelemetry", false)
 			) {
 				disable();
+
 				return;
 			}
 
@@ -88,6 +92,7 @@ export namespace Telemetry {
 	export function FilterErrorPath(line: string): string {
 		if (line) {
 			let values: string[] = line.split("/out/");
+
 			if (values.length <= 1) {
 				// Didn't match expected format
 				return line;
@@ -106,9 +111,12 @@ export namespace Telemetry {
 	): void {
 		try {
 			let stackArray: string[];
+
 			let firstLine: string = "";
+
 			if (err !== undefined && err.stack !== undefined) {
 				stackArray = err.stack.split("\n");
+
 				if (stackArray !== undefined && stackArray.length >= 2) {
 					firstLine = stackArray[1]; // The fist line is the error message and we don't want to send that telemetry event
 					firstLine = FilterErrorPath(firstLine);

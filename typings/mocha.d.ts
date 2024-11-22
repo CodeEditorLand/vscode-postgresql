@@ -116,6 +116,7 @@ declare class Mocha {
 	timeout(value: number): Mocha;
 	slow(value: number): Mocha;
 	enableTimeouts(value: boolean): Mocha;
+
 	asyncOnly(value: boolean): Mocha;
 	noHighlighting(value: boolean): Mocha;
 	/** Runs tests and invokes `onComplete()` when finished. */
@@ -128,6 +129,7 @@ declare module Mocha {
 	interface IRunnable {
 		title: string;
 		fn: Function;
+
 		async: boolean;
 		sync: boolean;
 		timedOut: boolean;

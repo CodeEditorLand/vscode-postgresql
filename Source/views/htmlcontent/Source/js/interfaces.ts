@@ -96,6 +96,7 @@ export interface IGridIcon {
 	showCondition: () => boolean;
 	icon: () => string;
 	hoverText: () => string;
+
 	functionality: (batchId: number, resultId: number, index: number) => void;
 }
 

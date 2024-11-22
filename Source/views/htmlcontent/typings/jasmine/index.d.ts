@@ -81,20 +81,33 @@ declare namespace jasmine {
 	var clock: () => Clock;
 
 	function any(aclass: any): Any;
+
 	function anything(): Any;
+
 	function arrayContaining(sample: any[]): ArrayContaining;
+
 	function objectContaining(sample: any): ObjectContaining;
+
 	function createSpy(name: string, originalFn?: Function): Spy;
+
 	function createSpyObj(baseName: string, methodNames: any[]): any;
+
 	function createSpyObj<T>(baseName: string, methodNames: any[]): T;
+
 	function pp(value: any): string;
+
 	function getEnv(): Env;
+
 	function addCustomEqualityTester(
 		equalityTester: CustomEqualityTester,
 	): void;
+
 	function addMatchers(matchers: CustomMatcherFactories): void;
+
 	function stringMatching(str: string): Any;
+
 	function stringMatching(str: RegExp): Any;
+
 	function formatErrorMsg(
 		domain: string,
 		usage: string,
@@ -207,6 +220,7 @@ declare namespace jasmine {
 	interface Env {
 		setTimeout: any;
 		clearTimeout: void;
+
 		setInterval: any;
 		clearInterval: void;
 		updateInterval: number;
@@ -253,9 +267,11 @@ declare namespace jasmine {
 		addCustomEqualityTester(equalityTester: CustomEqualityTester): void;
 		addMatchers(matchers: CustomMatcherFactories): void;
 		specFilter(spec: Spec): boolean;
+
 		throwOnExpectationFailure(value: boolean): void;
 		seed(seed: string | number): string | number;
 		provideFallbackReporter(reporter: Reporter): void;
+
 		throwingExpectationFailures(): boolean;
 		allowRespy(allow: boolean): void;
 		randomTests(): boolean;
@@ -299,6 +315,7 @@ declare namespace jasmine {
 
 		rollupCounts(result: NestedResults): void;
 		log(values: any): void;
+
 		getItems(): Result[];
 		addResult(result: Result): void;
 		passed(): boolean;
@@ -490,6 +507,7 @@ declare namespace jasmine {
 		runs(func: SpecFunction): Spec;
 		addToQueue(block: Block): void;
 		addMatcherResult(result: Result): void;
+
 		getResult(): any;
 		expect(actual: any): any;
 		waits(timeout: number): Spec;
@@ -499,6 +517,7 @@ declare namespace jasmine {
 			timeout?: number,
 		): Spec;
 		fail(e?: any): void;
+
 		getMatchersClass_(): Matchers;
 		addMatchers(matchersPrototype: CustomMatcherFactories): void;
 		finishCallback(): void;
@@ -513,6 +532,7 @@ declare namespace jasmine {
 			ignoreMethodDoesntExist: boolean,
 		): Spy;
 		removeAllSpies(): void;
+
 		throwOnExpectationFailure: boolean;
 	}
 
@@ -605,6 +625,7 @@ declare namespace jasmine {
 
 	interface Util {
 		inherit(childClass: Function, parentClass: Function): any;
+
 		formatException(e: any): any;
 		htmlEscape(str: string): string;
 		argsToArray(args: any): any;
@@ -639,6 +660,8 @@ declare namespace jasmine {
 	}
 
 	export var HtmlReporter: HtmlReporter;
+
 	export var HtmlSpecFilter: HtmlSpecFilter;
+
 	export var DEFAULT_TIMEOUT_INTERVAL: number;
 }

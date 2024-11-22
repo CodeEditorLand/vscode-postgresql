@@ -68,6 +68,7 @@ export class ConnectionCredentials implements IConnectionCredentials {
 		let details: ConnectionDetails = new ConnectionDetails();
 
 		details.options["host"] = credentials.host;
+
 		if (credentials.port && details.options["host"].indexOf(",") === -1) {
 			details.options["port"] = credentials.port;
 		}
@@ -107,6 +108,7 @@ export class ConnectionCredentials implements IConnectionCredentials {
 				isPasswordRequired,
 				defaultProfileValues,
 			);
+
 		let unprocessedCredentials: IConnectionCredentials = Object.assign(
 			{},
 			credentials,
@@ -236,6 +238,7 @@ export class ConnectionCredentials implements IConnectionCredentials {
 				},
 				onAnswered: (value) => {
 					credentials.password = value;
+
 					if (
 						typeof (<IConnectionProfile>credentials) !== "undefined"
 					) {
@@ -257,6 +260,7 @@ export class ConnectionCredentials implements IConnectionCredentials {
 				onAnswered: (value) => (credentials.port = value),
 			},
 		];
+
 		return questions;
 	}
 
@@ -288,6 +292,7 @@ export class ConnectionCredentials implements IConnectionCredentials {
 			"addr=",
 			"network address=",
 		];
+
 		let isConnectionString = dataSourceKeys.some(
 			(key) => value.toLowerCase().indexOf(key) !== -1,
 		);
@@ -320,6 +325,7 @@ export class ConnectionCredentials implements IConnectionCredentials {
 	): boolean {
 		// TODO consider enum based verification and handling of AD auth here in the future
 		let authenticationType = credentials.authenticationType;
+
 		if (typeof credentials.authenticationType === "undefined") {
 			authenticationType = utils.authTypeToString(
 				AuthenticationTypes.SqlLogin,

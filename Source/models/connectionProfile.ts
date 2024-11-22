@@ -39,6 +39,7 @@ export class ConnectionProfile
 		// Ensure all core properties are entered
 		let authOptions: INameValueChoice[] =
 			ConnectionCredentials.getAuthenticationTypesChoice();
+
 		if (authOptions.length === 1) {
 			// Set default value as there is only 1 option
 			profile.authenticationType = authOptions[0].value;

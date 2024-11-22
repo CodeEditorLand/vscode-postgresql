@@ -15,6 +15,7 @@ export default class CodeAdapter implements IPrompter {
 	private outChannel: OutputChannel;
 	private outBuffer: string = "";
 	private messageLevelFormatters = {};
+
 	constructor() {
 		// TODO Decide whether output channel logging should be saved here?
 		this.outChannel = window.createOutputChannel(
@@ -48,6 +49,7 @@ export default class CodeAdapter implements IPrompter {
 
 	private formatMessage(message: any): string {
 		const prefix = `${message.level}: (${message.id}) `;
+
 		return `${prefix}${message.message}`;
 	}
 
@@ -75,8 +77,10 @@ export default class CodeAdapter implements IPrompter {
 
 	public log(message: any): void {
 		let line: string = "";
+
 		if (message && typeof message.level === "string") {
 			let formatter: (a: any) => string = this.formatMessage;
+
 			if (this.messageLevelFormatters[message.level]) {
 				formatter = this.messageLevelFormatters[message.level];
 			}
@@ -117,6 +121,7 @@ export default class CodeAdapter implements IPrompter {
 		ignoreFocusOut?: boolean,
 	): Promise<T> {
 		let questions: IQuestion[] = [question];
+
 		return this.prompt(questions, ignoreFocusOut).then((answers) => {
 			if (answers) {
 				return answers[question.name] || false;

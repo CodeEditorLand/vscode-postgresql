@@ -43,12 +43,14 @@ export default class ResultsSerializer {
 
 	private promptForFilepath(format: string): Thenable<string> {
 		let defaultUri: vscode.Uri;
+
 		if (vscode.Uri.parse(this._uri).scheme === "untitled") {
 			defaultUri = undefined;
 		} else {
 			defaultUri = vscode.Uri.parse(path.dirname(this._uri));
 		}
 		let fileTypeFilter: { [name: string]: string[] } = {};
+
 		if (format === "csv") {
 			fileTypeFilter[LocalizedConstants.fileTypeCSVLabel] = ["csv"];
 		} else if (format === "json") {
@@ -60,6 +62,7 @@ export default class ResultsSerializer {
 			defaultUri: defaultUri,
 			filters: fileTypeFilter,
 		};
+
 		return this._vscodeWrapper.showSaveDialog(options).then((uri) => {
 			if (!uri) {
 				return undefined;
@@ -74,7 +77,9 @@ export default class ResultsSerializer {
 			Constants.extensionConfigSectionName,
 			this._uri,
 		);
+
 		let saveConfig = config[Constants.configSaveAsCsv];
+
 		let saveResultsParams = new Contracts.SaveResultsAsCsvRequestParams();
 
 		// if user entered config, set options
@@ -92,7 +97,9 @@ export default class ResultsSerializer {
 			Constants.extensionConfigSectionName,
 			this._uri,
 		);
+
 		let saveConfig = config[Constants.configSaveAsJson];
+
 		let saveResultsParams = new Contracts.SaveResultsAsJsonRequestParams();
 
 		if (saveConfig) {
@@ -109,7 +116,9 @@ export default class ResultsSerializer {
 			Constants.extensionConfigSectionName,
 			this._uri,
 		);
+
 		let saveConfig = config[Constants.configSaveAsCsv];
+
 		let saveResultsParams = new Contracts.SaveResultsAsExcelRequestParams();
 
 		// if user entered config, set options
@@ -129,6 +138,7 @@ export default class ResultsSerializer {
 		selection: Interfaces.ISlickRange,
 	): SaveAsRequestParams {
 		const self = this;
+
 		let saveResultsParams: SaveAsRequestParams;
 		this._filePath = filePath;
 
@@ -144,6 +154,7 @@ export default class ResultsSerializer {
 		saveResultsParams.ownerUri = this._uri;
 		saveResultsParams.resultSetIndex = resultSetNo;
 		saveResultsParams.batchIndex = batchIndex;
+
 		if (this.isSelected(selection)) {
 			saveResultsParams.rowStartIndex = selection.fromRow;
 			saveResultsParams.rowEndIndex = selection.toRow;
@@ -177,6 +188,7 @@ export default class ResultsSerializer {
 		selection: Interfaces.ISlickRange,
 	): Thenable<void> {
 		const self = this;
+
 		let saveResultsParams = self.getParameters(
 			filePath,
 			batchIndex,
@@ -184,12 +196,14 @@ export default class ResultsSerializer {
 			format,
 			selection,
 		);
+
 		let type: RequestType<
 			Contracts.SaveResultsRequestParams,
 			Contracts.SaveResultRequestResult,
 			void,
 			void
 		>;
+
 		if (format === "csv") {
 			type = Contracts.SaveResultsAsCsvRequest.type;
 		} else if (format === "json") {
@@ -275,6 +289,7 @@ export default class ResultsSerializer {
 	 */
 	public openSavedFile(filePath: string, format: string): void {
 		const self = this;
+
 		if (format === "excel") {
 			// This will not open in VSCode as it's treated as binary. Use the native file opener instead
 			// Note: must use filePath here, URI does not open correctly

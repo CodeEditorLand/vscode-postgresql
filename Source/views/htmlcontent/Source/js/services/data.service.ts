@@ -44,6 +44,7 @@ export class DataService {
 				: "",
 		);
 		this.ws = new WebSocket(WS_URL + "?uri=" + this.uri);
+
 		let observable = Observable.create((obs: Observer<MessageEvent>) => {
 			self.ws.onmessage = obs.next.bind(obs);
 			self.ws.onerror = obs.error.bind(obs);
@@ -63,6 +64,7 @@ export class DataService {
 		this.dataEventObs = Subject.create(observer, observable).map(
 			(response: MessageEvent): WebSocketEvent => {
 				let data = JSON.parse(response.data);
+
 				return data;
 			},
 		);
@@ -89,6 +91,7 @@ export class DataService {
 		resultId: number,
 	): Observable<ResultSetSubset> {
 		let uriFormat = "/{0}?batchId={1}&resultId={2}&uri={3}";
+
 		let uri = Utils.formatString(
 			uriFormat,
 			"rows",
@@ -96,6 +99,7 @@ export class DataService {
 			resultId,
 			this.uri,
 		);
+
 		return this.http
 			.get(uri + "&rowStart=" + start + "&numberOfRows=" + numberOfRows)
 			.map((res) => {
@@ -117,7 +121,9 @@ export class DataService {
 		selection: ISlickRange[],
 	): void {
 		const self = this;
+
 		let headers = new Headers();
+
 		let url =
 			"/saveResults?" +
 			"&uri=" +
@@ -140,7 +146,9 @@ export class DataService {
 	 */
 	getLocalizedTextsRequest(): Promise<{ [key: string]: any }> {
 		const self = this;
+
 		let headers = new Headers();
+
 		let url = "/localizedTexts";
 
 		return new Promise<{ [key: string]: any }>((resolve, reject) => {
@@ -157,6 +165,7 @@ export class DataService {
 	 */
 	openLink(content: string, columnName: string, linkType: string): void {
 		const self = this;
+
 		let headers = new Headers();
 		headers.append("Content-Type", "application/json");
 		self.http
@@ -188,7 +197,9 @@ export class DataService {
 		includeHeaders?: boolean,
 	): void {
 		const self = this;
+
 		let headers = new Headers();
+
 		let url =
 			"/copyResults?" +
 			"&uri=" +
@@ -197,6 +208,7 @@ export class DataService {
 			batchId +
 			"&resultId=" +
 			resultId;
+
 		if (includeHeaders !== undefined) {
 			url += "&includeHeaders=" + includeHeaders;
 		}
@@ -209,7 +221,9 @@ export class DataService {
 	 */
 	set editorSelection(selection: ISelectionData) {
 		const self = this;
+
 		let headers = new Headers();
+
 		let url = "/setEditorSelection?" + "&uri=" + self.uri;
 		self.http.post(url, selection, { headers: headers }).subscribe();
 	}
@@ -220,13 +234,16 @@ export class DataService {
 	 */
 	sendGetRequest(uri: string): void {
 		const self = this;
+
 		let headers = new Headers();
 		self.http.get(uri, { headers: headers }).subscribe();
 	}
 
 	showWarning(message: string): void {
 		const self = this;
+
 		let url = "/showWarning?" + "&uri=" + self.uri;
+
 		let headers = new Headers();
 		headers.append("Content-Type", "application/json");
 		self.http
@@ -238,7 +255,9 @@ export class DataService {
 
 	showError(message: string): void {
 		const self = this;
+
 		let url = "/showError?" + "&uri=" + self.uri;
+
 		let headers = new Headers();
 		headers.append("Content-Type", "application/json");
 		self.http
@@ -250,6 +269,7 @@ export class DataService {
 
 	get config(): Promise<{ [key: string]: any }> {
 		const self = this;
+
 		if (this._config) {
 			return Promise.resolve(this._config);
 		} else {
@@ -272,6 +292,7 @@ export class DataService {
 
 	get shortcuts(): Promise<any> {
 		const self = this;
+
 		if (this._shortcuts) {
 			return Promise.resolve(this._shortcuts);
 		} else {

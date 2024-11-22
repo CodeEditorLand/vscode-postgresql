@@ -7,6 +7,7 @@ import { forwardRef, Inject, Injectable } from "@angular/core";
 import { DataService } from "./data.service";
 
 const keycodes = require("./../keycodes.json!");
+
 const displayCodes = require("./../displayCodes.json!");
 
 /**
@@ -33,6 +34,7 @@ export class ShortcutService {
 	 */
 	stringCodeFor(eventString: string): Promise<string> {
 		const self = this;
+
 		if (this.shortcuts) {
 			return Promise.resolve(this.stringCodeForInternal(eventString));
 		} else {
@@ -46,6 +48,7 @@ export class ShortcutService {
 
 	private stringCodeForInternal(eventString: string): string {
 		let keyString = this.shortcuts[eventString];
+
 		if (keyString) {
 			let platString = this.window.navigator.platform;
 
@@ -85,6 +88,7 @@ export class ShortcutService {
 
 	getEvent(shortcut: string): Promise<string> {
 		const self = this;
+
 		if (this.shortcuts) {
 			return Promise.resolve(this.getEventInternal(shortcut));
 		} else {
@@ -120,6 +124,7 @@ export class ShortcutService {
 			e.which >= 65 && e.which <= 90
 				? String.fromCharCode(e.which).toLowerCase()
 				: keycodes[e.which];
+
 		return resString;
 	}
 }

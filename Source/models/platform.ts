@@ -10,6 +10,7 @@ import * as fs from "fs";
 import * as os from "os";
 
 const semver = require("semver");
+
 const plist = require("plist");
 
 const unknown = "unknown";
@@ -34,26 +35,37 @@ export function getRuntimeDisplayName(runtime: Runtime): string {
 	switch (runtime) {
 		case Runtime.Windows_7_64:
 			return "Windows";
+
 		case Runtime.Windows_7_86:
 			return "Windows";
+
 		case Runtime.OSX_10_11_64:
 			return "OSX";
+
 		case Runtime.CentOS_7:
 			return "CentOS";
+
 		case Runtime.Debian_8:
 			return "Debian";
+
 		case Runtime.Fedora_23:
 			return "Fedora";
+
 		case Runtime.OpenSUSE_13_2:
 			return "OpenSUSE";
+
 		case Runtime.SLES_12_2:
 			return "SLES";
+
 		case Runtime.RHEL_7:
 			return "RHEL";
+
 		case Runtime.Ubuntu_14:
 			return "Ubuntu14";
+
 		case Runtime.Ubuntu_16:
 			return "Ubuntu16";
+
 		default:
 			return "Unknown";
 	}
@@ -111,6 +123,7 @@ export class PlatformInformation {
 						"utf-8",
 					),
 				);
+
 				if (
 					versionInfo &&
 					versionInfo["ProductVersion"] &&
@@ -149,7 +162,9 @@ export class PlatformInformation {
 
 	public static GetCurrent(): Promise<PlatformInformation> {
 		let platform = os.platform();
+
 		let architecturePromise: Promise<string>;
+
 		let distributionPromise: Promise<LinuxDistribution>;
 
 		switch (platform) {
@@ -157,16 +172,19 @@ export class PlatformInformation {
 				architecturePromise =
 					PlatformInformation.GetWindowsArchitecture();
 				distributionPromise = Promise.resolve(undefined);
+
 				break;
 
 			case "darwin":
 				architecturePromise = PlatformInformation.GetUnixArchitecture();
 				distributionPromise = Promise.resolve(undefined);
+
 				break;
 
 			case "linux":
 				architecturePromise = PlatformInformation.GetUnixArchitecture();
 				distributionPromise = LinuxDistribution.GetCurrent();
+
 				break;
 
 			default:
@@ -211,11 +229,13 @@ export class PlatformInformation {
 				(error: Error, stdout: string, stderr: string) => {
 					if (error) {
 						reject(error);
+
 						return;
 					}
 
 					if (stderr && stderr.length > 0) {
 						reject(new Error(stderr));
+
 						return;
 					}
 
@@ -242,8 +262,10 @@ export class PlatformInformation {
 				switch (architecture) {
 					case "x86":
 						return Runtime.Windows_7_86;
+
 					case "x86_64":
 						return Runtime.Windows_7_64;
+
 					default:
 				}
 
@@ -283,6 +305,7 @@ export class PlatformInformation {
 								id,
 								distribution.version,
 							);
+
 							if (runtimeId !== Runtime.UnknownRuntime) {
 								break;
 							}
@@ -301,6 +324,7 @@ export class PlatformInformation {
 				throw new Error(
 					`Unsupported Linux distro: ${distribution.name}, ${distribution.version}, ${architecture}`,
 				);
+
 			default:
 				// If we got here, we've ended up with a platform we don't support  like 'freebsd' or 'sunos'.
 				// Chances are, VS Code doesn't support these platforms either.
@@ -318,6 +342,7 @@ export class PlatformInformation {
 				// NOTE: currently Arch Linux seems to be compatible enough with Ubuntu 16 that this works,
 				// though in the future this may need to change as Arch follows a rolling release model.
 				return Runtime.Ubuntu_16;
+
 			case "ubuntu":
 				if (distributionVersion.startsWith("14")) {
 					// This also works for Linux Mint
@@ -327,6 +352,7 @@ export class PlatformInformation {
 				}
 
 				break;
+
 			case "elementary":
 			case "elementary OS":
 				if (distributionVersion.startsWith("0.3")) {
@@ -338,6 +364,7 @@ export class PlatformInformation {
 				}
 
 				break;
+
 			case "linuxmint":
 				if (
 					distributionVersion.startsWith("18") ||
@@ -348,26 +375,34 @@ export class PlatformInformation {
 				}
 
 				break;
+
 			case "centos":
 			case "ol":
 				// Oracle Linux is binary compatible with CentOS
 				return Runtime.CentOS_7;
+
 			case "fedora":
 				return Runtime.Fedora_23;
+
 			case "opensuse":
 				return Runtime.OpenSUSE_13_2;
+
 			case "sles":
 				return Runtime.SLES_12_2;
+
 			case "rhel":
 				return Runtime.RHEL_7;
+
 			case "debian":
 			case "deepin":
 				return Runtime.Debian_8;
+
 			case "galliumos":
 				if (distributionVersion.startsWith("2.0")) {
 					return Runtime.Ubuntu_16;
 				}
 				break;
+
 			default:
 				return Runtime.Ubuntu_16;
 		}
@@ -420,16 +455,21 @@ export class LinuxDistribution {
 		eol: string = os.EOL,
 	): LinuxDistribution {
 		let name = unknown;
+
 		let version = unknown;
+
 		let idLike: string[] = undefined;
 
 		const lines = releaseInfo.split(eol);
+
 		for (let line of lines) {
 			line = line.trim();
 
 			let equalsIndex = line.indexOf("=");
+
 			if (equalsIndex >= 0) {
 				let key = line.substring(0, equalsIndex);
+
 				let value = line.substring(equalsIndex + 1);
 
 				// Strip quotes if necessary

@@ -20,6 +20,7 @@ export default class CheckboxPrompt extends Prompt {
 			result[
 				`${choice.checked === true ? figures.radioOn : figures.radioOff} ${choiceName}`
 			] = choice;
+
 			return result;
 		}, {});
 

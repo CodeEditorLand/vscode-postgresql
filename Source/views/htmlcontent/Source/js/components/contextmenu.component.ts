@@ -81,6 +81,7 @@ export class ContextMenu implements OnInit {
 		private shortcuts: ShortcutService,
 	) {
 		const self = this;
+
 		for (let key in this.keys) {
 			if (this.keys.hasOwnProperty(key)) {
 				this.shortcuts.stringCodeFor(key).then((result) => {

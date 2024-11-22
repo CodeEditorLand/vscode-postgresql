@@ -145,6 +145,7 @@ export function getPicklistDescription(
 	connCreds: Interfaces.IConnectionCredentials,
 ): string {
 	let desc: string = `[${getConnectionDisplayString(connCreds)}]`;
+
 	return desc;
 }
 
@@ -175,6 +176,7 @@ export function getConnectionDisplayString(
 ): string {
 	// Update the connection text
 	let text: string;
+
 	if (creds.connectionString) {
 		// If a connection string is present, try to display the profile name
 		if ((<IConnectionProfile>creds).profileName) {
@@ -185,6 +187,7 @@ export function getConnectionDisplayString(
 		}
 	} else {
 		text = creds.host;
+
 		if (creds.dbname !== "") {
 			text = appendIfNotEmpty(text, creds.dbname);
 		} else {
@@ -268,6 +271,7 @@ export function getTooltip(
 			"Connection encryption: " +
 			(connCreds.encrypt ? "Encrypted" : "Not encrypted") +
 			"\r\n";
+
 	if (serverInfo && serverInfo.serverVersion) {
 		tooltip += "Server version: " + serverInfo.serverVersion + "\r\n";
 	}

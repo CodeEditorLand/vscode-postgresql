@@ -10,8 +10,11 @@ import Utils = require("../models/utils");
 import Constants = require("../constants/constants");
 import Interfaces = require("../models/interfaces");
 import http = require("http");
+
 const bodyParser = require("body-parser");
+
 const express = require("express");
+
 const WebSocketServer = ws.Server;
 
 class WebSocketMapping {
@@ -150,6 +153,7 @@ export default class LocalWebService {
 
 	start(): void {
 		const address: any = this.server.listen(0).address();
+
 		const port = address.port; // 0 = listen on a random port
 		Utils.logDebug(`LocalWebService listening on port ${port}`);
 		LocalWebService._servicePort = port.toString();

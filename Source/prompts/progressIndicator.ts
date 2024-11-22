@@ -31,6 +31,7 @@ export default class ProgressIndicator {
 		if (this._tasks.length === 0) {
 			this._statusBarItem.text = "";
 			this.hideProgressIndicator();
+
 			return;
 		}
 

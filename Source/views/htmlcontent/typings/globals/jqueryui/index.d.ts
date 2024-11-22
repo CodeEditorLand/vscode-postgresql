@@ -328,7 +328,9 @@ declare namespace JQueryUI {
 
 	interface Datepicker extends Widget, DatepickerOptions {
 		regional: { [languageCod3: string]: any };
+
 		setDefaults(defaults: DatepickerOptions): void;
+
 		formatDate(
 			format: string,
 			date: Date,
@@ -439,6 +441,7 @@ declare namespace JQueryUI {
 		grid?: number[];
 		handle?: any;
 		helper?: any;
+
 		iframeFix?: any;
 		opacity?: number;
 		refreshPositions?: boolean;
@@ -696,7 +699,9 @@ declare namespace JQueryUI {
 		disabled?: boolean;
 		distance?: number;
 		dropOnEmpty?: boolean;
+
 		forceHelperSize?: boolean;
+
 		forcePlaceholderSize?: boolean;
 		grid?: number[];
 		helper?: string | ((event: Event, element: Sortable) => Element);
@@ -2048,6 +2053,7 @@ interface JQuery {
 		easing?: string,
 		complete?: Function,
 	): JQuery;
+
 	switchClass(
 		removeClassName: string,
 		addClassName: string,

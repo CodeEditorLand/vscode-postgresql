@@ -81,6 +81,7 @@ export default class StatusView implements vscode.Disposable {
 
 	private destroyStatusBar(fileUri: string): void {
 		let bar = this._statusBars[fileUri];
+
 		if (bar) {
 			if (bar.statusLanguageFlavor) {
 				bar.statusLanguageFlavor.dispose();
@@ -109,6 +110,7 @@ export default class StatusView implements vscode.Disposable {
 		}
 
 		let bar = this._statusBars[fileUri];
+
 		if (bar.progressTimerId) {
 			clearInterval(bar.progressTimerId);
 		}
@@ -176,6 +178,7 @@ export default class StatusView implements vscode.Disposable {
 		let bar = this.getStatusBar(fileUri);
 		bar.statusConnection.command = Constants.cmdConnect;
 		bar.statusConnection.text = LocalizedConstants.connectErrorLabel;
+
 		if (
 			error.errorNumber &&
 			error.errorMessage &&
@@ -271,18 +274,27 @@ export default class StatusView implements vscode.Disposable {
 						);
 					}
 				}, 500);
+
 				break;
+
 			case LocalizedConstants.definitionRequestCompletedStatus:
 				updateMessage("");
+
 				break;
+
 			case LocalizedConstants.updatingIntelliSenseStatus:
 				updateMessage(LocalizedConstants.updatingIntelliSenseLabel);
+
 				break;
+
 			case LocalizedConstants.intelliSenseUpdatedStatus:
 				updateMessage("");
+
 				break;
+
 			default:
 				Utils.logDebug(`Language service status changed. ${newStatus}`);
+
 				break;
 		}
 	}
@@ -298,8 +310,10 @@ export default class StatusView implements vscode.Disposable {
 
 	public associateWithExisting(existingUri: string, newUri: string): boolean {
 		let bar = this.getStatusBar(existingUri);
+
 		if (bar) {
 			this._statusBars[newUri] = bar;
+
 			return true;
 		} else {
 			return false;
@@ -322,7 +336,9 @@ export default class StatusView implements vscode.Disposable {
 		// Change the status bar to match the open file
 		if (typeof editor !== "undefined") {
 			const fileUri = editor.document.uri.toString();
+
 			const bar = this._statusBars[fileUri];
+
 			if (bar) {
 				this.showStatusBarItem(fileUri, bar.statusLanguageFlavor);
 				this.showStatusBarItem(fileUri, bar.statusConnection);
@@ -345,6 +361,7 @@ export default class StatusView implements vscode.Disposable {
 		// Only show the status bar if it matches the currently open file and is not empty
 		if (fileUri === currentOpenFile && !Utils.isEmpty(statusBarItem.text)) {
 			statusBarItem.show();
+
 			if (fileUri in this._statusBars) {
 				this._lastShownStatusBar = this._statusBars[fileUri];
 			}
@@ -359,12 +376,15 @@ export default class StatusView implements vscode.Disposable {
 		statusBarItem: vscode.StatusBarItem,
 	): void {
 		const self = this;
+
 		let index = 0;
+
 		let progressTicks = ["|", "/", "-", "\\"];
 
 		let bar = this.getStatusBar(fileUri);
 		bar.progressTimerId = setInterval(() => {
 			index++;
+
 			if (index > 3) {
 				index = 0;
 			}

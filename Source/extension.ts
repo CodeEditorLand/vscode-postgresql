@@ -20,7 +20,9 @@ export function activate(context: vscode.ExtensionContext): Promise<boolean> {
 	let config = vscodeWrapper.getConfiguration(
 		Constants.extensionConfigSectionName,
 	);
+
 	let applyLocalization = config[Constants.configApplyLocalization];
+
 	if (applyLocalization) {
 		LocalizedConstants.loadLocalizedConstants(vscode.env.language);
 	}

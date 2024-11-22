@@ -29,6 +29,7 @@ export class QueryNotificationHandler {
 		} else {
 			this._instance = new QueryNotificationHandler();
 			this._instance.initialize();
+
 			return this._instance;
 		}
 	}
@@ -96,6 +97,7 @@ export class QueryNotificationHandler {
 	// public for testing only
 	public handleQueryCompleteNotification(): NotificationHandler<any> {
 		const self = this;
+
 		return (event) => {
 			let handlerCallback = (runner: QueryRunner) => {
 				runner.handleQueryComplete(event);
@@ -119,6 +121,7 @@ export class QueryNotificationHandler {
 	// public for testing only
 	public handleBatchStartNotification(): NotificationHandler<any> {
 		const self = this;
+
 		return (event) => {
 			let handlerCallback = (runner: QueryRunner) => {
 				runner.handleBatchStart(event);
@@ -134,6 +137,7 @@ export class QueryNotificationHandler {
 	// public for testing only
 	public handleBatchCompleteNotification(): NotificationHandler<any> {
 		const self = this;
+
 		return (event) => {
 			let handlerCallback = (runner: QueryRunner) => {
 				runner.handleBatchComplete(event);
@@ -149,6 +153,7 @@ export class QueryNotificationHandler {
 	// public for testing only
 	public handleResultSetCompleteNotification(): NotificationHandler<any> {
 		const self = this;
+
 		return (event) => {
 			let handlerCallback = (runner: QueryRunner) => {
 				runner.handleResultSetComplete(event);
@@ -164,6 +169,7 @@ export class QueryNotificationHandler {
 	// public for testing only
 	public handleMessageNotification(): NotificationHandler<any> {
 		const self = this;
+
 		return (event) => {
 			let handlerCallback = (runner: QueryRunner) => {
 				runner.handleMessage(event);

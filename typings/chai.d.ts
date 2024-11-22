@@ -136,13 +136,19 @@ declare module "~chai/lib/Assert" {
 		lengthOf(exp: any, len: number, msg?: string): void;
 
 		throw(fn: Function, msg?: string): void;
+
 		throw(fn: Function, regExp: RegExp): void;
+
 		throw(fn: Function, errType: Function, msg?: string): void;
+
 		throw(fn: Function, errType: Function, regExp: RegExp): void;
 
 		throws(fn: Function, msg?: string): void;
+
 		throws(fn: Function, regExp: RegExp): void;
+
 		throws(fn: Function, errType: Function, msg?: string): void;
+
 		throws(fn: Function, errType: Function, regExp: RegExp): void;
 
 		Throw(fn: Function, msg?: string): void;
@@ -151,8 +157,11 @@ declare module "~chai/lib/Assert" {
 		Throw(fn: Function, errType: Function, regExp: RegExp): void;
 
 		doesNotThrow(fn: Function, msg?: string): void;
+
 		doesNotThrow(fn: Function, regExp: RegExp): void;
+
 		doesNotThrow(fn: Function, errType: Function, msg?: string): void;
+
 		doesNotThrow(fn: Function, errType: Function, regExp: RegExp): void;
 
 		operator(val: any, operator: string, val2: any, msg?: string): void;
@@ -189,11 +198,14 @@ declare module "~chai/lib/Assert" {
 		oneOf(inList: any, list: any[], msg?: string): void;
 
 		changes(fn: Function, obj: {}, property: string): void;
+
 		doesNotChange(fn: Function, obj: {}, property: string): void;
 		increases(fn: Function, obj: {}, property: string): void;
+
 		doesNotIncrease(fn: Function, obj: {}, property: string): void;
 
 		decreases(fn: Function, obj: {}, property: string): void;
+
 		doesNotDecrease(fn: Function, obj: {}, property: string): void;
 	}
 }
@@ -250,7 +262,9 @@ declare module "~chai/lib/Assertion" {
 		string(str: string, message?: string): Assertion;
 		keys: Keys;
 		key(str: string): Assertion;
+
 		throw: Throw;
+
 		throws: Throw;
 		Throw: Throw;
 		respondTo: RespondTo;
@@ -443,6 +457,7 @@ declare module "~chai/lib/Should" {
 
 	export interface ShouldAssertion {
 		Throw: ShouldThrow;
+
 		throw: ShouldThrow;
 		equal(value1: any, value2: any, message?: string): void;
 		exist(value: any, message?: string): void;
@@ -498,13 +513,21 @@ declare module "~chai/lib/Utils" {
 		addProperty(ctx: any, name: string, getter: () => void): void;
 		expectTypes(obj: Object, types: string[]): void;
 		flag(obj: Object, key: string, value?: any): any;
+
 		getActual(obj: Object, actual?: any): any;
+
 		getEnumerableProperties(obj: Object): string[];
+
 		getMessage(obj: Object, params: any[]): string;
+
 		getMessage(obj: Object, message: string, negateMessage: string): string;
+
 		getName(func: Function): string;
+
 		getPathInfo(path: string, obj: Object): PathInfo;
+
 		getPathValue(path: string, obj: Object): any;
+
 		getProperties(obj: Object): string[];
 		hasProperty(obj: Object, name: string): boolean;
 		transferFlags(
@@ -525,21 +548,32 @@ declare module "~chai/lib/Chai" {
 	import * as AE from "~chai~assertion-error";
 
 	import * as Assert from "~chai/lib/Assert";
+
 	import * as A from "~chai/lib/Assertion";
+
 	import * as Expect from "~chai/lib/Expect";
+
 	import * as Should from "~chai/lib/Should";
+
 	import * as Config from "~chai/lib/Config";
+
 	import * as Utils from "~chai/lib/Utils";
 
 	namespace chai {
 		export interface AssertionStatic extends A.AssertionStatic {}
 		export class AssertionError extends AE.AssertionError {}
 		export var Assertion: A.AssertionStatic;
+
 		export var expect: Expect.ExpectStatic;
+
 		export var assert: Assert.AssertStatic;
+
 		export var config: Config.Config;
+
 		export var util: Utils.Utils;
+
 		export function should(): Should.Should;
+
 		export function Should(): Should.Should;
 		/**
 		 * Provides a way to extend the internals of Chai
@@ -560,6 +594,7 @@ declare module "~chai/lib/Chai" {
 }
 declare module "chai/lib/Chai" {
 	import main = require("~chai/lib/Chai");
+
 	export = main;
 }
 

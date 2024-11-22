@@ -35,6 +35,7 @@ declare module "module" {
 		id: string;
 		uri: string;
 	};
+
 	export = mod;
 }
 

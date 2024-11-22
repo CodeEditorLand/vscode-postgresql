@@ -8,6 +8,7 @@
 import { parse as parseUrl, Url } from "url";
 
 let HttpProxyAgent = require("http-proxy-agent");
+
 let HttpsProxyAgent = require("https-proxy-agent");
 
 function getSystemProxyURL(requestURL: Url): string {

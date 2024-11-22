@@ -240,6 +240,7 @@ export default class ConnectionManager {
 	public handleLanguageServiceUpdateNotification(): NotificationHandler<LanguageServiceContracts.IntelliSenseReadyParams> {
 		// Using a lambda here to perform variable capture on the 'this' reference
 		const self = this;
+
 		return (
 			event: LanguageServiceContracts.IntelliSenseReadyParams,
 		): void => {
@@ -247,11 +248,16 @@ export default class ConnectionManager {
 				event.ownerUri,
 				LocalizedConstants.intelliSenseUpdatedStatus,
 			);
+
 			let connection = self.getConnectionInfo(event.ownerUri);
+
 			if (connection !== undefined) {
 				connection.intelliSenseTimer.end();
+
 				let duration = connection.intelliSenseTimer.getDuration();
+
 				let numberOfCharacters: number = 0;
+
 				if (
 					this.vscodeWrapper.activeTextEditor !== undefined &&
 					this.vscodeWrapper.activeTextEditor.document !== undefined
@@ -283,6 +289,7 @@ export default class ConnectionManager {
 	public handleConnectionChangedNotification(): NotificationHandler<ConnectionContracts.ConnectionChangedParams> {
 		// Using a lambda here to perform variable capture on the 'this' reference
 		const self = this;
+
 		return (event: ConnectionContracts.ConnectionChangedParams): void => {
 			if (self.isConnected(event.ownerUri)) {
 				let connectionInfo: ConnectionInfo =
@@ -315,8 +322,10 @@ export default class ConnectionManager {
 	public handleConnectionCompleteNotification(): NotificationHandler<ConnectionContracts.ConnectionCompleteParams> {
 		// Using a lambda here to perform variable capture on the 'this' reference
 		const self = this;
+
 		return (result: ConnectionContracts.ConnectionCompleteParams): void => {
 			let fileUri = result.ownerUri;
+
 			let connection = self.getConnectionInfo(fileUri);
 			connection.serviceTimer.end();
 			connection.connecting = false;
@@ -331,6 +340,7 @@ export default class ConnectionManager {
 					Interfaces.IConnectionCredentials,
 					Interfaces.IConnectionCredentials
 				>(newCredentials, connection.credentials);
+
 				if (
 					result.connectionSummary &&
 					result.connectionSummary.databaseName
@@ -551,6 +561,7 @@ export default class ConnectionManager {
 	// choose database to use on current server
 	public onChooseDatabase(): Promise<boolean> {
 		const self = this;
+
 		const fileUri = this.vscodeWrapper.activeTextEditorUri;
 
 		return new Promise<boolean>((resolve, reject) => {
@@ -559,6 +570,7 @@ export default class ConnectionManager {
 					LocalizedConstants.msgChooseDatabaseNotConnected,
 				);
 				resolve(false);
+
 				return;
 			}
 
@@ -629,6 +641,7 @@ export default class ConnectionManager {
 
 	public onChooseLanguageFlavor(): Promise<boolean> {
 		const fileUri = this._vscodeWrapper.activeTextEditorUri;
+
 		if (fileUri && this._vscodeWrapper.isEditingSqlFile) {
 			return this._connectionUI.promptLanguageFlavor().then((flavor) => {
 				if (!flavor) {
@@ -649,6 +662,7 @@ export default class ConnectionManager {
 			this._vscodeWrapper.showWarningMessage(
 				LocalizedConstants.msgOpenSqlFile,
 			);
+
 			return Promise.resolve(false);
 		}
 	}
@@ -752,8 +766,10 @@ export default class ConnectionManager {
 		connectionCreds: Interfaces.IConnectionCredentials,
 	): Promise<boolean> {
 		const self = this;
+
 		return new Promise<boolean>((resolve, reject) => {
 			let connection = self._connections[fileUri];
+
 			if (!result && connection && connection.loginFailed) {
 				self.connectionUI
 					.createProfileWithDifferentCredentials(connectionCreds)
@@ -762,6 +778,7 @@ export default class ConnectionManager {
 							self.connect(fileUri, newConnection).then(
 								(newResult) => {
 									connection = self._connections[fileUri];
+
 									if (
 										!newResult &&
 										connection &&
@@ -791,6 +808,7 @@ export default class ConnectionManager {
 	// let users pick from a picklist of connections
 	public onNewConnection(): Promise<boolean> {
 		const self = this;
+
 		const fileUri = this.vscodeWrapper.activeTextEditorUri;
 
 		return new Promise<boolean>((resolve, reject) => {
@@ -800,6 +818,7 @@ export default class ConnectionManager {
 					LocalizedConstants.msgOpenSqlFile,
 				);
 				resolve(false);
+
 				return;
 			} else if (!self.vscodeWrapper.isEditingSqlFile) {
 				self.connectionUI
@@ -815,6 +834,7 @@ export default class ConnectionManager {
 							resolve(false);
 						}
 					});
+
 				return;
 			}
 
@@ -869,6 +889,7 @@ export default class ConnectionManager {
 			// package connection details for request message
 			const connectionDetails =
 				ConnectionCredentials.createConnectionDetails(connectionCreds);
+
 			let connectParams = new ConnectionContracts.ConnectParams();
 			connectParams.ownerUri = fileUri;
 			connectParams.connection = connectionDetails;
@@ -906,6 +927,7 @@ export default class ConnectionManager {
 
 	public cancelConnect(): void {
 		let fileUri = this.vscodeWrapper.activeTextEditorUri;
+
 		if (!fileUri || Utils.isEmpty(fileUri)) {
 			return;
 		}
@@ -937,6 +959,7 @@ export default class ConnectionManager {
 
 	public onCreateProfile(): Promise<boolean> {
 		let self = this;
+
 		return new Promise<boolean>((resolve, reject) => {
 			self.connectionUI
 				.createAndSaveProfile(self.vscodeWrapper.isEditingSqlFile)
@@ -962,6 +985,7 @@ export default class ConnectionManager {
 
 	public onDidOpenTextDocument(doc: vscode.TextDocument): void {
 		let uri = doc.uri.toString();
+
 		if (
 			doc.languageId === "sql" &&
 			typeof this._connections[uri] === "undefined"

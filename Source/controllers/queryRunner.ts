@@ -130,6 +130,7 @@ export default class QueryRunner {
 	public cancel(): Thenable<QueryCancelResult> {
 		// Make the request to cancel the query
 		let cancelParams: QueryCancelParams = { ownerUri: this._uri };
+
 		return this._client.sendRequest(QueryCancelRequest.type, cancelParams);
 	}
 
@@ -198,6 +199,7 @@ export default class QueryRunner {
 			self.eventEmitter.emit("start");
 			self._notificationHandler.registerRunner(self, self._uri);
 		};
+
 		let onError = (error) => {
 			self._statusView.executedQuery(self.uri);
 			self._isExecuting = false;
@@ -267,10 +269,12 @@ export default class QueryRunner {
 
 		// Store the batch again to get the rest of the data
 		this._batchSets[batch.id] = batch;
+
 		let executionTime = <number>(
 			(Utils.parseTimeString(batch.executionElapsed) || 0)
 		);
 		this._totalElapsedMilliseconds += executionTime;
+
 		if (executionTime > 0) {
 			// send a time message in the format used for query complete
 			this.sendBatchTimeMessage(
@@ -285,6 +289,7 @@ export default class QueryRunner {
 		result: QueryExecuteResultSetCompleteNotificationParams,
 	): void {
 		let resultSet = result.resultSetSummary;
+
 		let batchSet = this._batchSets[resultSet.batchId];
 
 		// Store the result set in the batch and emit that a result set has completed
@@ -308,12 +313,14 @@ export default class QueryRunner {
 		resultSetIndex: number,
 	): Thenable<QueryExecuteSubsetResult> {
 		const self = this;
+
 		let queryDetails = new QueryExecuteSubsetParams();
 		queryDetails.ownerUri = this.uri;
 		queryDetails.resultSetIndex = parseInt(resultSetIndex.toString(), 10);
 		queryDetails.rowsCount = parseInt(numberOfRows.toString(), 10);
 		queryDetails.rowsStartIndex = parseInt(rowStart.toString(), 10);
 		queryDetails.batchIndex = parseInt(batchIndex.toString(), 10);
+
 		return new Promise<QueryExecuteSubsetResult>((resolve, reject) => {
 			self._client
 				.sendRequest(QueryExecuteSubsetRequest.type, queryDetails)
@@ -339,6 +346,7 @@ export default class QueryRunner {
 	 */
 	public dispose(): Promise<void> {
 		const self = this;
+
 		return new Promise<void>((resolve, reject) => {
 			let disposeDetails = new QueryDisposeParams();
 			disposeDetails.ownerUri = self.uri;
@@ -365,7 +373,9 @@ export default class QueryRunner {
 		range: ISlickRange,
 	): string[] {
 		let headers: string[] = undefined;
+
 		let batchSummary: BatchSummary = this.batchSets[batchId];
+
 		if (batchSummary !== undefined) {
 			let resultSetSummary = batchSummary.resultSetSummaries[resultId];
 			headers = resultSetSummary.columnInfo
@@ -391,6 +401,7 @@ export default class QueryRunner {
 		includeHeaders?: boolean,
 	): Promise<void> {
 		const self = this;
+
 		return new Promise<void>((resolve, reject) => {
 			let copyString = "";
 
@@ -411,6 +422,7 @@ export default class QueryRunner {
 									resultId,
 									range,
 								);
+
 								if (columnHeaders !== undefined) {
 									copyString +=
 										columnHeaders.join("\t") + os.EOL;
@@ -424,6 +436,7 @@ export default class QueryRunner {
 								rowIndex++
 							) {
 								let row = result.resultSubset.rows[rowIndex];
+
 								let cellObjects = row.slice(
 									range.fromCell,
 									range.toCell + 1,
@@ -435,6 +448,7 @@ export default class QueryRunner {
 										)
 									: cellObjects.map((x) => x.displayValue);
 								copyString += cells.join("\t");
+
 								if (
 									rowIndex <
 									result.resultSubset.rows.length - 1
@@ -447,6 +461,7 @@ export default class QueryRunner {
 			});
 
 			let p = tasks[0]();
+
 			for (let i = 1; i < tasks.length; i++) {
 				p = p.then(tasks[i]);
 			}
@@ -469,6 +484,7 @@ export default class QueryRunner {
 			this.uri,
 		);
 		includeHeaders = config[Constants.copyIncludeHeaders];
+
 		return !!includeHeaders;
 	}
 
@@ -478,7 +494,9 @@ export default class QueryRunner {
 			Constants.extensionConfigSectionName,
 			this.uri,
 		);
+
 		let removeNewLines: boolean = config[Constants.configCopyRemoveNewLine];
+
 		return removeNewLines;
 	}
 
@@ -488,6 +506,7 @@ export default class QueryRunner {
 		// Linux(LF)/Modern MacOS: \n
 		// Old MacOs: \r
 		let outputString: string = inputString.replace(/(\r\n|\n|\r)/gm, "");
+
 		return outputString;
 	}
 
@@ -497,7 +516,9 @@ export default class QueryRunner {
 			Constants.extensionConfigSectionName,
 			this.uri,
 		);
+
 		let showBatchTime: boolean = config[Constants.configShowBatchTime];
+
 		if (showBatchTime) {
 			let message: IResultMessage = {
 				batchId: batchId,
@@ -519,6 +540,7 @@ export default class QueryRunner {
 	 */
 	public setEditorSelection(selection: ISelectionData): Thenable<void> {
 		const self = this;
+
 		return new Promise<void>((resolve, reject) => {
 			self._vscodeWrapper
 				.openTextDocument(self._vscodeWrapper.parseUri(self.uri))

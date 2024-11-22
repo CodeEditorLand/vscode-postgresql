@@ -41,11 +41,13 @@ export default class ServerProvider {
 					this._config.getSqlToolsExecutableFiles();
 				executableFiles.forEach((element) => {
 					let executableFile = path.join(filePath, element);
+
 					if (
 						candidate === undefined &&
 						fs.existsSync(executableFile)
 					) {
 						candidate = executableFile;
+
 						return candidate;
 					}
 				});
@@ -89,6 +91,7 @@ export default class ServerProvider {
 	public getServerPath(runtime: Runtime): Promise<string> {
 		const installDirectory =
 			this._downloadProvider.getInstallDirectory(runtime);
+
 		return this.findServerPath(installDirectory);
 	}
 
@@ -99,6 +102,7 @@ export default class ServerProvider {
 		return new Promise<string>((resolve, reject) => {
 			const installDirectory =
 				this._downloadProvider.getInstallDirectory(runtime);
+
 			return this._downloadProvider
 				.installSQLToolsService(runtime)
 				.then((_) => {

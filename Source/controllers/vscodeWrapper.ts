@@ -117,7 +117,9 @@ export default class VscodeWrapper {
 	 */
 	public get isEditingSqlFile(): boolean {
 		let sqlFile = false;
+
 		let editor = this.activeTextEditor;
+
 		if (editor) {
 			if (editor.document.languageId === Constants.languageId) {
 				sqlFile = true;
@@ -186,6 +188,7 @@ export default class VscodeWrapper {
 	 */
 	public logToOutputChannel(msg: any): void {
 		let date: Date = new Date();
+
 		if (msg instanceof Array) {
 			msg.forEach((element) => {
 				VscodeWrapper._outputChannel.appendLine(

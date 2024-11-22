@@ -57,6 +57,7 @@ export default class MainController implements vscode.Disposable {
 		vscodeWrapper?: VscodeWrapper,
 	) {
 		this._context = context;
+
 		if (connectionManager) {
 			this._connectionMgr = connectionManager;
 		}
@@ -228,6 +229,7 @@ export default class MainController implements vscode.Disposable {
 					// Handle case where SQL file is the 1st opened document
 					const activeTextEditor =
 						this._vscodeWrapper.activeTextEditor;
+
 					if (
 						activeTextEditor &&
 						this._vscodeWrapper.isEditingSqlFile
@@ -279,6 +281,7 @@ export default class MainController implements vscode.Disposable {
 	private onChooseLanguageFlavor(): Promise<boolean> {
 		if (this.canRunCommand() && this.validateTextDocumentHasFocus()) {
 			const fileUri = this._vscodeWrapper.activeTextEditorUri;
+
 			if (fileUri && this._vscodeWrapper.isEditingSqlFile) {
 				this._connectionMgr.onChooseLanguageFlavor();
 			} else {
@@ -296,8 +299,10 @@ export default class MainController implements vscode.Disposable {
 	private onDisconnect(): Promise<any> {
 		if (this.canRunCommand() && this.validateTextDocumentHasFocus()) {
 			let fileUri = this._vscodeWrapper.activeTextEditorUri;
+
 			let queryRunner =
 				this._outputContentProvider.getQueryRunner(fileUri);
+
 			if (queryRunner && queryRunner.isExecutingQuery) {
 				this._outputContentProvider.cancelQuery(fileUri);
 			}
@@ -312,6 +317,7 @@ export default class MainController implements vscode.Disposable {
 	private onManageProfiles(): Promise<boolean> {
 		if (this.canRunCommand()) {
 			Telemetry.sendTelemetryEvent("ManageProfiles");
+
 			return this._connectionMgr.onManageProfiles();
 		}
 		return Promise.resolve(false);
@@ -333,6 +339,7 @@ export default class MainController implements vscode.Disposable {
 	public onRebuildIntelliSense(): void {
 		if (this.canRunCommand() && this.validateTextDocumentHasFocus()) {
 			const fileUri = this._vscodeWrapper.activeTextEditorUri;
+
 			if (fileUri && this._vscodeWrapper.isEditingSqlFile) {
 				this._statusview.languageServiceStatusChanged(
 					fileUri,
@@ -358,6 +365,7 @@ export default class MainController implements vscode.Disposable {
 	public onRunCurrentStatement(callbackThis?: MainController): void {
 		// the 'this' context is lost in retry callback, so capture it here
 		let self: MainController = callbackThis ? callbackThis : this;
+
 		try {
 			if (!self.canRunCommand()) {
 				return;
@@ -367,6 +375,7 @@ export default class MainController implements vscode.Disposable {
 				this._vscodeWrapper.showErrorMessage(
 					LocalizedConstants.macSierraRequiredErrorMessage,
 				);
+
 				return;
 			}
 			if (!self.validateTextDocumentHasFocus()) {
@@ -381,7 +390,9 @@ export default class MainController implements vscode.Disposable {
 			Telemetry.sendTelemetryEvent("RunCurrentStatement");
 
 			let editor = self._vscodeWrapper.activeTextEditor;
+
 			let uri = self._vscodeWrapper.activeTextEditorUri;
+
 			let title = path.basename(editor.document.fileName);
 
 			// return early if the document does contain any text
@@ -417,6 +428,7 @@ export default class MainController implements vscode.Disposable {
 	public onRunQuery(callbackThis?: MainController): void {
 		// the 'this' context is lost in retry callback, so capture it here
 		let self: MainController = callbackThis ? callbackThis : this;
+
 		try {
 			if (!self.canRunCommand() || !self.validateTextDocumentHasFocus()) {
 				return;
@@ -428,8 +440,11 @@ export default class MainController implements vscode.Disposable {
 			}
 
 			let editor = self._vscodeWrapper.activeTextEditor;
+
 			let uri = self._vscodeWrapper.activeTextEditorUri;
+
 			let title = path.basename(editor.document.fileName);
+
 			let querySelection: ISelectionData;
 
 			// Calculate the selection if we have a selection, otherwise we'll use null to indicate
@@ -448,6 +463,7 @@ export default class MainController implements vscode.Disposable {
 			let selectionToTrim = editor.selection.isEmpty
 				? undefined
 				: editor.selection;
+
 			if (editor.document.getText(selectionToTrim).trim().length === 0) {
 				return;
 			}
@@ -471,6 +487,7 @@ export default class MainController implements vscode.Disposable {
 	 */
 	public isRetryRequiredBeforeQuery(retryMethod: any): boolean {
 		let self = this;
+
 		if (!self._vscodeWrapper.isEditingSqlFile) {
 			// Prompt the user to change the language mode to SQL before running a query
 			self._connectionMgr.connectionUI
@@ -485,6 +502,7 @@ export default class MainController implements vscode.Disposable {
 						LocalizedConstants.msgError + err,
 					);
 				});
+
 			return true;
 		} else if (
 			!self._connectionMgr.isConnected(
@@ -503,6 +521,7 @@ export default class MainController implements vscode.Disposable {
 						LocalizedConstants.msgError + err,
 					);
 				});
+
 			return true;
 		} else {
 			// we don't need to do anything to configure environment before running query
@@ -518,11 +537,13 @@ export default class MainController implements vscode.Disposable {
 		handlerName: string,
 	): Promise<T> {
 		let self = this;
+
 		return promise.catch((err) => {
 			self._vscodeWrapper.showErrorMessage(
 				LocalizedConstants.msgError + err,
 			);
 			Telemetry.sendTelemetryEventForException(err, handlerName);
+
 			return undefined;
 		});
 	}
@@ -550,6 +571,7 @@ export default class MainController implements vscode.Disposable {
 	private canRunCommand(): boolean {
 		if (this._connectionMgr === undefined) {
 			Utils.showErrorMsg(LocalizedConstants.extensionNotInitializedError);
+
 			return false;
 		}
 		return true;
@@ -561,6 +583,7 @@ export default class MainController implements vscode.Disposable {
 	private validateTextDocumentHasFocus(): boolean {
 		if (this._vscodeWrapper.activeTextEditorUri === undefined) {
 			Utils.showErrorMsg(LocalizedConstants.noActiveEditorMsg);
+
 			return false;
 		}
 		return true;
@@ -571,6 +594,7 @@ export default class MainController implements vscode.Disposable {
 	 */
 	private canRunV2Command(): boolean {
 		let version: number = SqlToolsServerClient.instance.getServiceVersion();
+
 		return version > 1;
 	}
 
@@ -579,6 +603,7 @@ export default class MainController implements vscode.Disposable {
 	 */
 	private showReleaseNotesPrompt(): void {
 		let self = this;
+
 		if (!this.doesExtensionLaunchedFileExist()) {
 			// ask the user to view a scenario document
 			let confirmText = "View Now";
@@ -628,9 +653,11 @@ export default class MainController implements vscode.Disposable {
 	private doesExtensionLaunchedFileExist(): boolean {
 		// check if file already exists on disk
 		let filePath = this._context.asAbsolutePath("extensionlaunched.dat");
+
 		try {
 			// this will throw if the file does not exist
 			fs.statSync(filePath);
+
 			return true;
 		} catch (err) {
 			try {
@@ -658,6 +685,7 @@ export default class MainController implements vscode.Disposable {
 			return;
 		}
 		let closedDocumentUri: string = doc.uri.toString();
+
 		let closedDocumentUriScheme: string = doc.uri.scheme;
 
 		// Stop timers if they have been started

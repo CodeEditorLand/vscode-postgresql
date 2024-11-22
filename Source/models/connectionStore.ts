@@ -81,6 +81,7 @@ export class ConnectionStore {
 			);
 		}
 		let itemTypeString: string = ConnectionStore.CRED_PROFILE_USER;
+
 		if (itemType) {
 			itemTypeString = CredentialsQuickPickItemType[itemType];
 		}
@@ -114,6 +115,7 @@ export class ConnectionStore {
 			);
 		}
 		let cred: string[] = [ConnectionStore.CRED_PREFIX];
+
 		if (!itemType) {
 			itemType = ConnectionStore.CRED_PROFILE_USER;
 		}
@@ -138,6 +140,7 @@ export class ConnectionStore {
 			ConnectionStore.CRED_USER_PREFIX,
 			cred,
 		);
+
 		return cred.join(ConnectionStore.CRED_SEPARATOR);
 	}
 
@@ -173,6 +176,7 @@ export class ConnectionStore {
 			connectionCreds: undefined,
 			quickPickItemType: CredentialsQuickPickItemType.NewConnection,
 		});
+
 		return pickListItems;
 	}
 
@@ -192,6 +196,7 @@ export class ConnectionStore {
 		credentialsItem: IConnectionCredentialsQuickPickItem,
 	): Promise<IConnectionCredentialsQuickPickItem> {
 		let self = this;
+
 		return new Promise<IConnectionCredentialsQuickPickItem>(
 			(resolve, reject) => {
 				if (
@@ -264,9 +269,11 @@ export class ConnectionStore {
 		forceWritePlaintextPassword?: boolean,
 	): Promise<IConnectionProfile> {
 		const self = this;
+
 		return new Promise<IConnectionProfile>((resolve, reject) => {
 			// Add the profile to the saved list, taking care to clear out the password field if necessary
 			let savedProfile: IConnectionProfile;
+
 			if (forceWritePlaintextPassword) {
 				savedProfile = Object.assign({}, profile);
 			} else {
@@ -309,6 +316,7 @@ export class ConnectionStore {
 		let configValues = this._context.globalState.get<
 			IConnectionCredentials[]
 		>(Constants.configRecentConnections);
+
 		if (!configValues) {
 			configValues = [];
 		}
@@ -324,9 +332,11 @@ export class ConnectionStore {
 	 */
 	public addRecentlyUsed(conn: IConnectionCredentials): Promise<void> {
 		const self = this;
+
 		return new Promise<void>((resolve, reject) => {
 			// Get all profiles
 			let configValues = self.getRecentlyUsedConnections();
+
 			let maxConnections = self.getMaxRecentConnectionsCount();
 
 			// Remove the connection from the list if it already exists
@@ -373,6 +383,7 @@ export class ConnectionStore {
 	 */
 	public clearRecentlyUsed(): Promise<void> {
 		const self = this;
+
 		return new Promise<void>((resolve, reject) => {
 			// Update the MRU list to be empty
 			self._context.globalState
@@ -394,6 +405,7 @@ export class ConnectionStore {
 	 */
 	private removeRecentlyUsed(conn: IConnectionProfile): Promise<void> {
 		const self = this;
+
 		return new Promise<void>((resolve, reject) => {
 			// Get all profiles
 			let configValues = self.getRecentlyUsedConnections();
@@ -436,12 +448,14 @@ export class ConnectionStore {
 		type: CredentialsQuickPickItemType,
 	): Promise<boolean> {
 		let self = this;
+
 		return new Promise<boolean>((resolve, reject) => {
 			if (Utils.isNotEmpty(conn.password)) {
 				let credType: string =
 					type === CredentialsQuickPickItemType.Mru
 						? ConnectionStore.CRED_MRU_USER
 						: ConnectionStore.CRED_PROFILE_USER;
+
 				let credentialId = ConnectionStore.formatCredentialId(
 					conn.host,
 					conn.dbname,
@@ -476,6 +490,7 @@ export class ConnectionStore {
 		keepCredentialStore: boolean = false,
 	): Promise<boolean> {
 		const self = this;
+
 		return new Promise<boolean>((resolve, reject) => {
 			self._connectionConfig
 				.removeConnection(profile)
@@ -578,6 +593,7 @@ export class ConnectionStore {
 			recentConnections,
 			CredentialsQuickPickItemType.Mru,
 		);
+
 		for (let index of profilesInRecentConnectionsList) {
 			recentConnectionsItems[index].quickPickItemType =
 				CredentialsQuickPickItemType.Profile;
@@ -602,6 +618,7 @@ export class ConnectionStore {
 		// read from the global state
 		let configValues = this._context.globalState.get<T[]>(configName);
 		this.addConnections(connections, configValues);
+
 		return connections;
 	}
 
@@ -617,9 +634,11 @@ export class ConnectionStore {
 	): IConnectionCredentialsQuickPickItem[] {
 		let connections: IConnectionProfile[] =
 			this._connectionConfig.getConnections(loadWorkspaceProfiles);
+
 		let quickPickItems = connections.map((c) =>
 			this.createQuickPickItem(c, CredentialsQuickPickItemType.Profile),
 		);
+
 		return quickPickItems;
 	}
 
@@ -630,6 +649,7 @@ export class ConnectionStore {
 		if (configValues) {
 			for (let index = 0; index < configValues.length; index++) {
 				let element = configValues[index];
+
 				if (
 					element.host &&
 					element.host.trim() &&
@@ -654,6 +674,7 @@ export class ConnectionStore {
 
 		let maxConnections: number =
 			config[Constants.configMaxRecentConnections];
+
 		if (typeof maxConnections !== "number" || maxConnections <= 0) {
 			maxConnections = 5;
 		}

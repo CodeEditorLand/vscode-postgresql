@@ -28,8 +28,10 @@ export class CredentialStore implements ICredentialStore {
 	 */
 	public readCredential(credentialId: string): Promise<Contracts.Credential> {
 		let self = this;
+
 		let cred: Contracts.Credential = new Contracts.Credential();
 		cred.credentialId = credentialId;
+
 		return new Promise<Contracts.Credential>((resolve, reject) => {
 			self._client
 				.sendRequest(Contracts.ReadCredentialRequest.type, cred)
@@ -47,9 +49,11 @@ export class CredentialStore implements ICredentialStore {
 		password: any,
 	): Promise<boolean> {
 		let self = this;
+
 		let cred: Contracts.Credential = new Contracts.Credential();
 		cred.credentialId = credentialId;
 		cred.password = password;
+
 		return new Promise<boolean>((resolve, reject) => {
 			self._client
 				.sendRequest(Contracts.SaveCredentialRequest.type, cred)
@@ -64,8 +68,10 @@ export class CredentialStore implements ICredentialStore {
 
 	public deleteCredential(credentialId: string): Promise<boolean> {
 		let self = this;
+
 		let cred: Contracts.Credential = new Contracts.Credential();
 		cred.credentialId = credentialId;
+
 		return new Promise<boolean>((resolve, reject) => {
 			self._client
 				.sendRequest(Contracts.DeleteCredentialRequest.type, cred)

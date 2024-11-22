@@ -32,12 +32,14 @@ export default class HttpClient implements IHttpClient {
 		authorization?: string,
 	): Promise<void> {
 		const url = parseUrl(urlString);
+
 		let options = this.getHttpClientOptions(
 			url,
 			proxy,
 			strictSSL,
 			authorization,
 		);
+
 		let clientRequest =
 			url.protocol === "http:" ? http.request : https.request;
 
@@ -72,6 +74,7 @@ export default class HttpClient implements IHttpClient {
 					logger.appendLine(
 						`failed (error code '${response.statusCode}')`,
 					);
+
 					return reject(
 						new PackageError(response.statusCode.toString(), pkg),
 					);
@@ -150,6 +153,7 @@ export default class HttpClient implements IHttpClient {
 			let newPercentage = Math.ceil(
 				100 * (progress.downloadedBytes / progress.packageSize),
 			);
+
 			if (newPercentage !== progress.downloadPercentage) {
 				statusView.updateServiceDownloadingProgress(
 					progress.downloadPercentage,
@@ -159,6 +163,7 @@ export default class HttpClient implements IHttpClient {
 
 			// Update dots after package name in output console
 			let newDots = Math.ceil(progress.downloadPercentage / 5);
+
 			if (newDots > progress.dots) {
 				logger.append(".".repeat(newDots - progress.dots));
 				progress.dots = newDots;
@@ -189,6 +194,7 @@ export default class HttpClient implements IHttpClient {
 					statusView,
 				);
 			});
+
 			let tmpFile = fs.createWriteStream(undefined, {
 				fd: pkg.tmpFile.fd,
 			});
@@ -217,7 +223,10 @@ export default class HttpClient implements IHttpClient {
  */
 interface IDownloadProgress {
 	packageSize: number;
+
 	downloadedBytes: number;
+
 	downloadPercentage: number;
+
 	dots: number;
 }

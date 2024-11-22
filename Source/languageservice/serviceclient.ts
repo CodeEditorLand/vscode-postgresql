@@ -44,6 +44,7 @@ import ServiceDownloadProvider from "./serviceDownloadProvider";
 import Constants = require("../constants/constants");
 
 let vscode = require("vscode");
+
 let opener = require("opener");
 
 let _channel: OutputChannel = undefined;
@@ -154,10 +155,15 @@ export default class SqlToolsServiceClient {
 			_channel = window.createOutputChannel(
 				Constants.serviceInitializingOutputChannelName,
 			);
+
 			let logger = new Logger((text) => _channel.append(text));
+
 			let serverStatusView = new ServerStatusView();
+
 			let httpClient = new HttpClient();
+
 			let decompressProvider = new DecompressProvider();
+
 			let downloadProvider = new ServiceDownloadProvider(
 				config,
 				logger,
@@ -165,12 +171,15 @@ export default class SqlToolsServiceClient {
 				httpClient,
 				decompressProvider,
 			);
+
 			let serviceProvider = new ServerProvider(
 				downloadProvider,
 				config,
 				serverStatusView,
 			);
+
 			let vscodeWrapper = new VscodeWrapper();
+
 			let statusView = new StatusView(vscodeWrapper);
 			this._instance = new SqlToolsServiceClient(
 				config,
@@ -207,6 +216,7 @@ export default class SqlToolsServiceClient {
 			this._logger.append(
 				`Platform-------------: ${platformInfo.toString()}`,
 			);
+
 			if (!platformInfo.isValidRuntime) {
 				this._logger.appendLine();
 				this._logger.append("Platform invalid");
@@ -229,6 +239,7 @@ export default class SqlToolsServiceClient {
 					.getServerPath(platformInfo.runtimeId)
 					.then(async (serverPath) => {
 						this._logger.appendLine();
+
 						if (serverPath === undefined) {
 							// Check if the service already installed and if not open the output channel to show the logs
 							if (_channel !== undefined) {
@@ -323,10 +334,12 @@ export default class SqlToolsServiceClient {
 	): void {
 		if (serverPath === undefined) {
 			Utils.logDebug(Constants.invalidServiceFilePath);
+
 			throw new Error(Constants.invalidServiceFilePath);
 		} else {
 			let self = this;
 			self.initializeLanguageConfiguration();
+
 			let serverOptions: ServerOptions =
 				this.createServerOptions(serverPath);
 			this.client = this.createLanguageClient(serverOptions);
@@ -399,6 +412,7 @@ export default class SqlToolsServiceClient {
 
 	private createServerOptions(servicePath): ServerOptions {
 		let serverArgs = [];
+
 		let serverCommand: string = servicePath;
 
 		let config = workspace.getConfiguration(
@@ -409,8 +423,10 @@ export default class SqlToolsServiceClient {
 			// Override the server path with the local debug path if enabled
 
 			let useLocalSource = config["useDebugSource"];
+
 			if (useLocalSource) {
 				let localSourcePath = config["debugSourcePath"];
+
 				let filePath = path.join(
 					localSourcePath,
 					"pgsqltoolsservice/pgtoolsservice_main.py",
@@ -420,9 +436,11 @@ export default class SqlToolsServiceClient {
 					process.platform === "win32" ? "python" : "python3";
 
 				let enableStartupDebugging = config["enableStartupDebugging"];
+
 				let debuggingArg = enableStartupDebugging
 					? "--enable-remote-debugging-wait"
 					: "--enable-remote-debugging";
+
 				let debugPort = config["debugServerPort"];
 				debuggingArg += "=" + debugPort;
 				serverArgs = [filePath, debuggingArg];
@@ -438,10 +456,12 @@ export default class SqlToolsServiceClient {
 
 			// Enable diagnostic logging in the service if it is configured
 			let logDebugInfo = config["logDebugInfo"];
+
 			if (logDebugInfo) {
 				serverArgs.push("--enable-logging");
 			}
 			let applyLocalization = config[Constants.configApplyLocalization];
+
 			if (applyLocalization) {
 				let locale = vscode.env.language;
 				serverArgs.push("--locale");
@@ -515,23 +535,27 @@ export default class SqlToolsServiceClient {
 	// work for now because the extension is running in different process.
 	private getAppDataPath(): string {
 		let platform = process.platform;
+
 		switch (platform) {
 			case "win32":
 				return (
 					process.env["APPDATA"] ||
 					path.join(process.env["USERPROFILE"], "AppData", "Roaming")
 				);
+
 			case "darwin":
 				return path.join(
 					os.homedir(),
 					"Library",
 					"Application Support",
 				);
+
 			case "linux":
 				return (
 					process.env["XDG_CONFIG_HOME"] ||
 					path.join(os.homedir(), ".config")
 				);
+
 			default:
 				throw new Error("Platform not supported");
 		}

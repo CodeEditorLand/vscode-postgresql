@@ -56,6 +56,7 @@ export class ConnectionConfig implements IConnectionConfig {
 		getWorkspaceConnections: boolean,
 	): IConnectionProfile[] {
 		let profiles: IConnectionProfile[] = [];
+
 		let compareProfileFunc = (a, b) => {
 			// Sort by profile name if available, otherwise fall back to server name or connection string
 			let nameA = a.profileName
@@ -63,11 +64,13 @@ export class ConnectionConfig implements IConnectionConfig {
 				: a.server
 					? a.server
 					: a.connectionString;
+
 			let nameB = b.profileName
 				? b.profileName
 				: b.server
 					? b.server
 					: b.connectionString;
+
 			return nameA.localeCompare(nameB);
 		};
 
@@ -109,6 +112,7 @@ export class ConnectionConfig implements IConnectionConfig {
 			if (Utils.isSameProfile(value, profile)) {
 				// remove just this profile
 				found = true;
+
 				return false;
 			} else {
 				return true;
@@ -139,15 +143,18 @@ export class ConnectionConfig implements IConnectionConfig {
 			Constants.extensionName,
 			this._vscodeWrapper.activeTextEditorUri,
 		);
+
 		let profiles: IConnectionProfile[] = [];
 
 		let configValue = configuration.inspect<IConnectionProfile[]>(
 			Constants.connectionsArrayName,
 		);
+
 		if (global) {
 			profiles = configValue.globalValue;
 		} else {
 			profiles = configValue.workspaceValue;
+
 			if (profiles !== undefined) {
 				profiles = profiles.concat(
 					configValue.workspaceFolderValue || [],
@@ -173,6 +180,7 @@ export class ConnectionConfig implements IConnectionConfig {
 	): Promise<void> {
 		// Save the file
 		const self = this;
+
 		return new Promise<void>((resolve, reject) => {
 			self._vscodeWrapper
 				.getConfiguration(Constants.extensionName)

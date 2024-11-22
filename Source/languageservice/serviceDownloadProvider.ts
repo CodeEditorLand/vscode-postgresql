@@ -49,6 +49,7 @@ export default class ServiceDownloadProvider {
 	public getDownloadFileName(platform: Runtime): string {
 		let fileNamesJson =
 			this._config.getSqlToolsConfigValue("downloadFileNames");
+
 		let fileName = fileNamesJson[platform.toString()];
 
 		if (fileName === undefined) {
@@ -67,12 +68,14 @@ export default class ServiceDownloadProvider {
 	 */
 	public getInstallDirectory(platform: Runtime): string {
 		let basePath = this.getInstallDirectoryRoot();
+
 		let versionFromConfig = this._config.getSqlToolsPackageVersion();
 		basePath = basePath.replace("{#version#}", versionFromConfig);
 		basePath = basePath.replace(
 			"{#platform#}",
 			getRuntimeDisplayName(platform),
 		);
+
 		if (!fse.existsSync(basePath)) {
 			fse.mkdirsSync(basePath);
 		}
@@ -84,7 +87,9 @@ export default class ServiceDownloadProvider {
 	 */
 	public getInstallDirectoryRoot(): string {
 		let installDirFromConfig = this._config.getSqlToolsInstallDirectory();
+
 		let basePath: string;
+
 		if (path.isAbsolute(installDirFromConfig)) {
 			basePath = installDirFromConfig;
 		} else {
@@ -96,6 +101,7 @@ export default class ServiceDownloadProvider {
 
 	private getGetDownloadUrl(fileName: string): string {
 		let baseDownloadUrl = this._config.getSqlToolsServiceDownloadUrl();
+
 		let version = this._config.getSqlToolsPackageVersion();
 		baseDownloadUrl = baseDownloadUrl.replace("{#version#}", version);
 		baseDownloadUrl = baseDownloadUrl.replace("{#fileName#}", fileName);
@@ -103,6 +109,7 @@ export default class ServiceDownloadProvider {
 			"{#token#}",
 			ServiceDownloadProvider.TOKEN,
 		);
+
 		return baseDownloadUrl;
 	}
 
@@ -111,26 +118,31 @@ export default class ServiceDownloadProvider {
 	 */
 	public installSQLToolsService(platform: Runtime): Promise<boolean> {
 		const proxy = <string>this._config.getWorkspaceConfig("http.proxy");
+
 		const strictSSL = this._config.getWorkspaceConfig(
 			"http.proxyStrictSSL",
 			true,
 		);
+
 		const authorization = this._config.getWorkspaceConfig(
 			"http.proxyAuthorization",
 		);
 
 		return new Promise<boolean>((resolve, reject) => {
 			const fileName = this.getDownloadFileName(platform);
+
 			const installDirectory = this.getInstallDirectory(platform);
 
 			this._logger.appendLine(
 				`${Constants.serviceInstallingTo} ${installDirectory}.`,
 			);
+
 			const urlString = this.getGetDownloadUrl(fileName);
 
 			this._logger.appendLine(
 				`${Constants.serviceDownloading} ${urlString}`,
 			);
+
 			let pkg: IPackage = {
 				installPath: installDirectory,
 				url: urlString,
