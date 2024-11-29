@@ -135,6 +135,7 @@ export class PlatformInformation {
 				// do nothing for now. Assume version is supported
 			}
 		}
+
 		return false;
 	}
 
@@ -171,18 +172,21 @@ export class PlatformInformation {
 			case "win32":
 				architecturePromise =
 					PlatformInformation.GetWindowsArchitecture();
+
 				distributionPromise = Promise.resolve(undefined);
 
 				break;
 
 			case "darwin":
 				architecturePromise = PlatformInformation.GetUnixArchitecture();
+
 				distributionPromise = Promise.resolve(undefined);
 
 				break;
 
 			case "linux":
 				architecturePromise = PlatformInformation.GetUnixArchitecture();
+
 				distributionPromise = LinuxDistribution.GetCurrent();
 
 				break;
@@ -401,6 +405,7 @@ export class PlatformInformation {
 				if (distributionVersion.startsWith("2.0")) {
 					return Runtime.Ubuntu_16;
 				}
+
 				break;
 
 			default:

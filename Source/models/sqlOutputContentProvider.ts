@@ -24,6 +24,7 @@ const deletionTimeoutTime = 1.8e6; // in ms, currently 30 minutes
 // holds information about the state of a query runner
 class QueryRunnerState {
 	timeout: NodeJS.Timer;
+
 	flaggedForDeletion: boolean;
 
 	constructor(public queryRunner: QueryRunner) {
@@ -33,12 +34,14 @@ class QueryRunnerState {
 
 class ResultsConfig implements Interfaces.IResultsConfig {
 	shortcuts: { [key: string]: string };
+
 	messagesDefaultOpen: boolean;
 }
 
 export class SqlOutputContentProvider {
 	// CONSTANTS ///////////////////////////////////////////////////////////
 	public static providerName = "tsqloutput";
+
 	public static providerUri = vscode.Uri.parse("tsqloutput://");
 
 	// MEMBER VARIABLES ////////////////////////////////////////////////////
@@ -46,9 +49,13 @@ export class SqlOutputContentProvider {
 		string,
 		QueryRunnerState
 	>();
+
 	private _service: LocalWebService;
+
 	private _onDidChange = new vscode.EventEmitter<vscode.Uri>();
+
 	private _vscodeWrapper: VscodeWrapper;
+
 	private _resultsPanes = new Map<string, vscode.WebviewPanel>();
 
 	// CONSTRUCTOR /////////////////////////////////////////////////////////
@@ -107,6 +114,7 @@ export class SqlOutputContentProvider {
 			Interfaces.ContentType.LocalizedTexts,
 			(req, res) => {
 				let localizedText = LocalizedConstants;
+
 				res.send(localizedText);
 			},
 		);
@@ -127,6 +135,7 @@ export class SqlOutputContentProvider {
 		if (this._queryResultsMap.has(uri)) {
 			clearTimeout(this._queryResultsMap.get(uri).timeout);
 		}
+
 		let theme: string = req.query.theme;
 
 		let backgroundcolor: string = req.query.backgroundcolor;
@@ -143,15 +152,18 @@ export class SqlOutputContentProvider {
 				),
 				fs.F_OK,
 			);
+
 			prod = true;
 		} catch (e) {
 			prod = false;
 		}
+
 		let queryUri: string;
 
 		if (this._queryResultsMap.has(uri)) {
 			queryUri = this._queryResultsMap.get(uri).queryRunner.uri;
 		}
+
 		let pgsqlConfig = this._vscodeWrapper.getConfiguration(
 			Constants.extensionName,
 			queryUri,
@@ -187,6 +199,7 @@ export class SqlOutputContentProvider {
 			: editorConfig.get<number>("fontSize") + "px";
 
 		let fontweight = editorConfig.get<string>("fontWeight");
+
 		res.render(
 			path.join(
 				LocalWebService.staticContentPath,
@@ -215,11 +228,13 @@ export class SqlOutputContentProvider {
 		let numberOfRows = parseInt(req.query.numberOfRows, 10);
 
 		let uri: string = req.query.uri;
+
 		this._queryResultsMap
 			.get(uri)
 			.queryRunner.getRows(rowStart, numberOfRows, batchId, resultId)
 			.then((results) => {
 				let json = JSON.stringify(results.resultSubset);
+
 				res.send(json);
 			});
 	}
@@ -237,7 +252,9 @@ export class SqlOutputContentProvider {
 		for (let key of Constants.extConfigResultKeys) {
 			config[key] = extConfig[key];
 		}
+
 		let json = JSON.stringify(config);
+
 		res.send(json);
 	}
 
@@ -255,6 +272,7 @@ export class SqlOutputContentProvider {
 		let selection: Interfaces.ISlickRange[] = req.body;
 
 		let saveResults = new ResultsSerializer();
+
 		saveResults.onSaveResults(
 			queryUri,
 			batchIndex,
@@ -262,7 +280,9 @@ export class SqlOutputContentProvider {
 			format,
 			selection,
 		);
+
 		res.status = 200;
+
 		res.send();
 	}
 
@@ -272,8 +292,11 @@ export class SqlOutputContentProvider {
 		let columnName: string = req.body.columnName;
 
 		let linkType: string = req.body.type;
+
 		this.openLink(content, columnName, linkType);
+
 		res.status = 200;
+
 		res.send();
 	}
 
@@ -287,6 +310,7 @@ export class SqlOutputContentProvider {
 		let includeHeaders = req.query.includeHeaders;
 
 		let selection: Interfaces.ISlickRange[] = req.body;
+
 		this._queryResultsMap
 			.get(uri)
 			.queryRunner.copyResults(
@@ -297,6 +321,7 @@ export class SqlOutputContentProvider {
 			)
 			.then(() => {
 				res.status = 200;
+
 				res.send();
 			});
 	}
@@ -310,28 +335,34 @@ export class SqlOutputContentProvider {
 			endLine: parseInt(req.query.endLine, 10),
 			endColumn: parseInt(req.query.endColumn, 10),
 		};
+
 		this._queryResultsMap
 			.get(uri)
 			.queryRunner.setEditorSelection(selection)
 			.then(() => {
 				res.status = 200;
+
 				res.send();
 			});
 	}
 
 	public showErrorRequestHandler(req, res): void {
 		let message: string = req.body.message;
+
 		this._vscodeWrapper.showErrorMessage(message);
 		// not attached to show function callback, since callback returns only after user closes message
 		res.status = 200;
+
 		res.send();
 	}
 
 	public showWarningRequestHandler(req, res): void {
 		let message: string = req.body.message;
+
 		this._vscodeWrapper.showWarningMessage(message);
 		// not attached to show function callback, since callback returns only after user closes message
 		res.status = 200;
+
 		res.send();
 	}
 
@@ -450,6 +481,7 @@ export class SqlOutputContentProvider {
 
 			// If the query is not in progress, we can reuse the query runner
 			queryRunner = existingRunner;
+
 			queryRunner.resetHasCompleted();
 
 			// update the open pane assuming its open (if its not its a bug covered by the previewhtml command later)
@@ -458,9 +490,11 @@ export class SqlOutputContentProvider {
 			// We do not have a query runner for this editor, so create a new one
 			// and map it to the results uri
 			queryRunner = new QueryRunner(uri, title, statusView);
+
 			queryRunner.eventEmitter.on("resultSet", (resultSet) => {
 				this._service.broadcast(resultsUri, "resultSet", resultSet);
 			});
+
 			queryRunner.eventEmitter.on("batchStart", (batch) => {
 				// Build a link for the selection and send it in a message
 				let encodedUri = encodeURIComponent(resultsUri);
@@ -491,11 +525,14 @@ export class SqlOutputContentProvider {
 						uri: link,
 					},
 				};
+
 				this._service.broadcast(resultsUri, "message", message);
 			});
+
 			queryRunner.eventEmitter.on("message", (message) => {
 				this._service.broadcast(resultsUri, "message", message);
 			});
+
 			queryRunner.eventEmitter.on("complete", (totalMilliseconds) => {
 				this._service.broadcast(
 					resultsUri,
@@ -503,9 +540,11 @@ export class SqlOutputContentProvider {
 					totalMilliseconds,
 				);
 			});
+
 			queryRunner.eventEmitter.on("start", () => {
 				this._service.resetSocket(resultsUri);
 			});
+
 			this._queryResultsMap.set(
 				resultsUri,
 				new QueryRunnerState(queryRunner),
@@ -548,11 +587,13 @@ export class SqlOutputContentProvider {
 					enableScripts: true,
 				},
 			);
+
 			this._resultsPanes.set(resultsUri, panel);
 		}
 
 		// Update the results panel's content
 		panel.webview.html = this.provideTextDocumentContent(resultsUri);
+
 		panel.reveal(resultPaneColumn);
 
 		// Reset focus to the text editor if it's in a different column than the results window
@@ -634,10 +675,12 @@ export class SqlOutputContentProvider {
 
 		// Remap the query runner in the map
 		let savedResultUri = decodeURIComponent(this.getResultsUri(savedUri));
+
 		this._queryResultsMap.set(
 			savedResultUri,
 			this._queryResultsMap.get(untitledResultsUri),
 		);
+
 		this._queryResultsMap.delete(untitledResultsUri);
 	}
 
@@ -687,6 +730,7 @@ export class SqlOutputContentProvider {
 	public provideTextDocumentContent(uri: string): string {
 		// URI needs to be encoded as a component for proper inclusion in a url
 		let encodedUri = encodeURIComponent(uri);
+
 		console.log(
 			`${LocalWebService.getEndpointUri(Interfaces.ContentType.Root)}?uri=${encodedUri}`,
 		);
@@ -753,6 +797,7 @@ export class SqlOutputContentProvider {
 			} catch (e) {
 				// If Json fails to parse, fall back on original Json content
 			}
+
 			if (jsonContent) {
 				// If Json content was valid and parsed, pretty print content to a string
 				content = JSON.stringify(jsonContent, undefined, 4);

@@ -17,18 +17,22 @@ const fs = require("fs");
  */
 export default class Config implements IConfig {
 	private static _configJsonContent = undefined;
+
 	private _sqlToolsServiceConfigKey: string;
+
 	private version: number;
 
 	public static get configJsonContent(): any {
 		if (this._configJsonContent === undefined) {
 			this._configJsonContent = this.loadConfig();
 		}
+
 		return this._configJsonContent;
 	}
 
 	constructor() {
 		this._sqlToolsServiceConfigKey = Constants.sqlToolsServiceConfigKey;
+
 		this.version = 2;
 	}
 
@@ -68,6 +72,7 @@ export default class Config implements IConfig {
 				this._sqlToolsServiceConfigKey =
 					Constants.sqlToolsServiceConfigKey;
 		}
+
 		this.version = version;
 	}
 
@@ -85,6 +90,7 @@ export default class Config implements IConfig {
 		if (toolsConfig !== undefined) {
 			configValue = toolsConfig[configKey];
 		}
+
 		return configValue;
 	}
 
@@ -98,6 +104,7 @@ export default class Config implements IConfig {
 		if (!configValue) {
 			configValue = defaultValue;
 		}
+
 		return configValue;
 	}
 
@@ -109,6 +116,7 @@ export default class Config implements IConfig {
 		if (!configValue) {
 			configValue = defaultValue;
 		}
+
 		return configValue;
 	}
 

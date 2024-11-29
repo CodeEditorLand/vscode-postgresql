@@ -18,10 +18,12 @@ export default class DecompressProvider implements IDecompressProvider {
 					logger.appendLine(
 						`Done! ${files.length} files unpacked.\n`,
 					);
+
 					resolve();
 				})
 				.catch((decompressErr) => {
 					logger.appendLine(`[ERROR] ${decompressErr}`);
+
 					reject(decompressErr);
 				});
 		});

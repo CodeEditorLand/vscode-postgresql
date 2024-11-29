@@ -13,7 +13,9 @@ import { IPromptCallback, IPrompter, IQuestion } from "./question";
 // Supports simple pattern for prompting for user input and acting on this
 export default class CodeAdapter implements IPrompter {
 	private outChannel: OutputChannel;
+
 	private outBuffer: string = "";
+
 	private messageLevelFormatters = {};
 
 	constructor() {
@@ -28,6 +30,7 @@ export default class CodeAdapter implements IPrompter {
 		let line = `error: ${message.message}\n    Code - ${message.code}`;
 
 		this.outBuffer += `${line}\n`;
+
 		this.outChannel.appendLine(line);
 	}
 
@@ -84,12 +87,14 @@ export default class CodeAdapter implements IPrompter {
 			if (this.messageLevelFormatters[message.level]) {
 				formatter = this.messageLevelFormatters[message.level];
 			}
+
 			line = formatter(message);
 		} else {
 			line = nodeUtil.format(arguments);
 		}
 
 		this.outBuffer += `${line}\n`;
+
 		this.outChannel.appendLine(line);
 	}
 
@@ -165,9 +170,11 @@ export default class CodeAdapter implements IPrompter {
 								if (question.onAnswered) {
 									question.onAnswered(result);
 								}
+
 								return answers;
 							});
 						}
+
 						return answers;
 					});
 			},

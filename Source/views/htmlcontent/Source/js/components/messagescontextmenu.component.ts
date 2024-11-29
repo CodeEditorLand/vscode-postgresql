@@ -41,12 +41,18 @@ export class MessagesContextMenu implements OnInit {
 
 	@Output() clickEvent: EventEmitter<{
 		type: string;
+
 		selectedRange: IRange;
 	}> = new EventEmitter<{ type: string; selectedRange: IRange }>();
+
 	private selectedRange: IRange;
+
 	private isDisabled: boolean;
+
 	private position: { x: number; y: number } = { x: 0, y: 0 };
+
 	private visible: boolean = false;
+
 	private keys = {
 		"event.copySelection": "",
 	};
@@ -80,8 +86,11 @@ export class MessagesContextMenu implements OnInit {
 			selectedRange && selectedRange.toString
 				? selectedRange.toString()
 				: "";
+
 		this.isDisabled = selectedText.length === 0;
+
 		this.position = { x: x, y: y };
+
 		this.visible = true;
 	}
 

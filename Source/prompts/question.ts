@@ -6,18 +6,23 @@ export class QuestionTypes {
 	public static get input(): string {
 		return "input";
 	}
+
 	public static get password(): string {
 		return "password";
 	}
+
 	public static get list(): string {
 		return "list";
 	}
+
 	public static get confirm(): string {
 		return "confirm";
 	}
+
 	public static get checkbox(): string {
 		return "checkbox";
 	}
+
 	public static get expand(): string {
 		return "expand";
 	}
@@ -51,6 +56,7 @@ export interface IQuestion {
 // Pair used to display simple choices to the user
 export interface INameValueChoice {
 	name: string;
+
 	value: any;
 }
 
@@ -74,6 +80,7 @@ export interface IPrompter {
 		questions: IQuestion[],
 		ignoreFocusOut?: boolean,
 	): Promise<{ [questionId: string]: T }>;
+
 	promptCallback(questions: IQuestion[], callback: IPromptCallback): void;
 }
 

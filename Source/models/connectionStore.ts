@@ -36,9 +36,11 @@ export class ConnectionStore {
 		if (!this._credentialStore) {
 			this._credentialStore = new CredentialStore();
 		}
+
 		if (!this.vscodeWrapper) {
 			this.vscodeWrapper = new VscodeWrapper();
 		}
+
 		if (!this._connectionConfig) {
 			this._connectionConfig = new ConnectionConfig();
 		}
@@ -47,26 +49,33 @@ export class ConnectionStore {
 	public static get CRED_PREFIX(): string {
 		return "Microsoft.SqlTools";
 	}
+
 	public static get CRED_SEPARATOR(): string {
 		return "|";
 	}
+
 	public static get CRED_SERVER_PREFIX(): string {
 		return "server:";
 	}
+
 	public static get CRED_DB_PREFIX(): string {
 		return "db:";
 	}
+
 	public static get CRED_USER_PREFIX(): string {
 		return "user:";
 	}
+
 	public static get CRED_ITEMTYPE_PREFIX(): string {
 		return "itemtype:";
 	}
+
 	public static get CRED_PROFILE_USER(): string {
 		return CredentialsQuickPickItemType[
 			CredentialsQuickPickItemType.Profile
 		];
 	}
+
 	public static get CRED_MRU_USER(): string {
 		return CredentialsQuickPickItemType[CredentialsQuickPickItemType.Mru];
 	}
@@ -80,11 +89,13 @@ export class ConnectionStore {
 				"Missing Connection which is required",
 			);
 		}
+
 		let itemTypeString: string = ConnectionStore.CRED_PROFILE_USER;
 
 		if (itemType) {
 			itemTypeString = CredentialsQuickPickItemType[itemType];
 		}
+
 		return ConnectionStore.formatCredentialId(
 			creds.host,
 			creds.dbname,
@@ -114,6 +125,7 @@ export class ConnectionStore {
 				"Missing Server Name, which is required",
 			);
 		}
+
 		let cred: string[] = [ConnectionStore.CRED_PREFIX];
 
 		if (!itemType) {
@@ -125,16 +137,19 @@ export class ConnectionStore {
 			ConnectionStore.CRED_ITEMTYPE_PREFIX,
 			cred,
 		);
+
 		ConnectionStore.pushIfNonEmpty(
 			server,
 			ConnectionStore.CRED_SERVER_PREFIX,
 			cred,
 		);
+
 		ConnectionStore.pushIfNonEmpty(
 			database,
 			ConnectionStore.CRED_DB_PREFIX,
 			cred,
 		);
+
 		ConnectionStore.pushIfNonEmpty(
 			user,
 			ConnectionStore.CRED_USER_PREFIX,
@@ -171,6 +186,7 @@ export class ConnectionStore {
 	public getPickListItems(): IConnectionCredentialsQuickPickItem[] {
 		let pickListItems: IConnectionCredentialsQuickPickItem[] =
 			this.loadAllConnections();
+
 		pickListItems.push(<IConnectionCredentialsQuickPickItem>{
 			label: LocalizedConstants.CreateProfileFromConnectionsListLabel,
 			connectionCreds: undefined,
@@ -217,6 +233,7 @@ export class ConnectionStore {
 							credentialsItem.connectionCreds,
 							credentialsItem.quickPickItemType,
 						);
+
 					self._credentialStore
 						.readCredential(credentialId)
 						.then((savedCred) => {
@@ -224,6 +241,7 @@ export class ConnectionStore {
 								credentialsItem.connectionCreds.password =
 									savedCred.password;
 							}
+
 							resolve(credentialsItem);
 						})
 						.catch((err) => reject(err));
@@ -253,6 +271,7 @@ export class ConnectionStore {
 				!connectionCreds.emptyPasswordInput
 			);
 		}
+
 		return false;
 	}
 
@@ -297,6 +316,7 @@ export class ConnectionStore {
 						// Add necessary default properties before returning
 						// this is needed to support immediate connections
 						ConnInfo.fixupConnectionCredentials(profile);
+
 						resolve(profile);
 					},
 					(err) => {
@@ -320,6 +340,7 @@ export class ConnectionStore {
 		if (!configValues) {
 			configValues = [];
 		}
+
 		return configValues;
 	}
 
@@ -352,6 +373,7 @@ export class ConnectionStore {
 			let savedConn: IConnectionCredentials = Object.assign({}, conn, {
 				password: "",
 			});
+
 			configValues.unshift(savedConn);
 
 			// Remove last element if needed
@@ -437,6 +459,7 @@ export class ConnectionStore {
 		if (!profile.savePassword) {
 			return Promise.resolve(true);
 		}
+
 		return this.doSavePassword(
 			profile,
 			CredentialsQuickPickItemType.Profile,
@@ -462,6 +485,7 @@ export class ConnectionStore {
 					conn.user,
 					credType,
 				);
+
 				self._credentialStore
 					.saveCredential(credentialId, conn.password)
 					.then((result) => {
@@ -522,6 +546,7 @@ export class ConnectionStore {
 						profile.user,
 						ConnectionStore.CRED_PROFILE_USER,
 					);
+
 					self._credentialStore
 						.deleteCredential(credentialId)
 						.then(undefined, (rejected) => {
@@ -563,6 +588,7 @@ export class ConnectionStore {
 
 		// Remove any duplicates that are in both recent connections and the user settings
 		let profilesInRecentConnectionsList: number[] = [];
+
 		profilesInConfiguration = profilesInConfiguration.filter((profile) => {
 			for (let index = 0; index < recentConnections.length; index++) {
 				if (
@@ -579,12 +605,16 @@ export class ConnectionStore {
 					) {
 						// The MRU item should reflect the current profile's settings from user preferences if it is still the same database
 						ConnInfo.fixupConnectionCredentials(profile);
+
 						recentConnections[index] = Object.assign({}, profile);
+
 						profilesInRecentConnectionsList.push(index);
 					}
+
 					return false;
 				}
 			}
+
 			return true;
 		});
 
@@ -600,6 +630,7 @@ export class ConnectionStore {
 		}
 
 		quickPickItems = quickPickItems.concat(recentConnectionsItems);
+
 		quickPickItems = quickPickItems.concat(
 			this.mapToQuickPickItems(
 				profilesInConfiguration,
@@ -617,6 +648,7 @@ export class ConnectionStore {
 		let connections: T[] = [];
 		// read from the global state
 		let configValues = this._context.globalState.get<T[]>(configName);
+
 		this.addConnections(connections, configValues);
 
 		return connections;
@@ -657,6 +689,7 @@ export class ConnectionStore {
 				) {
 					let connection =
 						ConnInfo.fixupConnectionCredentials(element);
+
 					connections.push(connection);
 				} else {
 					Utils.logDebug(
@@ -678,6 +711,7 @@ export class ConnectionStore {
 		if (typeof maxConnections !== "number" || maxConnections <= 0) {
 			maxConnections = 5;
 		}
+
 		return maxConnections;
 	}
 }

@@ -30,6 +30,7 @@ export class CredentialStore implements ICredentialStore {
 		let self = this;
 
 		let cred: Contracts.Credential = new Contracts.Credential();
+
 		cred.credentialId = credentialId;
 
 		return new Promise<Contracts.Credential>((resolve, reject) => {
@@ -51,7 +52,9 @@ export class CredentialStore implements ICredentialStore {
 		let self = this;
 
 		let cred: Contracts.Credential = new Contracts.Credential();
+
 		cred.credentialId = credentialId;
+
 		cred.password = password;
 
 		return new Promise<boolean>((resolve, reject) => {
@@ -70,6 +73,7 @@ export class CredentialStore implements ICredentialStore {
 		let self = this;
 
 		let cred: Contracts.Credential = new Contracts.Credential();
+
 		cred.credentialId = credentialId;
 
 		return new Promise<boolean>((resolve, reject) => {

@@ -70,7 +70,9 @@ export default class ServiceDownloadProvider {
 		let basePath = this.getInstallDirectoryRoot();
 
 		let versionFromConfig = this._config.getSqlToolsPackageVersion();
+
 		basePath = basePath.replace("{#version#}", versionFromConfig);
+
 		basePath = basePath.replace(
 			"{#platform#}",
 			getRuntimeDisplayName(platform),
@@ -79,6 +81,7 @@ export default class ServiceDownloadProvider {
 		if (!fse.existsSync(basePath)) {
 			fse.mkdirsSync(basePath);
 		}
+
 		return basePath;
 	}
 
@@ -96,6 +99,7 @@ export default class ServiceDownloadProvider {
 			// The path from config is relative to the out folder
 			basePath = path.join(__dirname, "../../" + installDirFromConfig);
 		}
+
 		return basePath;
 	}
 
@@ -103,8 +107,11 @@ export default class ServiceDownloadProvider {
 		let baseDownloadUrl = this._config.getSqlToolsServiceDownloadUrl();
 
 		let version = this._config.getSqlToolsPackageVersion();
+
 		baseDownloadUrl = baseDownloadUrl.replace("{#version#}", version);
+
 		baseDownloadUrl = baseDownloadUrl.replace("{#fileName#}", fileName);
+
 		baseDownloadUrl = baseDownloadUrl.replace(
 			"{#token#}",
 			ServiceDownloadProvider.TOKEN,
@@ -148,6 +155,7 @@ export default class ServiceDownloadProvider {
 				url: urlString,
 				tmpFile: undefined,
 			};
+
 			this.createTempFile(pkg).then((tmpResult) => {
 				pkg.tmpFile = tmpResult;
 
@@ -165,7 +173,9 @@ export default class ServiceDownloadProvider {
 						this._logger.logDebug(
 							`Downloaded to ${pkg.tmpFile.name}...`,
 						);
+
 						this._logger.appendLine(" Done!");
+
 						this.install(pkg)
 							.then((result) => {
 								resolve(true);
@@ -176,6 +186,7 @@ export default class ServiceDownloadProvider {
 					})
 					.catch((downloadError) => {
 						this._logger.appendLine(`[ERROR] ${downloadError}`);
+
 						reject(downloadError);
 					});
 			});
@@ -205,6 +216,7 @@ export default class ServiceDownloadProvider {
 
 	private install(pkg: IPackage): Promise<void> {
 		this._logger.appendLine("Installing ...");
+
 		this._statusView.installingService();
 
 		return new Promise<void>((resolve, reject) => {
@@ -212,6 +224,7 @@ export default class ServiceDownloadProvider {
 				.decompress(pkg, this._logger)
 				.then((_) => {
 					this._statusView.serviceInstalled();
+
 					resolve();
 				})
 				.catch((err) => {

@@ -26,6 +26,7 @@ export default class ExpandPrompt extends Prompt {
 
 	private renderQuickPick(choices: vscode.QuickPickItem[]): any {
 		let options = this.defaultQuickPickOptions;
+
 		options.placeHolder = this._question.message;
 
 		return vscode.window.showQuickPick(choices, options).then((result) => {
@@ -36,6 +37,7 @@ export default class ExpandPrompt extends Prompt {
 			return this.validateAndReturn(result || false);
 		});
 	}
+
 	private renderNameValueChoice(choices: INameValueChoice[]): any {
 		const choiceMap = this._question.choices.reduce((result, choice) => {
 			result[choice.name] = choice.value;
@@ -44,6 +46,7 @@ export default class ExpandPrompt extends Prompt {
 		}, {});
 
 		let options = this.defaultQuickPickOptions;
+
 		options.placeHolder = this._question.message;
 
 		return vscode.window
@@ -64,6 +67,7 @@ export default class ExpandPrompt extends Prompt {
 		if (!this.validate(value)) {
 			return this.render();
 		}
+
 		return value;
 	}
 
@@ -77,6 +81,7 @@ export default class ExpandPrompt extends Prompt {
 
 			return false;
 		}
+
 		return true;
 	}
 }

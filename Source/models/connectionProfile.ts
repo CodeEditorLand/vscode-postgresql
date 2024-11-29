@@ -22,7 +22,9 @@ export class ConnectionProfile
 	implements IConnectionProfile
 {
 	public profileName: string;
+
 	public savePassword: boolean;
+
 	public emptyPasswordInput: boolean;
 
 	/**

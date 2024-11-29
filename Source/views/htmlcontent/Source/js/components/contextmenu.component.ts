@@ -50,24 +50,40 @@ export class ContextMenu implements OnInit {
 
 	@Output() clickEvent: EventEmitter<{
 		type: string;
+
 		batchId: number;
+
 		resultId: number;
+
 		index: number;
+
 		selection: ISlickRange[];
 	}> = new EventEmitter<{
 		type: string;
+
 		batchId: number;
+
 		resultId: number;
+
 		index: number;
+
 		selection: ISlickRange[];
 	}>();
+
 	private batchId: number;
+
 	private resultId: number;
+
 	private index: number;
+
 	private selection: ISlickRange[];
+
 	private isDisabled: boolean;
+
 	private position: { x: number; y: number } = { x: 0, y: 0 };
+
 	private visible: boolean = false;
+
 	private keys = {
 		"event.saveAsCSV": "",
 		"event.saveAsJSON": "",
@@ -107,11 +123,17 @@ export class ContextMenu implements OnInit {
 		selection: ISlickRange[],
 	): void {
 		this.batchId = batchId;
+
 		this.resultId = resultId;
+
 		this.index = index;
+
 		this.selection = selection;
+
 		this.isDisabled = selection.length > 1;
+
 		this.position = { x: x, y: y };
+
 		this.visible = true;
 	}
 

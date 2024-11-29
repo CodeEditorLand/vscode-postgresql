@@ -25,24 +25,39 @@ declare let Slick;
 
 		function init(grid): void {
 			_grid = grid;
+
 			_grid.onKeyDown.subscribe(handleKeyDown);
+
 			_grid.onClick.subscribe(handleClick);
+
 			_grid.onDrag.subscribe(handleDrag);
+
 			_grid.onDragInit.subscribe(handleDragInit);
+
 			_grid.onDragStart.subscribe(handleDragStart);
+
 			_grid.onDragEnd.subscribe(handleDragEnd);
+
 			_grid.onHeaderClick.subscribe(handleHeaderClick);
+
 			_grid.onColumnsResized.subscribe(handleColumnsResized);
 		}
 
 		function destroy(): void {
 			_grid.onKeyDown.unsubscribe(handleKeyDown);
+
 			_grid.onClick.unsubscribe(handleClick);
+
 			_grid.onDrag.unsubscribe(handleDrag);
+
 			_grid.onDragInit.unsubscribe(handleDragInit);
+
 			_grid.onDragStart.unsubscribe(handleDragStart);
+
 			_grid.onDragEnd.unsubscribe(handleDragEnd);
+
 			_grid.onHeaderClick.unsubscribe(handleHeaderClick);
+
 			_grid.onColumnsResized.unsubscribe(handleColumnsResized);
 		}
 
@@ -54,6 +69,7 @@ declare let Slick;
 					rows.push(j);
 				}
 			}
+
 			return rows;
 		}
 
@@ -65,6 +81,7 @@ declare let Slick;
 			for (let i = 0; i < rows.length; i++) {
 				ranges.push(new Slick.Range(rows[i], 0, rows[i], lastCell));
 			}
+
 			return ranges;
 		}
 
@@ -78,6 +95,7 @@ declare let Slick;
 
 		function setSelectedRanges(ranges): void {
 			_ranges = ranges;
+
 			_self.onSelectedRangesChanged.notify(_ranges);
 		}
 
@@ -125,6 +143,7 @@ declare let Slick;
 					let toRow = Math.max(activeCell.row, last.toRow);
 
 					let toCell = Math.max(newRangeColumn, last.toCell);
+
 					_ranges = [
 						new Slick.Range(fromRow, fromCell, toRow, toCell),
 					];
@@ -187,6 +206,7 @@ declare let Slick;
 						),
 					];
 				}
+
 				_grid.setActiveCell(activeCell.row, newActiveCellColumn);
 
 				setSelectedRanges(_ranges);
@@ -211,6 +231,7 @@ declare let Slick;
 								altKey: e.altKey,
 							},
 						});
+
 						window.dispatchEvent(event);
 
 						return;
@@ -230,9 +251,11 @@ declare let Slick;
 							let allColumns = JSON.parse(
 								JSON.stringify(_grid.getColumns()),
 							);
+
 							allColumns[activeCell.cell - 1].width =
 								allColumns[activeCell.cell - 1].width -
 								keyColResizeIncr;
+
 							_grid.setColumns(allColumns);
 						} else {
 							navigateLeft(e, activeCell);
@@ -269,6 +292,7 @@ declare let Slick;
 								activeCell.cell - 1,
 								last.toCell,
 							);
+
 							_ranges = [
 								new Slick.Range(
 									fromRow,
@@ -287,6 +311,7 @@ declare let Slick;
 								),
 							];
 						}
+
 						_grid.setActiveCell(
 							activeCell.row - 1,
 							activeCell.cell,
@@ -300,9 +325,11 @@ declare let Slick;
 							let allColumns = JSON.parse(
 								JSON.stringify(_grid.getColumns()),
 							);
+
 							allColumns[activeCell.cell - 1].width =
 								allColumns[activeCell.cell - 1].width +
 								keyColResizeIncr;
+
 							_grid.setColumns(allColumns);
 						} else {
 							navigateRight(e, activeCell);
@@ -342,6 +369,7 @@ declare let Slick;
 								activeCell.cell - 1,
 								last.toCell,
 							);
+
 							_ranges = [
 								new Slick.Range(
 									fromRow,
@@ -360,6 +388,7 @@ declare let Slick;
 								),
 							];
 						}
+
 						_grid.setActiveCell(
 							activeCell.row + 1,
 							activeCell.cell,
@@ -403,6 +432,7 @@ declare let Slick;
 				let from = Math.min(columnIndex, last);
 
 				let to = Math.max(columnIndex, last);
+
 				_ranges = [];
 
 				for (let i = from; i <= to; i++) {
@@ -412,6 +442,7 @@ declare let Slick;
 						);
 					}
 				}
+
 				_ranges.push(
 					new Slick.Range(0, last, _grid.getDataLength() - 1, last),
 				);
@@ -429,6 +460,7 @@ declare let Slick;
 			_grid.resetActiveCell();
 
 			setSelectedRanges(_ranges);
+
 			e.stopImmediatePropagation();
 
 			return true;
@@ -453,6 +485,7 @@ declare let Slick;
 					];
 
 					setSelectedRanges(_ranges);
+
 					_grid.setActiveCell(cell.row, cell.cell);
 
 					return true;
@@ -467,6 +500,7 @@ declare let Slick;
 					];
 
 					setSelectedRanges(_ranges);
+
 					_grid.setActiveCell(cell.row, 1);
 
 					return true;
@@ -482,6 +516,7 @@ declare let Slick;
 								_grid.getColumns().length - 1,
 							),
 						);
+
 						_grid.setActiveCell(cell.row, 1);
 					} else {
 						_ranges.push(
@@ -492,6 +527,7 @@ declare let Slick;
 								cell.cell - 1,
 							),
 						);
+
 						_grid.setActiveCell(cell.row, cell.cell);
 					}
 				} else if (_ranges.length && e.shiftKey) {
@@ -501,6 +537,7 @@ declare let Slick;
 						let fromRow = Math.min(cell.row, last.fromRow);
 
 						let toRow = Math.max(cell.row, last.fromRow);
+
 						_ranges = [
 							new Slick.Range(
 								fromRow,
@@ -517,6 +554,7 @@ declare let Slick;
 						let toRow = Math.max(cell.row, last.toRow);
 
 						let toCell = Math.max(cell.cell - 1, last.toCell);
+
 						_ranges = [
 							new Slick.Range(fromRow, fromCell, toRow, toCell),
 						];
@@ -535,11 +573,14 @@ declare let Slick;
 
 		function handleDragStart(e): void {
 			let cell = _grid.getCellFromEvent(e);
+
 			e.stopImmediatePropagation();
+
 			_dragging = true;
 
 			if (e.ctrlKey || e.metaKey) {
 				_ranges.push(new Slick.Range());
+
 				_grid.setActiveCell(cell.row, cell.cell);
 			} else if (_ranges.length && e.shiftKey) {
 				let last = _ranges.pop();
@@ -551,11 +592,14 @@ declare let Slick;
 				let toRow = Math.max(cell.row, last.toRow);
 
 				let toCell = Math.max(cell.cell - 1, last.toCell);
+
 				_ranges = [new Slick.Range(fromRow, fromCell, toRow, toCell)];
 			} else {
 				_ranges = [new Slick.Range()];
+
 				_grid.setActiveCell(cell.row, cell.cell);
 			}
+
 			setSelectedRanges(_ranges);
 		}
 
@@ -577,6 +621,7 @@ declare let Slick;
 					let firstRow = Math.min(cell.row, activeCell.row);
 
 					let lastRow = Math.max(cell.row, activeCell.row);
+
 					_ranges.push(
 						new Slick.Range(firstRow, 0, lastRow, lastCell),
 					);
@@ -594,6 +639,7 @@ declare let Slick;
 						cell.cell - 1,
 						activeCell.cell - 1,
 					);
+
 					_ranges.push(
 						new Slick.Range(
 							firstRow,
@@ -603,6 +649,7 @@ declare let Slick;
 						),
 					);
 				}
+
 				setSelectedRanges(_ranges);
 			}
 		}

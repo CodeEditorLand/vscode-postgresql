@@ -21,8 +21,11 @@ export enum ContentType {
 
 export interface ISlickRange {
 	fromCell: number;
+
 	fromRow: number;
+
 	toCell: number;
+
 	toRow: number;
 }
 
@@ -255,7 +258,9 @@ export interface IConnectionCredentials {
 // optional name and details on whether password should be saved
 export interface IConnectionProfile extends IConnectionCredentials {
 	profileName: string;
+
 	savePassword: boolean;
+
 	emptyPasswordInput: boolean;
 }
 
@@ -267,87 +272,136 @@ export enum CredentialsQuickPickItemType {
 export interface IConnectionCredentialsQuickPickItem
 	extends vscode.QuickPickItem {
 	connectionCreds: IConnectionCredentials;
+
 	quickPickItemType: CredentialsQuickPickItemType;
 }
 
 // Obtained from an active connection to show in the status bar
 export interface IConnectionProperties {
 	serverVersion: string;
+
 	currentUser: string;
+
 	currentDatabase: string;
 }
 
 export interface IDbColumn {
 	allowDBNull?: boolean;
+
 	baseCatalogName: string;
+
 	baseColumnName: string;
+
 	baseSchemaName: string;
+
 	baseServerName: string;
+
 	baseTableName: string;
+
 	columnName: string;
+
 	columnOrdinal?: number;
+
 	columnSize?: number;
+
 	isAliased?: boolean;
+
 	isAutoIncrement?: boolean;
+
 	isExpression?: boolean;
+
 	isHidden?: boolean;
+
 	isIdentity?: boolean;
+
 	isKey?: boolean;
+
 	isBytes?: boolean;
+
 	isChars?: boolean;
+
 	isSqlVariant?: boolean;
+
 	isUdt?: boolean;
+
 	dataType: string;
+
 	isXml?: boolean;
+
 	isJson?: boolean;
+
 	isLong?: boolean;
+
 	isReadOnly?: boolean;
+
 	isUnique?: boolean;
+
 	numericPrecision?: number;
+
 	numericScale?: number;
+
 	udtAssemblyQualifiedName: string;
+
 	dataTypeName: string;
 }
 
 export interface IGridResultSet {
 	columns: IDbColumn[];
+
 	rowsUri: string;
+
 	numberOfRows: number;
 }
 
 export interface ISelectionData {
 	startLine: number;
+
 	startColumn: number;
+
 	endLine: number;
+
 	endColumn: number;
 }
 
 export interface IResultMessage {
 	batchId?: number;
+
 	isError: boolean;
+
 	time: string;
+
 	message: string;
 }
 
 export interface IGridBatchMetaData {
 	resultSets: IGridResultSet[];
+
 	hasError: boolean;
+
 	selection: ISelectionData;
+
 	startTime: string;
+
 	endTime: string;
+
 	totalTime: string;
 }
 
 export interface IResultsConfig {
 	shortcuts: { [key: string]: string };
+
 	messagesDefaultOpen: boolean;
 }
 
 export interface ILogger {
 	logDebug(message: string): void;
+
 	increaseIndent(): void;
+
 	decreaseIndent(): void;
+
 	append(message?: string): void;
+
 	appendLine(message?: string): void;
 }
 

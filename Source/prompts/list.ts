@@ -20,6 +20,7 @@ export default class ListPrompt extends Prompt {
 		}, {});
 
 		let options = this.defaultQuickPickOptions;
+
 		options.placeHolder = this._question.message;
 
 		return window

@@ -23,8 +23,10 @@ export namespace Telemetry {
 			// Generate the user id if it has not been created already
 			if (typeof userId === "undefined") {
 				let id = Utils.generateUserId();
+
 				id.then((newId) => {
 					userId = newId;
+
 					resolve(userId);
 				});
 			} else {
@@ -40,6 +42,7 @@ export namespace Telemetry {
 			return new Promise<PlatformInformation>((resolve) => {
 				PlatformInformation.GetCurrent().then((info) => {
 					platformInformation = info;
+
 					resolve(platformInformation);
 				});
 			});
@@ -78,6 +81,7 @@ export namespace Telemetry {
 			}
 
 			let packageInfo = Utils.getPackageInfo(context);
+
 			reporter = new TelemetryReporter(
 				"vscode-pgsql",
 				packageInfo.version,
@@ -128,6 +132,7 @@ export namespace Telemetry {
 				methodName: methodName,
 				errorLine: firstLine,
 			});
+
 			Utils.logDebug(
 				"Unhandled Exception occurred. error: " +
 					err +
@@ -153,6 +158,7 @@ export namespace Telemetry {
 		if (typeof disabled === "undefined") {
 			disabled = false;
 		}
+
 		if (disabled || typeof reporter === "undefined") {
 			// Don't do anything if telemetry is disabled
 			return;
@@ -168,6 +174,7 @@ export namespace Telemetry {
 			getPlatformInformation(),
 		]).then(() => {
 			properties["userId"] = userId;
+
 			properties["distribution"] =
 				platformInformation && platformInformation.distribution
 					? `${platformInformation.distribution.name}, ${platformInformation.distribution.version}`

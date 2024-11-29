@@ -12,6 +12,7 @@ export function formatString(str: string, ...args: any[]): string {
 			return typeof args[index] !== "undefined" ? args[index] : match;
 		});
 	}
+
 	return result;
 }
 

@@ -12,14 +12,18 @@ import * as Utils from "./utils";
  */
 export class Logger implements ILogger {
 	private _writer: (message: string) => void;
+
 	private _prefix: string;
 
 	private _indentLevel: number = 0;
+
 	private _indentSize: number = 4;
+
 	private _atLineStart: boolean = false;
 
 	constructor(writer: (message: string) => void, prefix?: string) {
 		this._writer = writer;
+
 		this._prefix = prefix;
 	}
 
@@ -31,6 +35,7 @@ export class Logger implements ILogger {
 		if (this._atLineStart) {
 			if (this._indentLevel > 0) {
 				const indent = " ".repeat(this._indentLevel * this._indentSize);
+
 				this._writer(indent);
 			}
 
@@ -56,12 +61,15 @@ export class Logger implements ILogger {
 
 	public append(message?: string): void {
 		message = message || "";
+
 		this._appendCore(message);
 	}
 
 	public appendLine(message?: string): void {
 		message = message || "";
+
 		this._appendCore(message + os.EOL);
+
 		this._atLineStart = true;
 	}
 }

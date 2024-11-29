@@ -60,7 +60,9 @@ export namespace TelemetryNotification {
 export class TelemetryParams {
 	public params: {
 		eventName: string;
+
 		properties: Telemetry.ITelemetryEventProperties;
+
 		measures: Telemetry.ITelemetryEventMeasures;
 	};
 }

@@ -19,40 +19,56 @@ const WebSocketServer = ws.Server;
 
 class WebSocketMapping {
 	public webSocketServer: ws;
+
 	public pendingMessages: Array<WebSocketMessage> = [];
 }
 
 class WebSocketMessage {
 	public type: string;
+
 	public data: any;
 }
 
 export default class LocalWebService {
 	private app = express();
+
 	private server = http.createServer();
+
 	private wss = new WebSocketServer({ server: this.server });
+
 	private wsMap = new Map<string, WebSocketMapping>();
+
 	static _servicePort: string;
+
 	static _vscodeExtensionPath: string;
+
 	static _htmlContentLocation = "out/src/views/htmlcontent";
+
 	static _staticContentPath: string;
 
 	constructor(extensionPath: string) {
 		// add static content for express web server to serve
 		const self = this;
+
 		LocalWebService._vscodeExtensionPath = extensionPath;
+
 		LocalWebService._staticContentPath = path.join(
 			extensionPath,
 			LocalWebService._htmlContentLocation,
 		);
+
 		this.app.use(express.static(LocalWebService.staticContentPath));
+
 		this.app.use(
 			bodyParser.json({ limit: "50mb", type: "application/json" }),
 		);
+
 		this.app.set("view engine", "ejs");
+
 		Utils.logDebug(
 			`LocalWebService: added static html content path: ${LocalWebService.staticContentPath}`,
 		);
+
 		this.server.on("request", this.app);
 
 		// Handle new connections to the web socket server
@@ -67,6 +83,7 @@ export default class LocalWebService {
 			// If the mapping does not exist, create it now
 			if (mapping === undefined) {
 				mapping = new WebSocketMapping();
+
 				self.wsMap.set(parse.uri, mapping);
 			}
 
@@ -110,6 +127,7 @@ export default class LocalWebService {
 		if (mapping === undefined) {
 			// There isn't a mapping, so create it
 			mapping = new WebSocketMapping();
+
 			this.wsMap.set(uri, mapping);
 		} else {
 			// Make sure the web socket server is open, then fire away
@@ -140,6 +158,7 @@ export default class LocalWebService {
 		handler: (req, res) => void,
 	): void {
 		let segment = "/" + Interfaces.ContentTypes[type];
+
 		this.app.get(segment, handler);
 	}
 
@@ -148,6 +167,7 @@ export default class LocalWebService {
 		handler: (req, res) => void,
 	): void {
 		let segment = "/" + Interfaces.ContentTypes[type];
+
 		this.app.post(segment, handler);
 	}
 
@@ -156,6 +176,7 @@ export default class LocalWebService {
 
 		const port = address.port; // 0 = listen on a random port
 		Utils.logDebug(`LocalWebService listening on port ${port}`);
+
 		LocalWebService._servicePort = port.toString();
 	}
 }

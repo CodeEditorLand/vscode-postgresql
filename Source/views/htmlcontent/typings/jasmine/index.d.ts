@@ -117,6 +117,7 @@ declare namespace jasmine {
 		new (expectedClass: any): any;
 
 		jasmineMatches(other: any): boolean;
+
 		jasmineToString(): string;
 	}
 
@@ -130,6 +131,7 @@ declare namespace jasmine {
 		new (sample: any[]): any;
 
 		asymmetricMatch(other: any): boolean;
+
 		jasmineToString(): string;
 	}
 
@@ -141,6 +143,7 @@ declare namespace jasmine {
 			mismatchKeys: any[],
 			mismatchValues: any[],
 		): boolean;
+
 		jasmineToString(): string;
 	}
 
@@ -166,10 +169,13 @@ declare namespace jasmine {
 
 	interface Clock {
 		install(): void;
+
 		uninstall(): void;
 		/** Calls to any registered callback are triggered when the clock is ticked forward via the jasmine.clock().tick function, which takes a number of milliseconds. */
 		tick(ms: number): void;
+
 		mockDate(date?: Date): void;
+
 		withMock(func: () => void): void;
 	}
 
@@ -179,6 +185,7 @@ declare namespace jasmine {
 
 	interface CustomMatcher {
 		compare<T>(actual: T, expected: T): CustomMatcherResult;
+
 		compare(actual: any, expected: any): CustomMatcherResult;
 	}
 
@@ -195,6 +202,7 @@ declare namespace jasmine {
 
 	interface CustomMatcherResult {
 		pass: boolean;
+
 		message?: string;
 	}
 
@@ -204,11 +212,13 @@ declare namespace jasmine {
 			b: any,
 			customTesters?: Array<CustomEqualityTester>,
 		): boolean;
+
 		contains<T>(
 			haystack: ArrayLike<T> | string,
 			needle: any,
 			customTesters?: Array<CustomEqualityTester>,
 		): boolean;
+
 		buildFailureMessage(
 			matcherName: string,
 			isNot: boolean,
@@ -219,10 +229,13 @@ declare namespace jasmine {
 
 	interface Env {
 		setTimeout: any;
+
 		clearTimeout: void;
 
 		setInterval: any;
+
 		clearInterval: void;
+
 		updateInterval: number;
 
 		currentSpec: Spec;
@@ -230,51 +243,74 @@ declare namespace jasmine {
 		matchersClass: Matchers;
 
 		version(): any;
+
 		versionString(): string;
+
 		nextSpecId(): number;
+
 		addReporter(reporter: Reporter): void;
+
 		execute(): void;
+
 		describe(description: string, specDefinitions: () => void): Suite;
 		// ddescribe(description: string, specDefinitions: () => void): Suite; Not a part of jasmine. Angular team adds these
 		beforeEach(beforeEachFunction: () => void): void;
+
 		beforeAll(beforeAllFunction: () => void): void;
+
 		currentRunner(): Runner;
+
 		afterEach(afterEachFunction: () => void): void;
+
 		afterAll(afterAllFunction: () => void): void;
+
 		xdescribe(desc: string, specDefinitions: () => void): XSuite;
+
 		it(description: string, func: () => void): Spec;
 		// iit(description: string, func: () => void): Spec; Not a part of jasmine. Angular team adds these
 		xit(desc: string, func: () => void): XSpec;
+
 		compareRegExps_(
 			a: RegExp,
 			b: RegExp,
 			mismatchKeys: string[],
 			mismatchValues: string[],
 		): boolean;
+
 		compareObjects_(
 			a: any,
 			b: any,
 			mismatchKeys: string[],
 			mismatchValues: string[],
 		): boolean;
+
 		equals_(
 			a: any,
 			b: any,
 			mismatchKeys: string[],
 			mismatchValues: string[],
 		): boolean;
+
 		contains_(haystack: any, needle: any): boolean;
+
 		addCustomEqualityTester(equalityTester: CustomEqualityTester): void;
+
 		addMatchers(matchers: CustomMatcherFactories): void;
+
 		specFilter(spec: Spec): boolean;
 
 		throwOnExpectationFailure(value: boolean): void;
+
 		seed(seed: string | number): string | number;
+
 		provideFallbackReporter(reporter: Reporter): void;
 
 		throwingExpectationFailures(): boolean;
+
 		allowRespy(allow: boolean): void;
+
 		randomTests(): boolean;
+
 		randomizeTests(b: boolean): void;
 	}
 
@@ -282,8 +318,11 @@ declare namespace jasmine {
 		new (): any;
 
 		reset(): void;
+
 		tick(millis: number): void;
+
 		runFunctionsWithinRange(oldMillis: number, nowMillis: number): void;
+
 		scheduleFunction(
 			timeoutKey: any,
 			funcToCall: () => void,
@@ -308,56 +347,75 @@ declare namespace jasmine {
 		description: string;
 
 		totalCount: number;
+
 		passedCount: number;
+
 		failedCount: number;
 
 		skipped: boolean;
 
 		rollupCounts(result: NestedResults): void;
+
 		log(values: any): void;
 
 		getItems(): Result[];
+
 		addResult(result: Result): void;
+
 		passed(): boolean;
 	}
 
 	interface MessageResult extends Result {
 		values: any;
+
 		trace: Trace;
 	}
 
 	interface ExpectationResult extends Result {
 		matcherName: string;
+
 		passed(): boolean;
+
 		expected: any;
+
 		actual: any;
+
 		message: string;
+
 		trace: Trace;
 	}
 
 	interface Order {
 		new (options: { random: boolean; seed: string }): any;
+
 		random: boolean;
+
 		seed: string;
+
 		sort<T>(items: T[]): T[];
 	}
 
 	namespace errors {
 		class ExpectationFailed extends Error {
 			constructor();
+
 			stack: any;
 		}
 	}
 
 	interface TreeProcessor {
 		new (attrs: any): any;
+
 		execute: (done: Function) => void;
+
 		processTree(): any;
 	}
 
 	interface Trace {
 		name: string;
+
 		message: string;
+
 		stack: any;
 	}
 
@@ -365,14 +423,20 @@ declare namespace jasmine {
 		new (): any;
 
 		format(value: any): void;
+
 		iterateObject(
 			obj: any,
 			fn: (property: string, isGetter: boolean) => void,
 		): void;
+
 		emitScalar(value: any): void;
+
 		emitString(value: string): void;
+
 		emitArray(array: any[]): void;
+
 		emitObject(obj: any): void;
+
 		append(value: any): void;
 	}
 
@@ -382,19 +446,31 @@ declare namespace jasmine {
 		new (env: any): any;
 
 		env: Env;
+
 		ensured: boolean[];
+
 		blocks: Block[];
+
 		running: boolean;
+
 		index: number;
+
 		offset: number;
+
 		abort: boolean;
 
 		addBefore(block: Block, ensure?: boolean): void;
+
 		add(block: any, ensure?: boolean): void;
+
 		insertNext(block: any, ensure?: boolean): void;
+
 		start(onComplete?: () => void): void;
+
 		isRunning(): boolean;
+
 		next_(): void;
+
 		results(): NestedResults;
 	}
 
@@ -402,48 +478,73 @@ declare namespace jasmine {
 		new (env: Env, actual: any, spec: Env, isNot?: boolean): any;
 
 		env: Env;
+
 		actual: any;
+
 		spec: Env;
+
 		isNot?: boolean;
+
 		message(): any;
 
 		toBe(expected: any, expectationFailOutput?: any): boolean;
+
 		toEqual(expected: any, expectationFailOutput?: any): boolean;
+
 		toMatch(
 			expected: string | RegExp,
 			expectationFailOutput?: any,
 		): boolean;
+
 		toBeDefined(expectationFailOutput?: any): boolean;
+
 		toBeUndefined(expectationFailOutput?: any): boolean;
+
 		toBeNull(expectationFailOutput?: any): boolean;
+
 		toBeNaN(): boolean;
+
 		toBeTruthy(expectationFailOutput?: any): boolean;
+
 		toBeFalsy(expectationFailOutput?: any): boolean;
+
 		toHaveBeenCalled(): boolean;
+
 		toHaveBeenCalledWith(...params: any[]): boolean;
+
 		toHaveBeenCalledTimes(expected: number): boolean;
+
 		toContain(expected: any, expectationFailOutput?: any): boolean;
+
 		toBeLessThan(expected: number, expectationFailOutput?: any): boolean;
+
 		toBeLessThanOrEqual(
 			expected: number,
 			expectationFailOutput?: any,
 		): boolean;
+
 		toBeGreaterThan(expected: number, expectationFailOutput?: any): boolean;
+
 		toBeGreaterThanOrEqual(
 			expected: number,
 			expectationFailOutput?: any,
 		): boolean;
+
 		toBeCloseTo(
 			expected: number,
 			precision?: any,
 			expectationFailOutput?: any,
 		): boolean;
+
 		toThrow(expected?: any): boolean;
+
 		toThrowError(message?: string | RegExp): boolean;
+
 		toThrowError(
 			expected?: new (...args: any[]) => Error,
 			message?: string | RegExp,
 		): boolean;
+
 		not: Matchers;
 
 		Any: Any;
@@ -451,10 +552,15 @@ declare namespace jasmine {
 
 	interface Reporter {
 		reportRunnerStarting(runner: Runner): void;
+
 		reportRunnerResults(runner: Runner): void;
+
 		reportSuiteResults(suite: Suite): void;
+
 		reportSpecStarting(spec: Spec): void;
+
 		reportSpecResults(spec: Spec): void;
+
 		log(str: string): void;
 	}
 
@@ -466,16 +572,27 @@ declare namespace jasmine {
 		new (env: Env): any;
 
 		execute(): void;
+
 		beforeEach(beforeEachFunction: SpecFunction): void;
+
 		afterEach(afterEachFunction: SpecFunction): void;
+
 		beforeAll(beforeAllFunction: SpecFunction): void;
+
 		afterAll(afterAllFunction: SpecFunction): void;
+
 		finishCallback(): void;
+
 		addSuite(suite: Suite): void;
+
 		add(block: Block): void;
+
 		specs(): Spec[];
+
 		suites(): Suite[];
+
 		topLevelSuites(): Suite[];
+
 		results(): NestedResults;
 	}
 
@@ -485,8 +602,11 @@ declare namespace jasmine {
 
 	interface SuiteOrSpec {
 		id: number;
+
 		env: Env;
+
 		description: string;
+
 		queue: Queue;
 	}
 
@@ -496,41 +616,61 @@ declare namespace jasmine {
 		suite: Suite;
 
 		afterCallbacks: SpecFunction[];
+
 		spies_: Spy[];
 
 		results_: NestedResults;
+
 		matchersClass: Matchers;
 
 		getFullName(): string;
+
 		results(): NestedResults;
+
 		log(arguments: any): any;
+
 		runs(func: SpecFunction): Spec;
+
 		addToQueue(block: Block): void;
+
 		addMatcherResult(result: Result): void;
 
 		getResult(): any;
+
 		expect(actual: any): any;
+
 		waits(timeout: number): Spec;
+
 		waitsFor(
 			latchFunction: SpecFunction,
 			timeoutMessage?: string,
 			timeout?: number,
 		): Spec;
+
 		fail(e?: any): void;
 
 		getMatchersClass_(): Matchers;
+
 		addMatchers(matchersPrototype: CustomMatcherFactories): void;
+
 		finishCallback(): void;
+
 		finish(onComplete?: () => void): void;
+
 		after(doAfter: SpecFunction): void;
+
 		execute(onComplete?: () => void, enabled?: boolean): any;
+
 		addBeforesAndAftersToQueue(): void;
+
 		explodes(): void;
+
 		spyOn(
 			obj: any,
 			methodName: string,
 			ignoreMethodDoesntExist: boolean,
 		): Spy;
+
 		removeAllSpies(): void;
 
 		throwOnExpectationFailure: boolean;
@@ -538,6 +678,7 @@ declare namespace jasmine {
 
 	interface XSpec {
 		id: number;
+
 		runs(): void;
 	}
 
@@ -552,16 +693,27 @@ declare namespace jasmine {
 		parentSuite: Suite;
 
 		getFullName(): string;
+
 		finish(onComplete?: () => void): void;
+
 		beforeEach(beforeEachFunction: SpecFunction): void;
+
 		afterEach(afterEachFunction: SpecFunction): void;
+
 		beforeAll(beforeAllFunction: SpecFunction): void;
+
 		afterAll(afterAllFunction: SpecFunction): void;
+
 		results(): NestedResults;
+
 		add(suiteOrSpec: SuiteOrSpec): void;
+
 		specs(): Spec[];
+
 		suites(): Suite[];
+
 		children(): any[];
+
 		execute(onComplete?: () => void): void;
 	}
 
@@ -573,10 +725,15 @@ declare namespace jasmine {
 		(...params: any[]): any;
 
 		identity: string;
+
 		and: SpyAnd;
+
 		calls: Calls;
+
 		mostRecentCall: { args: any[] };
+
 		argsForCall: any[];
+
 		wasCalled: boolean;
 	}
 
@@ -627,35 +784,51 @@ declare namespace jasmine {
 		inherit(childClass: Function, parentClass: Function): any;
 
 		formatException(e: any): any;
+
 		htmlEscape(str: string): string;
+
 		argsToArray(args: any): any;
+
 		extend(destination: any, source: any): any;
 	}
 
 	interface JsApiReporter extends Reporter {
 		started: boolean;
+
 		finished: boolean;
+
 		result: any;
+
 		messages: any;
+
 		runDetails: {
 			failedExpectations: ExpectationResult[];
+
 			order: jasmine.Order;
 		};
 
 		new (): any;
 
 		suites(): Suite[];
+
 		summarize_(suiteOrSpec: SuiteOrSpec): any;
+
 		results(): any;
+
 		resultsForSpec(specId: any): any;
+
 		log(str: any): any;
+
 		resultsForSpecs(specIds: any): any;
+
 		summarizeResult_(result: any): any;
 	}
 
 	interface Jasmine {
 		Spec: Spec;
+
 		clock: Clock;
+
 		util: Util;
 	}
 

@@ -20,43 +20,81 @@ import LocalizedConstants = require("../constants/localizedConstants");
 // Concrete implementation of the IConnectionCredentials interface
 export class ConnectionCredentials implements IConnectionCredentials {
 	public host: string;
+
 	public dbname: string;
+
 	public user: string;
+
 	public password: string;
+
 	public port: number;
+
 	public hostaddr: string;
+
 	public clientEncoding: string;
+
 	public options: string;
+
 	public sslmode: string;
+
 	public sslcompression: boolean;
+
 	public sslcert: string;
+
 	public sslkey: string;
+
 	public sslrootcert: string;
+
 	public sslcrl: string;
+
 	public requirepeer: string;
+
 	public service: string;
+
 	public authenticationType: string;
+
 	public encrypt: boolean;
+
 	public trustServerCertificate: boolean;
+
 	public persistSecurityInfo: boolean;
+
 	public connectTimeout: number;
+
 	public connectRetryCount: number;
+
 	public connectRetryInterval: number;
+
 	public applicationName: string;
+
 	public workstationId: string;
+
 	public applicationIntent: string;
+
 	public currentLanguage: string;
+
 	public pooling: boolean;
+
 	public maxPoolSize: number;
+
 	public minPoolSize: number;
+
 	public loadBalanceTimeout: number;
+
 	public replication: boolean;
+
 	public attachDbFilename: string;
+
 	public failoverPartner: string;
+
 	public multiSubnetFailover: boolean;
+
 	public multipleActiveResultSets: boolean;
+
 	public packetSize: number;
+
 	public typeSystemVersion: string;
+
 	public connectionString: string;
 
 	/**
@@ -72,21 +110,37 @@ export class ConnectionCredentials implements IConnectionCredentials {
 		if (credentials.port && details.options["host"].indexOf(",") === -1) {
 			details.options["port"] = credentials.port;
 		}
+
 		details.options["dbname"] = credentials.dbname;
+
 		details.options["user"] = credentials.user;
+
 		details.options["password"] = credentials.password;
+
 		details.options["hostaddr"] = credentials.hostaddr;
+
 		details.options["connectTimeout"] = credentials.connectTimeout;
+
 		details.options["clientEncoding"] = credentials.clientEncoding;
+
 		details.options["options"] = credentials.options;
+
 		details.options["applicationName"] = credentials.applicationName;
+
 		details.options["sslmode"] = credentials.sslmode;
+
 		details.options["sslcompression"] = credentials.sslcompression;
+
 		details.options["sslcert"] = credentials.sslcert;
+
 		details.options["sslkey"] = credentials.sslkey;
+
 		details.options["sslrootcert"] = credentials.sslrootcert;
+
 		details.options["sslcrl"] = credentials.sslcrl;
+
 		details.options["requirepeer"] = credentials.requirepeer;
+
 		details.options["service"] = credentials.service;
 
 		return details;
@@ -147,6 +201,7 @@ export class ConnectionCredentials implements IConnectionCredentials {
 						});
 					}
 				}
+
 				return credentials;
 			} else {
 				return undefined;
@@ -234,6 +289,7 @@ export class ConnectionCredentials implements IConnectionCredentials {
 							value,
 						);
 					}
+
 					return undefined;
 				},
 				onAnswered: (value) => {
@@ -331,6 +387,7 @@ export class ConnectionCredentials implements IConnectionCredentials {
 				AuthenticationTypes.SqlLogin,
 			);
 		}
+
 		return (
 			authenticationType ===
 			utils.authTypeToString(AuthenticationTypes.SqlLogin)
@@ -345,6 +402,7 @@ export class ConnectionCredentials implements IConnectionCredentials {
 		if (utils.isEmpty(value)) {
 			return property + LocalizedConstants.msgIsRequired;
 		}
+
 		return undefined;
 	}
 

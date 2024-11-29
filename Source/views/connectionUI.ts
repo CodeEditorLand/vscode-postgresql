@@ -79,7 +79,9 @@ export class ConnectionUI {
 	// Show connection errors in an output window
 	public showConnectionErrors(errorMessages: string): void {
 		this._errorOutputChannel.clear();
+
 		this._errorOutputChannel.append(errorMessages);
+
 		this._errorOutputChannel.show(true);
 	}
 
@@ -133,6 +135,7 @@ export class ConnectionUI {
 					providerId: Constants.noneProviderName,
 				},
 			];
+
 			self.promptItemChoice(
 				{
 					placeHolder: LocalizedConstants.flavorChooseLanguage,
@@ -193,7 +196,9 @@ export class ConnectionUI {
 
 		return new Promise((resolve, reject) => {
 			let timer: Timer = new Timer();
+
 			timer.start();
+
 			self.waitForLanguageModeToBeSqlHelper(resolve, timer);
 		});
 	}
@@ -210,6 +215,7 @@ export class ConnectionUI {
 				name: LocalizedConstants.msgPromptCancelConnect,
 				message: LocalizedConstants.msgPromptCancelConnect,
 			};
+
 			self._prompter
 				.promptSingle(question)
 				.then((result) => {
@@ -234,6 +240,7 @@ export class ConnectionUI {
 				name: LocalizedConstants.msgChangeLanguageMode,
 				message: LocalizedConstants.msgChangeLanguageMode,
 			};
+
 			self._prompter
 				.promptSingle(question)
 				.then((value) => {
@@ -272,6 +279,7 @@ export class ConnectionUI {
 					(name) => {
 						let newCredentials: Interfaces.IConnectionCredentials =
 							<any>{};
+
 						Object.assign<
 							Interfaces.IConnectionCredentials,
 							Interfaces.IConnectionCredentials
@@ -280,6 +288,7 @@ export class ConnectionUI {
 						if (newCredentials["profileName"]) {
 							delete newCredentials["profileName"];
 						}
+
 						newCredentials.dbname = name;
 
 						return <Interfaces.IConnectionCredentialsQuickPickItem>{
@@ -297,6 +306,7 @@ export class ConnectionUI {
 					label: LocalizedConstants.disconnectOptionLabel,
 					description: LocalizedConstants.disconnectOptionDescription,
 				};
+
 				pickListItems.push(disconnectItem);
 
 				const pickListOptions: vscode.QuickPickOptions = {
@@ -339,6 +349,7 @@ export class ConnectionUI {
 				name: LocalizedConstants.disconnectConfirmationMsg,
 				message: LocalizedConstants.disconnectConfirmationMsg,
 			};
+
 			self._prompter.promptSingle<boolean>(question).then(
 				(result) => {
 					if (result === true) {
@@ -371,6 +382,7 @@ export class ConnectionUI {
 								emptyPasswordInput: false,
 							},
 						);
+
 						ConnectionCredentials.ensureRequiredPropertiesSet(
 							connectionWithoutCredentials, // connection profile
 							true, // isProfile
@@ -420,6 +432,7 @@ export class ConnectionUI {
 						if (!resolvedConnectionCreds) {
 							resolve(undefined);
 						}
+
 						resolve(resolvedConnectionCreds);
 					},
 					(err) => reject(err),
@@ -439,6 +452,7 @@ export class ConnectionUI {
 				name: LocalizedConstants.msgPromptClearRecentConnections,
 				message: LocalizedConstants.msgPromptClearRecentConnections,
 			};
+
 			self._prompter
 				.promptSingle(question)
 				.then((result) => {
@@ -500,6 +514,7 @@ export class ConnectionUI {
 												self.vscodeWrapper.showInformationMessage(
 													LocalizedConstants.msgClearedRecentConnections,
 												);
+
 												resolve(true);
 											});
 									} else {
@@ -564,6 +579,7 @@ export class ConnectionUI {
 						return self.saveProfile(profile);
 					}
 				}
+
 				return undefined;
 			})
 			.then((savedProfile) => {
@@ -578,6 +594,7 @@ export class ConnectionUI {
 						);
 					}
 				}
+
 				return savedProfile;
 			});
 	}
@@ -703,6 +720,7 @@ export class ConnectionUI {
 				if (profile) {
 					return self._connectionStore.removeProfile(profile);
 				}
+
 				return false;
 			})
 			.then((result) => {
@@ -712,6 +730,7 @@ export class ConnectionUI {
 						LocalizedConstants.msgProfileRemoved,
 					);
 				}
+
 				return result;
 			});
 	}

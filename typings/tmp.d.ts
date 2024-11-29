@@ -10,17 +10,25 @@ declare module "tmp" {
 
 		interface SimpleOptions {
 			prefix?: string;
+
 			postfix?: string;
+
 			template?: string;
+
 			dir?: string;
+
 			tries?: number;
+
 			keep?: boolean;
+
 			unsafeCleanup?: boolean;
 		}
 
 		interface SynchronousResult {
 			name: string;
+
 			fd: number;
+
 			removeCallback: () => void;
 		}
 

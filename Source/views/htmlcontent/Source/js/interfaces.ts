@@ -11,90 +11,139 @@
 
 export interface IDbColumn {
 	allowDBNull?: boolean;
+
 	baseCatalogName: string;
+
 	baseColumnName: string;
+
 	baseSchemaName: string;
+
 	baseServerName: string;
+
 	baseTableName: string;
+
 	columnName: string;
+
 	columnOrdinal?: number;
+
 	columnSize?: number;
+
 	isAliased?: boolean;
+
 	isAutoIncrement?: boolean;
+
 	isExpression?: boolean;
+
 	isHidden?: boolean;
+
 	isIdentity?: boolean;
+
 	isKey?: boolean;
+
 	isBytes?: boolean;
+
 	isChars?: boolean;
+
 	isSqlVariant?: boolean;
+
 	isUdt?: boolean;
+
 	dataType: string;
+
 	isXml?: boolean;
+
 	isJson?: boolean;
+
 	isLong?: boolean;
+
 	isReadOnly?: boolean;
+
 	isUnique?: boolean;
+
 	numericPrecision?: number;
+
 	numericScale?: number;
+
 	udtAssemblyQualifiedName: string;
+
 	dataTypeName: string;
 }
 
 export class DbCellValue {
 	displayValue: string;
+
 	isNull: boolean;
 }
 
 export class ResultSetSubset {
 	rowCount: number;
+
 	rows: DbCellValue[][];
 }
 
 export class ResultSetSummary {
 	id: number;
+
 	rowCount: number;
+
 	columnInfo: IDbColumn[];
 }
 
 export class BatchSummary {
 	id: number;
+
 	selection: ISelectionData;
+
 	resultSetSummaries: ResultSetSummary[];
+
 	executionElapsed: string;
+
 	executionEnd: string;
+
 	executionStart: string;
 }
 
 export interface IGridResultSet {
 	columns: IDbColumn[];
+
 	rowsUri: string;
+
 	numberOfRows: number;
 }
 
 export interface ISelectionData {
 	startLine: number;
+
 	startColumn: number;
+
 	endLine: number;
+
 	endColumn: number;
 }
 
 export interface IMessageLink {
 	uri: string;
+
 	text: string;
 }
 
 export interface IMessage {
 	batchId?: number;
+
 	time: string;
+
 	message: string;
+
 	isError: boolean;
+
 	link?: IMessageLink;
 }
 
 export interface IGridIcon {
 	showCondition: () => boolean;
+
 	icon: () => string;
+
 	hoverText: () => string;
 
 	functionality: (batchId: number, resultId: number, index: number) => void;
@@ -102,11 +151,13 @@ export interface IGridIcon {
 
 export interface IResultsConfig {
 	shortcuts: { [key: string]: string };
+
 	messagesDefaultOpen: boolean;
 }
 
 export class WebSocketEvent {
 	type: string;
+
 	data: any;
 }
 

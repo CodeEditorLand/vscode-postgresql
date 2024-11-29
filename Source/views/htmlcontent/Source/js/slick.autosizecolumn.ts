@@ -16,6 +16,7 @@
 
 		function init(_grid): void {
 			grid = _grid;
+
 			maxWidth = maxWidth || 200;
 
 			$container = $(grid.getContainerNode());
@@ -24,6 +25,7 @@
 				".slick-resizable-handle",
 				reSizeColumn,
 			);
+
 			context = document.createElement("canvas").getContext("2d");
 		}
 
@@ -41,6 +43,7 @@
 			}
 
 			e.preventDefault();
+
 			e.stopPropagation();
 
 			let headerWidth = getElementWidth(headerEl[0]);
@@ -53,8 +56,10 @@
 
 			for (let [index, col] of allColumns.entries()) {
 				col.formatter = origCols[index].formatter;
+
 				col.asyncPostRender = origCols[index].asyncPostRender;
 			}
+
 			let column = allColumns[colIndex];
 
 			let autoSizeWidth =
@@ -65,7 +70,9 @@
 
 			if (autoSizeWidth !== column.width) {
 				allColumns[colIndex].width = autoSizeWidth;
+
 				grid.setColumns(allColumns);
+
 				grid.onColumnsResized.notify();
 			}
 		}
@@ -86,6 +93,7 @@
 			for (let i = start; i < end; i++) {
 				texts.push(data.getItem(i)[columnDef.field]);
 			}
+
 			let template = getMaxTextTemplate(
 				texts,
 				columnDef,
@@ -95,6 +103,7 @@
 			);
 
 			let width = getTemplateWidth(rowEl, template);
+
 			deleteRow(rowEl);
 
 			return width;
@@ -102,6 +111,7 @@
 
 		function getTemplateWidth(rowEl, template): number {
 			let cell = $(rowEl.find(".slick-cell"));
+
 			cell.append(template);
 			$(cell).find("*").css("position", "relative");
 
@@ -134,12 +144,15 @@
 							) +
 							"</span>",
 					);
+
 					text = template.text() || text;
 				}
+
 				let length = text ? getElementWidthUsingCanvas(rowEl, text) : 0;
 
 				if (length > max) {
 					max = length;
+
 					maxTemplate = template || text;
 				}
 			});
@@ -151,6 +164,7 @@
 			let rowEl = $(
 				'<div class="slick-row"><div class="slick-cell"></div></div>',
 			);
+
 			rowEl.find(".slick-cell").css({
 				"visibility": "hidden",
 				"text-overflow": "initial",
@@ -170,10 +184,14 @@
 		function getElementWidth(element): number {
 			let width,
 				clone = element.cloneNode(true);
+
 			clone.style.cssText =
 				"position: absolute; visibility: hidden;right: auto;text-overflow: initial;white-space: nowrap;";
+
 			element.parentNode.insertBefore(clone, element);
+
 			width = clone.offsetWidth;
+
 			clone.parentNode.removeChild(clone);
 
 			return width;

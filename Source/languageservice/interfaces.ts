@@ -8,8 +8,11 @@ import { ILogger } from "../models/interfaces";
 
 export interface IStatusView {
 	installingService(): void;
+
 	serviceInstalled(): void;
+
 	serviceInstallationFailed(): void;
+
 	updateServiceDownloadingProgress(downloadPercentage: number): void;
 }
 
@@ -29,6 +32,7 @@ export interface IConfig {
 	getWorkspaceConfig(key: string, defaultValue?: any): any;
 
 	getSqlToolsConfigValue(configKey: string): any;
+
 	useServiceVersion(version: number): void;
 
 	getServiceVersion(): number;
@@ -36,7 +40,9 @@ export interface IConfig {
 
 export interface IPackage {
 	url: string;
+
 	installPath?: string;
+
 	tmpFile: tmp.SynchronousResult;
 }
 

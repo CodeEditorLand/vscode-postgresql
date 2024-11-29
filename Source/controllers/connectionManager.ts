@@ -88,8 +88,11 @@ export class ConnectionInfo {
 // ConnectionManager class is the main controller for connection management
 export default class ConnectionManager {
 	private _context: vscode.ExtensionContext;
+
 	private _statusView: StatusView;
+
 	private _prompter: IPrompter;
+
 	private _connections: { [fileUri: string]: ConnectionInfo };
 
 	constructor(
@@ -102,13 +105,17 @@ export default class ConnectionManager {
 		private _connectionUI?: ConnectionUI,
 	) {
 		this._context = context;
+
 		this._statusView = statusView;
+
 		this._prompter = prompter;
+
 		this._connections = {};
 
 		if (!this.client) {
 			this.client = SqlToolsServerClient.instance;
 		}
+
 		if (!this.vscodeWrapper) {
 			this.vscodeWrapper = new VscodeWrapper();
 		}
@@ -131,10 +138,12 @@ export default class ConnectionManager {
 				ConnectionContracts.ConnectionChangedNotification.type,
 				this.handleConnectionChangedNotification(),
 			);
+
 			this.client.onNotification(
 				ConnectionContracts.ConnectionCompleteNotification.type,
 				this.handleConnectionCompleteNotification(),
 			);
+
 			this.client.onNotification(
 				LanguageServiceContracts.IntelliSenseReadyNotification.type,
 				this.handleLanguageServiceUpdateNotification(),
@@ -263,8 +272,10 @@ export default class ConnectionManager {
 					this.vscodeWrapper.activeTextEditor.document !== undefined
 				) {
 					let document = this.vscodeWrapper.activeTextEditor.document;
+
 					numberOfCharacters = document.getText().length;
 				}
+
 				Telemetry.sendTelemetryEvent(
 					"IntelliSenseActivated",
 					{
@@ -294,9 +305,12 @@ export default class ConnectionManager {
 			if (self.isConnected(event.ownerUri)) {
 				let connectionInfo: ConnectionInfo =
 					self._connections[event.ownerUri];
+
 				connectionInfo.credentials.host = event.connection.serverName;
+
 				connectionInfo.credentials.dbname =
 					event.connection.databaseName;
+
 				connectionInfo.credentials.user = event.connection.userName;
 
 				self._statusView.connectSuccess(
@@ -327,7 +341,9 @@ export default class ConnectionManager {
 			let fileUri = result.ownerUri;
 
 			let connection = self.getConnectionInfo(fileUri);
+
 			connection.serviceTimer.end();
+
 			connection.connecting = false;
 
 			let mruConnection: Interfaces.IConnectionCredentials = <any>{};
@@ -336,6 +352,7 @@ export default class ConnectionManager {
 				// We have a valid connection
 				// Copy credentials as the database name will be updated
 				let newCredentials: Interfaces.IConnectionCredentials = <any>{};
+
 				Object.assign<
 					Interfaces.IConnectionCredentials,
 					Interfaces.IConnectionCredentials
@@ -355,9 +372,11 @@ export default class ConnectionManager {
 					newCredentials,
 					result,
 				);
+
 				mruConnection = connection.credentials;
 			} else {
 				self.handleConnectionErrors(fileUri, connection, result);
+
 				mruConnection = undefined;
 			}
 
@@ -372,9 +391,13 @@ export default class ConnectionManager {
 		result: ConnectionContracts.ConnectionCompleteParams,
 	): void {
 		connection.connectionId = result.connectionId;
+
 		connection.serverInfo = result.serverInfo;
+
 		connection.credentials = newCredentials;
+
 		connection.errorNumber = undefined;
+
 		connection.errorMessage = undefined;
 
 		this.statusView.connectSuccess(
@@ -382,6 +405,7 @@ export default class ConnectionManager {
 			newCredentials,
 			connection.serverInfo,
 		);
+
 		this.statusView.languageServiceStatusChanged(
 			fileUri,
 			LocalizedConstants.updatingIntelliSenseStatus,
@@ -462,7 +486,9 @@ export default class ConnectionManager {
 					),
 				);
 			}
+
 			connection.errorNumber = result.errorNumber;
+
 			connection.errorMessage = result.errorMessage;
 		} else {
 			PlatformInformation.GetCurrent().then((platformInfo) => {
@@ -521,7 +547,9 @@ export default class ConnectionManager {
 				}
 			});
 		}
+
 		this.statusView.connectError(fileUri, connection.credentials, result);
+
 		this.vscodeWrapper.logToOutputChannel(
 			Utils.formatString(
 				LocalizedConstants.msgConnectionFailed,
@@ -538,6 +566,7 @@ export default class ConnectionManager {
 		if (newConnection) {
 			let connectionToSave: Interfaces.IConnectionCredentials =
 				Object.assign({}, newConnection);
+
 			this._connectionStore.addRecentlyUsed(connectionToSave).then(
 				() => {
 					connection.connectHandler(true);
@@ -569,6 +598,7 @@ export default class ConnectionManager {
 				self.vscodeWrapper.showWarningMessage(
 					LocalizedConstants.msgChooseDatabaseNotConnected,
 				);
+
 				resolve(false);
 
 				return;
@@ -576,7 +606,9 @@ export default class ConnectionManager {
 
 			// Get list of databases on current server
 			let listParams = new ConnectionContracts.ListDatabasesParams();
+
 			listParams.ownerUri = fileUri;
+
 			self.client
 				.sendRequest(
 					ConnectionContracts.ListDatabasesRequest.type,
@@ -619,6 +651,7 @@ export default class ConnectionManager {
 														fileUri,
 													),
 												);
+
 												resolve(true);
 											})
 											.catch((err) => {
@@ -647,7 +680,9 @@ export default class ConnectionManager {
 				if (!flavor) {
 					return false;
 				}
+
 				this.statusView.languageFlavorChanged(fileUri, flavor);
+
 				SqlToolsServerClient.instance.sendNotification(
 					LanguageServiceContracts.LanguageFlavorChangedNotification
 						.type,
@@ -679,6 +714,7 @@ export default class ConnectionManager {
 			if (self.isConnected(fileUri)) {
 				let disconnectParams =
 					new ConnectionContracts.DisconnectParams();
+
 				disconnectParams.ownerUri = fileUri;
 
 				self.client
@@ -690,6 +726,7 @@ export default class ConnectionManager {
 						if (self.statusView) {
 							self.statusView.notConnected(fileUri);
 						}
+
 						if (result) {
 							Telemetry.sendTelemetryEvent(
 								"DatabaseDisconnected",
@@ -710,6 +747,7 @@ export default class ConnectionManager {
 			} else if (self.isConnecting(fileUri)) {
 				// Prompt the user to cancel connecting
 				self.onCancelConnect();
+
 				resolve(true);
 			} else {
 				resolve(true);
@@ -792,6 +830,7 @@ export default class ConnectionManager {
 											),
 										);
 									}
+
 									resolve(newResult);
 								},
 							);
@@ -817,6 +856,7 @@ export default class ConnectionManager {
 				self.vscodeWrapper.showWarningMessage(
 					LocalizedConstants.msgOpenSqlFile,
 				);
+
 				resolve(false);
 
 				return;
@@ -851,10 +891,15 @@ export default class ConnectionManager {
 
 		return new Promise<boolean>((resolve, reject) => {
 			let connectionInfo: ConnectionInfo = new ConnectionInfo();
+
 			connectionInfo.extensionTimer = new Utils.Timer();
+
 			connectionInfo.intelliSenseTimer = new Utils.Timer();
+
 			connectionInfo.credentials = connectionCreds;
+
 			connectionInfo.connecting = true;
+
 			this._connections[fileUri] = connectionInfo;
 
 			// Note: must call flavor changed before connecting, or the timer showing an animation doesn't occur
@@ -863,12 +908,15 @@ export default class ConnectionManager {
 					fileUri,
 					Constants.pgsqlProviderName,
 				);
+
 				self.statusView.connecting(fileUri, connectionCreds);
+
 				self.statusView.languageFlavorChanged(
 					fileUri,
 					Constants.pgsqlProviderName,
 				);
 			}
+
 			self.vscodeWrapper.logToOutputChannel(
 				Utils.formatString(
 					LocalizedConstants.msgConnecting,
@@ -891,7 +939,9 @@ export default class ConnectionManager {
 				ConnectionCredentials.createConnectionDetails(connectionCreds);
 
 			let connectParams = new ConnectionContracts.ConnectParams();
+
 			connectParams.ownerUri = fileUri;
+
 			connectParams.connection = connectionDetails;
 
 			connectionInfo.serviceTimer = new Utils.Timer();
@@ -934,9 +984,11 @@ export default class ConnectionManager {
 
 		let cancelParams: ConnectionContracts.CancelConnectParams =
 			new ConnectionContracts.CancelConnectParams();
+
 		cancelParams.ownerUri = fileUri;
 
 		const self = this;
+
 		this.client
 			.sendRequest(
 				ConnectionContracts.CancelConnectRequest.type,
@@ -1006,6 +1058,7 @@ export default class ConnectionManager {
 		// Connect the saved uri and disconnect the untitled uri on successful connection
 		let creds: Interfaces.IConnectionCredentials =
 			this._connections[oldFileUri].credentials;
+
 		this.connect(newFileUri, creds).then((result) => {
 			if (result) {
 				this.disconnect(oldFileUri);
@@ -1021,6 +1074,7 @@ export default class ConnectionManager {
 				return "Windows";
 			}
 		}
+
 		return "";
 	}
 }

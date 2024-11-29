@@ -32,7 +32,9 @@ OTHER DEALINGS IN THE SOFTWARE.
 declare module "module" {
 	var mod: {
 		config: () => any;
+
 		id: string;
+
 		uri: string;
 	};
 

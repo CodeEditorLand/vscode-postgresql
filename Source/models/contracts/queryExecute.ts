@@ -4,18 +4,27 @@ import { IDbColumn, IResultMessage, ISelectionData } from "./../interfaces";
 
 export class ResultSetSummary {
 	id: number;
+
 	batchId: number;
+
 	rowCount: number;
+
 	columnInfo: IDbColumn[];
 }
 
 export class BatchSummary {
 	hasError: boolean;
+
 	id: number;
+
 	selection: ISelectionData;
+
 	resultSetSummaries: ResultSetSummary[];
+
 	executionElapsed: string;
+
 	executionEnd: string;
+
 	executionStart: string;
 }
 
@@ -29,12 +38,14 @@ export namespace QueryExecuteCompleteNotification {
 
 export class QueryExecuteCompleteNotificationResult {
 	ownerUri: string;
+
 	batchSummaries: BatchSummary[];
 }
 
 // Query Batch Notification -----------------------------------------------------------------------
 export class QueryExecuteBatchNotificationParams {
 	batchSummary: BatchSummary;
+
 	ownerUri: string;
 }
 
@@ -64,6 +75,7 @@ export namespace QueryExecuteResultSetCompleteNotification {
 
 export class QueryExecuteResultSetCompleteNotificationParams {
 	resultSetSummary: ResultSetSummary;
+
 	ownerUri: string;
 }
 
@@ -76,6 +88,7 @@ export namespace QueryExecuteMessageNotification {
 
 export class QueryExecuteMessageParams {
 	message: IResultMessage;
+
 	ownerUri: string;
 }
 
@@ -100,12 +113,15 @@ export namespace QueryExecuteStatementRequest {
 
 export class QueryExecuteParams {
 	ownerUri: string;
+
 	querySelection: ISelectionData;
 }
 
 export class QueryExecuteStatementParams {
 	ownerUri: string;
+
 	line: number;
+
 	column: number;
 }
 
@@ -123,19 +139,25 @@ export namespace QueryExecuteSubsetRequest {
 
 export class QueryExecuteSubsetParams {
 	ownerUri: string;
+
 	batchIndex: number;
+
 	resultSetIndex: number;
+
 	rowsStartIndex: number;
+
 	rowsCount: number;
 }
 
 export class DbCellValue {
 	displayValue: string;
+
 	isNull: boolean;
 }
 
 export class ResultSetSubset {
 	rowCount: number;
+
 	rows: DbCellValue[][];
 }
 

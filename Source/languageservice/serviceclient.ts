@@ -152,6 +152,7 @@ export default class SqlToolsServiceClient {
 	public static get instance(): SqlToolsServiceClient {
 		if (this._instance === undefined) {
 			let config = new ExtConfig();
+
 			_channel = window.createOutputChannel(
 				Constants.serviceInitializingOutputChannelName,
 			);
@@ -181,6 +182,7 @@ export default class SqlToolsServiceClient {
 			let vscodeWrapper = new VscodeWrapper();
 
 			let statusView = new StatusView(vscodeWrapper);
+
 			this._instance = new SqlToolsServiceClient(
 				config,
 				serviceProvider,
@@ -189,6 +191,7 @@ export default class SqlToolsServiceClient {
 				vscodeWrapper,
 			);
 		}
+
 		return this._instance;
 	}
 
@@ -212,18 +215,24 @@ export default class SqlToolsServiceClient {
 			this._logger.appendLine(
 				Constants.commandsNotAvailableWhileInstallingTheService,
 			);
+
 			this._logger.appendLine();
+
 			this._logger.append(
 				`Platform-------------: ${platformInfo.toString()}`,
 			);
 
 			if (!platformInfo.isValidRuntime) {
 				this._logger.appendLine();
+
 				this._logger.append("Platform invalid");
+
 				Utils.showErrorMsg(Constants.unsupportedPlatformErrorMessage);
+
 				Telemetry.sendTelemetryEvent("UnsupportedPlatform", {
 					platform: platformInfo.toString(),
 				});
+
 				reject("Invalid Platform");
 			} else {
 				if (platformInfo.runtimeId) {
@@ -233,6 +242,7 @@ export default class SqlToolsServiceClient {
 				} else {
 					this._logger.appendLine();
 				}
+
 				this._logger.appendLine();
 
 				this._server
@@ -245,15 +255,19 @@ export default class SqlToolsServiceClient {
 							if (_channel !== undefined) {
 								_channel.show();
 							}
+
 							let installedServerPath =
 								await this._server.downloadServerFiles(
 									platformInfo.runtimeId,
 								);
+
 							this.initializeLanguageClient(
 								installedServerPath,
 								context,
 							);
+
 							await this._client.onReady();
+
 							resolve(
 								new ServerInitializationResult(
 									true,
@@ -263,7 +277,9 @@ export default class SqlToolsServiceClient {
 							);
 						} else {
 							this.initializeLanguageClient(serverPath, context);
+
 							await this._client.onReady();
+
 							resolve(
 								new ServerInitializationResult(
 									false,
@@ -277,10 +293,13 @@ export default class SqlToolsServiceClient {
 						Utils.logDebug(
 							Constants.serviceLoadingFailed + " " + err,
 						);
+
 						Utils.showErrorMsg(Constants.serviceLoadingFailed);
+
 						Telemetry.sendTelemetryEvent(
 							"ServiceInitializingFailed",
 						);
+
 						reject(err);
 					});
 			}
@@ -338,10 +357,12 @@ export default class SqlToolsServiceClient {
 			throw new Error(Constants.invalidServiceFilePath);
 		} else {
 			let self = this;
+
 			self.initializeLanguageConfiguration();
 
 			let serverOptions: ServerOptions =
 				this.createServerOptions(serverPath);
+
 			this.client = this.createLanguageClient(serverOptions);
 
 			if (context !== undefined) {
@@ -372,6 +393,7 @@ export default class SqlToolsServiceClient {
 			serverOptions,
 			clientOptions,
 		);
+
 		client.onReady().then(() => {
 			this.checkServiceCompatibility();
 
@@ -379,6 +401,7 @@ export default class SqlToolsServiceClient {
 				LanguageServiceContracts.TelemetryNotification.type,
 				this.handleLanguageServiceTelemetryNotification(),
 			);
+
 			client.onNotification(
 				LanguageServiceContracts.StatusChangedNotification.type,
 				this.handleLanguageServiceStatusNotification(),
@@ -431,7 +454,9 @@ export default class SqlToolsServiceClient {
 					localSourcePath,
 					"pgsqltoolsservice/pgtoolsservice_main.py",
 				);
+
 				process.env.PYTHONPATH = localSourcePath;
+
 				serverCommand =
 					process.platform === "win32" ? "python" : "python3";
 
@@ -442,7 +467,9 @@ export default class SqlToolsServiceClient {
 					: "--enable-remote-debugging";
 
 				let debugPort = config["debugServerPort"];
+
 				debuggingArg += "=" + debugPort;
+
 				serverArgs = [filePath, debuggingArg];
 			}
 
@@ -452,6 +479,7 @@ export default class SqlToolsServiceClient {
 			);
 
 			serverArgs.push("--log-dir=" + logFileLocation);
+
 			serverArgs.push(logFileLocation);
 
 			// Enable diagnostic logging in the service if it is configured
@@ -460,11 +488,14 @@ export default class SqlToolsServiceClient {
 			if (logDebugInfo) {
 				serverArgs.push("--enable-logging");
 			}
+
 			let applyLocalization = config[Constants.configApplyLocalization];
 
 			if (applyLocalization) {
 				let locale = vscode.env.language;
+
 				serverArgs.push("--locale");
+
 				serverArgs.push(locale);
 			}
 		}

@@ -24,7 +24,9 @@ const msInS = 1000;
 // Interface for package.json information
 export interface IPackageInfo {
 	name: string;
+
 	version: string;
+
 	aiKey: string;
 }
 
@@ -70,6 +72,7 @@ export function generateGuid(): string {
 	/* tslint:disable:no-bitwise */
 	for (let a: number = 0; a < 4; a++) {
 		tmp = (4294967296 * Math.random()) | 0;
+
 		oct +=
 			hexValues[tmp & 0xf] +
 			hexValues[(tmp >> 4) & 0xf] +
@@ -132,6 +135,7 @@ export function isEditingSqlFile(): boolean {
 			sqlFile = true;
 		}
 	}
+
 	return sqlFile;
 }
 
@@ -142,6 +146,7 @@ export function getActiveTextEditor(): vscode.TextEditor {
 	if (vscode.window && vscode.window.activeTextEditor) {
 		editor = vscode.window.activeTextEditor;
 	}
+
 	return editor;
 }
 
@@ -153,6 +158,7 @@ export function getActiveTextEditorUri(): string {
 	) {
 		return vscode.window.activeTextEditor.document.uri.toString();
 	}
+
 	return "";
 }
 
@@ -161,6 +167,7 @@ export function logToOutputChannel(msg: any): void {
 	let outputChannel = vscode.window.createOutputChannel(
 		Constants.outputChannelName,
 	);
+
 	outputChannel.show();
 
 	if (msg instanceof Array) {
@@ -184,6 +191,7 @@ export function logDebug(msg: any): void {
 		let currentTime = new Date().toLocaleTimeString();
 
 		let outputMsg = "[" + currentTime + "]: " + msg ? msg.toString() : "";
+
 		console.log(outputMsg);
 	}
 }
@@ -238,6 +246,7 @@ export function formatString(str: string, ...args: any[]): string {
 			return typeof args[index] !== "undefined" ? args[index] : match;
 		});
 	}
+
 	return result;
 }
 
@@ -252,9 +261,11 @@ function isSameDatabase(
 	if (isEmpty(currentDatabase)) {
 		currentDatabase = Constants.defaultDatabase;
 	}
+
 	if (isEmpty(expectedDatabase)) {
 		expectedDatabase = Constants.defaultDatabase;
 	}
+
 	return currentDatabase === expectedDatabase;
 }
 
@@ -269,9 +280,11 @@ function isSameAuthenticationType(
 	if (isEmpty(currentAuthenticationType)) {
 		currentAuthenticationType = Constants.sqlAuthentication;
 	}
+
 	if (isEmpty(expectedAuthenticationType)) {
 		expectedAuthenticationType = Constants.sqlAuthentication;
 	}
+
 	return currentAuthenticationType === expectedAuthenticationType;
 }
 
@@ -292,6 +305,7 @@ export function isSameProfile(
 	if (currentProfile === undefined) {
 		return false;
 	}
+
 	if (expectedProfile.profileName) {
 		// Can match on profile name
 		return expectedProfile.profileName === currentProfile.profileName;
@@ -307,6 +321,7 @@ export function isSameProfile(
 			currentProfile.connectionString === expectedProfile.connectionString
 		);
 	}
+
 	return (
 		expectedProfile.host === currentProfile.host &&
 		isSameDatabase(expectedProfile.dbname, currentProfile.dbname) &&
@@ -359,6 +374,7 @@ export function isFileExisting(filePath: string): boolean {
 // One-time use timer for performance testing
 export class Timer {
 	private _startTime: number[];
+
 	private _endTime: number[];
 
 	constructor() {
@@ -400,6 +416,7 @@ export function parseTimeString(value: string): number | boolean {
 	if (!value) {
 		return false;
 	}
+
 	let tempVal = value.split(".");
 
 	if (tempVal.length === 1) {
@@ -443,12 +460,15 @@ export function parseNumAsTimeString(value: number): string {
 	let tempVal = value;
 
 	let h = Math.floor(tempVal / msInH);
+
 	tempVal %= msInH;
 
 	let m = Math.floor(tempVal / msInM);
+
 	tempVal %= msInM;
 
 	let s = Math.floor(tempVal / msInS);
+
 	tempVal %= msInS;
 
 	let hs = h < 10 ? "0" + h : "" + h;

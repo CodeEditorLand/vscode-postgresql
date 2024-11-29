@@ -25,9 +25,13 @@ const WS_URL = "ws://localhost:" + window.location.port + "/";
 @Injectable()
 export class DataService {
 	private uri: string;
+
 	public ws: WebSocket;
+
 	public dataEventObs: Subject<WebSocketEvent>;
+
 	private _shortcuts;
+
 	private _config;
 
 	/* for testing purposes only */
@@ -43,11 +47,14 @@ export class DataService {
 				? document.getElementById("uri").innerText.trim()
 				: "",
 		);
+
 		this.ws = new WebSocket(WS_URL + "?uri=" + this.uri);
 
 		let observable = Observable.create((obs: Observer<MessageEvent>) => {
 			self.ws.onmessage = obs.next.bind(obs);
+
 			self.ws.onerror = obs.error.bind(obs);
+
 			self.ws.onclose = obs.complete.bind(obs);
 
 			return self.ws.close.bind(self.ws);
@@ -134,6 +141,7 @@ export class DataService {
 			batchIndex +
 			"&resultSetNo=" +
 			resultSetNumber;
+
 		self.http
 			.post(url, selection, { headers: headers })
 			.subscribe(undefined, (err) => {
@@ -167,7 +175,9 @@ export class DataService {
 		const self = this;
 
 		let headers = new Headers();
+
 		headers.append("Content-Type", "application/json");
+
 		self.http
 			.post(
 				"/openLink",
@@ -212,6 +222,7 @@ export class DataService {
 		if (includeHeaders !== undefined) {
 			url += "&includeHeaders=" + includeHeaders;
 		}
+
 		self.http.post(url, selection, { headers: headers }).subscribe();
 	}
 
@@ -225,6 +236,7 @@ export class DataService {
 		let headers = new Headers();
 
 		let url = "/setEditorSelection?" + "&uri=" + self.uri;
+
 		self.http.post(url, selection, { headers: headers }).subscribe();
 	}
 
@@ -236,6 +248,7 @@ export class DataService {
 		const self = this;
 
 		let headers = new Headers();
+
 		self.http.get(uri, { headers: headers }).subscribe();
 	}
 
@@ -245,7 +258,9 @@ export class DataService {
 		let url = "/showWarning?" + "&uri=" + self.uri;
 
 		let headers = new Headers();
+
 		headers.append("Content-Type", "application/json");
+
 		self.http
 			.post(url, JSON.stringify({ "message": message }), {
 				headers: headers,
@@ -259,7 +274,9 @@ export class DataService {
 		let url = "/showError?" + "&uri=" + self.uri;
 
 		let headers = new Headers();
+
 		headers.append("Content-Type", "application/json");
+
 		self.http
 			.post(url, JSON.stringify({ "message": message }), {
 				headers: headers,
@@ -275,6 +292,7 @@ export class DataService {
 		} else {
 			return new Promise<{ [key: string]: string }>((resolve, reject) => {
 				let url = "/config?" + "&uri=" + self.uri;
+
 				self.http
 					.get(url)
 					.map((res): IResultsConfig => {
@@ -282,8 +300,11 @@ export class DataService {
 					})
 					.subscribe((result: IResultsConfig) => {
 						self._shortcuts = result.shortcuts;
+
 						delete result.shortcuts;
+
 						self._config = result;
+
 						resolve(self._config);
 					});
 			});
@@ -298,6 +319,7 @@ export class DataService {
 		} else {
 			return new Promise<any>((resolve, reject) => {
 				let url = "/config?" + "&uri=" + self.uri;
+
 				self.http
 					.get(url)
 					.map((res): IResultsConfig => {
@@ -305,8 +327,11 @@ export class DataService {
 					})
 					.subscribe((result) => {
 						self._shortcuts = result.shortcuts;
+
 						delete result.resultShortcuts;
+
 						self._config = result;
+
 						resolve(self._shortcuts);
 					});
 			});

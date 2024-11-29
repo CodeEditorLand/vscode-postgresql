@@ -7,6 +7,7 @@ import { ErrorCodes } from "./interfaces";
 
 export class PlatformNotSupportedError extends Error {
 	public static readonly message = "";
+
 	public readonly code: ErrorCodes = ErrorCodes.ERR_PLATFORM_NOT_SUPPORTED;
 
 	constructor(
@@ -19,6 +20,7 @@ export class PlatformNotSupportedError extends Error {
 
 export class ArchitectureNotSupportedError extends PlatformNotSupportedError {
 	public static readonly message = "";
+
 	public readonly code: ErrorCodes =
 		ErrorCodes.ERR_ARCHITECTURE_NOT_SUPPORTED;
 
@@ -33,6 +35,7 @@ export class ArchitectureNotSupportedError extends PlatformNotSupportedError {
 
 export class DistributionNotSupportedError extends PlatformNotSupportedError {
 	public static readonly message = "";
+
 	public readonly code: ErrorCodes =
 		ErrorCodes.ERR_DISTRIBUTION_NOT_SUPPORTED;
 

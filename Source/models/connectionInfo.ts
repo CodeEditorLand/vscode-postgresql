@@ -181,6 +181,7 @@ export function getConnectionDisplayString(
 		// If a connection string is present, try to display the profile name
 		if ((<IConnectionProfile>creds).profileName) {
 			text = (<IConnectionProfile>creds).profileName;
+
 			text = appendIfNotEmpty(text, creds.connectionString);
 		} else {
 			text = creds.connectionString;
@@ -196,13 +197,16 @@ export function getConnectionDisplayString(
 				LocalizedConstants.defaultDatabaseLabel,
 			);
 		}
+
 		let user: string = getUserNameOrDomainLogin(creds);
+
 		text = appendIfNotEmpty(text, user);
 	}
 
 	// Limit the maximum length of displayed text
 	if (text.length > Constants.maxDisplayedStatusTextLength) {
 		text = text.substr(0, Constants.maxDisplayedStatusTextLength);
+
 		text += " \u2026"; // Ellipsis character (...)
 	}
 
@@ -213,6 +217,7 @@ function appendIfNotEmpty(connectionText: string, value: string): string {
 	if (Utils.isNotEmpty(value)) {
 		connectionText += ` : ${value}`;
 	}
+
 	return connectionText;
 }
 

@@ -44,6 +44,7 @@ const ncp = require("copy-paste");
 
 export interface IResultSet {
 	columns: string[];
+
 	totalNumberOfRows: number;
 }
 /*
@@ -53,12 +54,19 @@ export interface IResultSet {
 export default class QueryRunner {
 	// MEMBER VARIABLES ////////////////////////////////////////////////////
 	private _batchSets: BatchSummary[] = [];
+
 	private _isExecuting: boolean;
+
 	private _uri: string;
+
 	private _title: string;
+
 	private _resultLineOffset: number;
+
 	private _totalElapsedMilliseconds: number;
+
 	private _hasCompleted: boolean;
+
 	public eventEmitter: EventEmitter = new EventEmitter();
 
 	// CONSTRUCTOR /////////////////////////////////////////////////////////
@@ -85,9 +93,13 @@ export default class QueryRunner {
 
 		// Store the state
 		this._uri = _ownerUri;
+
 		this._title = _editorTitle;
+
 		this._isExecuting = false;
+
 		this._totalElapsedMilliseconds = 0;
+
 		this._hasCompleted = false;
 	}
 
@@ -184,24 +196,30 @@ export default class QueryRunner {
 		queryCallback: any,
 	): Thenable<void> {
 		const self = this;
+
 		this._vscodeWrapper.logToOutputChannel(
 			Utils.formatString(LocalizedConstants.msgStartedExecute, this._uri),
 		);
 
 		// Update internal state to show that we're executing the query
 		this._resultLineOffset = selection ? selection.startLine : 0;
+
 		this._isExecuting = true;
+
 		this._totalElapsedMilliseconds = 0;
+
 		this._statusView.executingQuery(this.uri);
 
 		let onSuccess = (result) => {
 			// The query has started, so lets fire up the result pane
 			self.eventEmitter.emit("start");
+
 			self._notificationHandler.registerRunner(self, self._uri);
 		};
 
 		let onError = (error) => {
 			self._statusView.executedQuery(self.uri);
+
 			self._isExecuting = false;
 			// TODO: localize
 			self._vscodeWrapper.showErrorMessage(
@@ -225,13 +243,16 @@ export default class QueryRunner {
 
 		// Store the batch sets we got back as a source of "truth"
 		this._isExecuting = false;
+
 		this._hasCompleted = true;
+
 		this._batchSets = result.batchSummaries;
 
 		this._batchSets.map((batch) => {
 			if (batch.selection) {
 				batch.selection.startLine =
 					batch.selection.startLine + this._resultLineOffset;
+
 				batch.selection.endLine =
 					batch.selection.endLine + this._resultLineOffset;
 			}
@@ -239,6 +260,7 @@ export default class QueryRunner {
 
 		// We're done with this query so shut down any waiting mechanisms
 		this._statusView.executedQuery(this.uri);
+
 		this.eventEmitter.emit(
 			"complete",
 			Utils.parseNumAsTimeString(this._totalElapsedMilliseconds),
@@ -251,6 +273,7 @@ export default class QueryRunner {
 		// Recalculate the start and end lines, relative to the result line offset
 		if (batch.selection) {
 			batch.selection.startLine += this._resultLineOffset;
+
 			batch.selection.endLine += this._resultLineOffset;
 		}
 
@@ -259,6 +282,7 @@ export default class QueryRunner {
 
 		// Store the batch
 		this._batchSets[batch.id] = batch;
+
 		this.eventEmitter.emit("batchStart", batch);
 	}
 
@@ -273,6 +297,7 @@ export default class QueryRunner {
 		let executionTime = <number>(
 			(Utils.parseTimeString(batch.executionElapsed) || 0)
 		);
+
 		this._totalElapsedMilliseconds += executionTime;
 
 		if (executionTime > 0) {
@@ -282,6 +307,7 @@ export default class QueryRunner {
 				Utils.parseNumAsTimeString(executionTime),
 			);
 		}
+
 		this.eventEmitter.emit("batchComplete", batch);
 	}
 
@@ -294,11 +320,13 @@ export default class QueryRunner {
 
 		// Store the result set in the batch and emit that a result set has completed
 		batchSet.resultSetSummaries[resultSet.id] = resultSet;
+
 		this.eventEmitter.emit("resultSet", resultSet);
 	}
 
 	public handleMessage(obj: QueryExecuteMessageParams): void {
 		let message = obj.message;
+
 		message.time = new Date(message.time).toLocaleTimeString();
 
 		// Send the message to the results pane
@@ -315,10 +343,15 @@ export default class QueryRunner {
 		const self = this;
 
 		let queryDetails = new QueryExecuteSubsetParams();
+
 		queryDetails.ownerUri = this.uri;
+
 		queryDetails.resultSetIndex = parseInt(resultSetIndex.toString(), 10);
+
 		queryDetails.rowsCount = parseInt(numberOfRows.toString(), 10);
+
 		queryDetails.rowsStartIndex = parseInt(rowStart.toString(), 10);
+
 		queryDetails.batchIndex = parseInt(batchIndex.toString(), 10);
 
 		return new Promise<QueryExecuteSubsetResult>((resolve, reject) => {
@@ -334,6 +367,7 @@ export default class QueryRunner {
 							"Something went wrong getting more rows: " +
 								error.message,
 						);
+
 						reject();
 					},
 				);
@@ -349,7 +383,9 @@ export default class QueryRunner {
 
 		return new Promise<void>((resolve, reject) => {
 			let disposeDetails = new QueryDisposeParams();
+
 			disposeDetails.ownerUri = self.uri;
+
 			self._client
 				.sendRequest(QueryDisposeRequest.type, disposeDetails)
 				.then(
@@ -361,6 +397,7 @@ export default class QueryRunner {
 						self._vscodeWrapper.showErrorMessage(
 							"Failed disposing query: " + error.message,
 						);
+
 						reject();
 					},
 				);
@@ -378,12 +415,14 @@ export default class QueryRunner {
 
 		if (batchSummary !== undefined) {
 			let resultSetSummary = batchSummary.resultSetSummaries[resultId];
+
 			headers = resultSetSummary.columnInfo
 				.slice(range.fromCell, range.toCell + 1)
 				.map((info, i) => {
 					return info.columnName;
 				});
 		}
+
 		return headers;
 	}
 
@@ -432,7 +471,9 @@ export default class QueryRunner {
 							// Iterate over the rows to paste into the copy string
 							for (
 								let rowIndex: number = 0;
+
 								rowIndex < result.resultSubset.rows.length;
+
 								rowIndex++
 							) {
 								let row = result.resultSubset.rows[rowIndex];
@@ -447,6 +488,7 @@ export default class QueryRunner {
 											self.removeNewLines(x.displayValue),
 										)
 									: cellObjects.map((x) => x.displayValue);
+
 								copyString += cells.join("\t");
 
 								if (
@@ -465,6 +507,7 @@ export default class QueryRunner {
 			for (let i = 1; i < tasks.length; i++) {
 				p = p.then(tasks[i]);
 			}
+
 			p.then(() => {
 				ncp.copy(copyString, () => {
 					resolve();
@@ -483,6 +526,7 @@ export default class QueryRunner {
 			Constants.extensionConfigSectionName,
 			this.uri,
 		);
+
 		includeHeaders = config[Constants.copyIncludeHeaders];
 
 		return !!includeHeaders;
@@ -556,6 +600,7 @@ export default class QueryRunner {
 								selection.endColumn,
 							),
 						);
+
 						resolve();
 					});
 				});

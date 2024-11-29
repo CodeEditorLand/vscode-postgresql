@@ -6,10 +6,12 @@ import { InputBoxOptions, QuickPickOptions } from "vscode";
 
 abstract class Prompt {
 	protected _question: any;
+
 	protected _ignoreFocusOut?: boolean;
 
 	constructor(question: any, ignoreFocusOut?: boolean) {
 		this._question = question;
+
 		this._ignoreFocusOut = ignoreFocusOut ? ignoreFocusOut : false;
 	}
 

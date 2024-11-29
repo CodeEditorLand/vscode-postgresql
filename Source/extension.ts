@@ -13,7 +13,9 @@ let controller: MainController = undefined;
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext): Promise<boolean> {
 	let vscodeWrapper = new VscodeWrapper();
+
 	controller = new MainController(context, undefined, vscodeWrapper);
+
 	context.subscriptions.push(controller);
 
 	// Checking if localization should be applied
