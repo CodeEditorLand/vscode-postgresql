@@ -471,9 +471,7 @@ export default class QueryRunner {
 							// Iterate over the rows to paste into the copy string
 							for (
 								let rowIndex: number = 0;
-
 								rowIndex < result.resultSubset.rows.length;
-
 								rowIndex++
 							) {
 								let row = result.resultSubset.rows[rowIndex];

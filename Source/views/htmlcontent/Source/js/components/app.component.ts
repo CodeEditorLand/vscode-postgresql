@@ -488,9 +488,7 @@ export class AppComponent implements OnInit, AfterViewChecked {
 
 										for (
 											let row = 0;
-
 											row < rows.rows.length;
-
 											row++
 										) {
 											// Push row values onto end of gridData for slickgrid
