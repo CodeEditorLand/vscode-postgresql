@@ -437,7 +437,7 @@
 		"onCommand:extension.pgsql.newQuery"
 	],
 	"dependencies": {
-		"applicationinsights": "3.4.0",
+		"applicationinsights": "3.5.0",
 		"body-parser": "1.20.3",
 		"comment-json": "4.2.5",
 		"copy-paste": "1.5.3",
