@@ -460,7 +460,7 @@
 		"ws": "8.18.0"
 	},
 	"devDependencies": {
-		"chai": "5.1.2",
+		"chai": "5.2.0",
 		"coveralls": "3.1.1",
 		"decache": "4.6.2",
 		"del": "8.0.0",
